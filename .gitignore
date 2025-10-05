@@ -230,3 +230,6 @@ pip-delete-this-directory.txt
 
 /uploads/
 *.json
+*.yml
+
+ML\LLM\DataDirAgribot\news\*.json
