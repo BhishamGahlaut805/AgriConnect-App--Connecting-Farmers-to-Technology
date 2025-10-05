@@ -10,7 +10,10 @@
 config/
 secrets/
 keys/
-
+*.json
+*.yml
+*.yaml
+*.mp4
 # =========================
 # 🧠 Python and Virtual Environments
 # =========================
