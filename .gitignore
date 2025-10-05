@@ -225,3 +225,6 @@ pip-delete-this-directory.txt
 *.bak
 *.pid
 *.lock
+
+/uploads/
+*.json
