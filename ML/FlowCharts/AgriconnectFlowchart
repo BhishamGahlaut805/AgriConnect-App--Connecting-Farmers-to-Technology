@@ -1,0 +1,52 @@
+digraph AgriconnectFlow {
+	fontname="Helvetica-Bold" rankdir=TB size=10
+	A [label="FARMER USER" fillcolor="#FF6B6B" fontcolor=white fontsize=18 style=filled]
+	B [label="AGRICONNECT CHATBOT
+AI-Powered Agricultural Assistant" fillcolor="#4ECDC4" fontcolor=white fontsize=16 style=filled]
+	C [label="SELECT REQUEST TYPE" fillcolor="#2A7F7A" fontcolor=white fontsize=16 style=filled]
+	A -> B
+	B -> C
+	D [label="GENERAL CHAT QUERY" fillcolor="#45B7D1" fontcolor=white fontsize=14 style=filled]
+	C -> D
+	L [label="CROP DISEASE DETECTION" fillcolor="#96CEB4" fontcolor=white fontsize=14 style=filled]
+	C -> L
+	T [label="YIELD PREDICTION" fillcolor="#FFEAA7" fontcolor=white fontsize=14 style=filled]
+	C -> T
+	AD [label="WEATHER SUPPORT" fillcolor="#74B9FF" fontcolor=white fontsize=14 style=filled]
+	C -> AD
+	AM [label="GOVERNMENT SCHEMES" fillcolor="#A29BFE" fontcolor=white fontsize=14 style=filled]
+	C -> AM
+	AW [label="CROP REPORTS" fillcolor="#FD79A8" fontcolor=white fontsize=14 style=filled]
+	C -> AW
+	BG [label="ADMIN FUNCTIONS" fillcolor="#FDCB6E" fontcolor=white fontsize=14 style=filled]
+	C -> BG
+	E [label="PROCESS USER QUERY" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	F [label="LLM STATUS CHECK" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	G [label="QUERY TRAINED LLM" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	H [label="BASIC KNOWLEDGE BASE" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	I [label="GENERATE CONTEXTUAL ANSWER" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	J [label="FETCH STORED INFORMATION" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	K [label="RETURN SMART RESPONSE" fillcolor="#45B7D1" fontcolor=white fontsize=12 style=filled]
+	D -> E
+	E -> F
+	F -> G [label=READY]
+	F -> H [label="NOT READY"]
+	G -> I
+	H -> J
+	I -> K
+	J -> K
+	M [label="UPLOAD CROP IMAGE" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	N [label="IMAGE PREPROCESSING" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	O [label="ML MODEL ANALYSIS" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	P [label="DISEASE IDENTIFICATION" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	Q [label="TREATMENT RECOMMENDATIONS" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	R [label="PREVENTION MEASURES" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	S [label="GENERATE DIAGNOSIS REPORT" fillcolor="#96CEB4" fontcolor=white fontsize=12 style=filled]
+	L -> M
+	M -> N
+	N -> O
+	O -> P
+	P -> Q
+	Q -> R
+	R -> S
+}

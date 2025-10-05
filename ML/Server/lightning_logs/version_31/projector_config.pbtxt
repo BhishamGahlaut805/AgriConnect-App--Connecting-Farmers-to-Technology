@@ -1,0 +1,20 @@
+embeddings {
+  tensor_name: "crop:00229"
+  metadata_path: "00229/crop\\metadata.tsv"
+  tensor_path: "00229/crop\\tensors.tsv"
+}
+embeddings {
+  tensor_name: "season:00229"
+  metadata_path: "00229/season\\metadata.tsv"
+  tensor_path: "00229/season\\tensors.tsv"
+}
+embeddings {
+  tensor_name: "district:00229"
+  metadata_path: "00229/district\\metadata.tsv"
+  tensor_path: "00229/district\\tensors.tsv"
+}
+embeddings {
+  tensor_name: "FARM_ID:00229"
+  metadata_path: "00229/FARM_ID\\metadata.tsv"
+  tensor_path: "00229/FARM_ID\\tensors.tsv"
+}

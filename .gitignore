@@ -1,0 +1,224 @@
+# =========================
+# 🌐 Environment and Config Files
+# =========================
+.env
+.env.*
+*.env
+*.env.*
+!*.env.example  # Keep template env files
+*.config
+config/
+secrets/
+keys/
+
+# =========================
+# 🧠 Python and Virtual Environments
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.so
+*.egg-info/
+*.ipynb_checkpoints
+*.ipynb
+.DS_Store
+.env/
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# 🧰 Node.js / JavaScript / TypeScript
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+package.json
+.next/
+dist/
+build/
+coverage/
+*.map
+
+# =========================
+# 🤖 Machine Learning / Deep Learning
+# =========================
+# Model files
+*.h5
+*.hdf5
+*.ckpt
+*.pt
+*.pth
+*.tflite
+*.pb
+*.onnx
+*.joblib
+*.weights
+*.model
+*.bin
+*.pkl
+*.keras
+
+# Training outputs and experiments
+checkpoints/
+trained_models/
+saved_models/
+models/
+outputs/
+results/
+experiments/
+runs/
+mlruns/
+wandb/
+tensorboard/
+
+# =========================
+# 📊 Data and Datasets
+# =========================
+*.csv
+*.tsv
+*.xls
+*.xlsx
+*.json
+*.xml
+*.yaml
+*.yml
+*.parquet
+*.feather
+*.db
+*.sqlite
+*.npz
+*.npy
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.bz2
+data/
+datasets/
+data_raw/
+data_processed/
+uploads/
+downloads/
+storage/
+
+# =========================
+# 🧾 Logs, Reports, PDFs, and Text Files
+# =========================
+*.log
+*.out
+*.err
+*.tmp
+*.dat
+*.txt
+*.pdf
+*.md
+logs/
+reports/
+temp/
+tmp/
+cache/
+.cache/
+__logs__/
+experiments_results/
+outputs/
+
+# =========================
+# 🖼️ Media and Generated Files
+# =========================
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.svg
+*.ico
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.tif
+*.tiff
+media/
+images/
+screenshots/
+videos/
+static/uploads/
+public/temp/
+frontend/public/uploads/
+
+# =========================
+# 💻 IDE and Editor Configurations
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+
+# =========================
+# ⚙️ Framework / Build Artifacts
+# =========================
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+server/node_modules/
+server/dist/
+server/build/
+__pypackages__/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+
+# =========================
+# 🧪 Testing / Coverage
+# =========================
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# =========================
+# 🧩 Documentation
+# =========================
+docs/_build/
+site/
+mkdocs.yml
+README.md
+
+# =========================
+# 🗂️ System and Misc
+# =========================
+Thumbs.db
+desktop.ini
+pip-log.txt
+pip-delete-this-directory.txt
+*.manifest
+*.spec
+*.bak
+*.pid
+*.lock
