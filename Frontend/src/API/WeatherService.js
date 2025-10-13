@@ -146,16 +146,17 @@ export async function fetchSeasonalWeather(lat, lon) {
 }
 
 /** Load WMO codes */
-export async function loadWeatherCodeDescriptions() {
+export const loadWeatherCodeDescriptions = async () => {
   try {
-    const res = await fetch(WMO_FILE);
-    if (!res.ok) throw new Error("Failed to load WMO.json");
-    return await res.json();
-  } catch (err) {
-    console.error("loadWeatherCodeDescriptions error:", err);
-    return null;
+    // Use the default descriptions directly instead of fetching from backend
+    // This avoids the JSON parsing error when backend returns HTML instead of JSON
+    console.log("Using default WMO descriptions");
+    return null; // Return null to use the default descriptions defined in component
+  } catch (error) {
+    console.error("Error loading WMO descriptions:", error);
+    return null; // Fallback to default descriptions
   }
-}
+};
 
 /** Get cities data */
 export async function fetchCityData(cityName) {

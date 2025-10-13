@@ -29,6 +29,7 @@ import {
   Thermometer,
 } from "lucide-react";
 import DetectionDetails from "../../SubComponents/DetectionRes"
+import AgriWeedHero from "../../SubComponents/AgriWeedHero";
 
 const CropDashboard = () => {
   const [activeTab, setActiveTab] = useState("webcam");
@@ -892,46 +893,19 @@ const CropDashboard = () => {
   );
 
   return (
-    <div className="mt-16 min-h-screen bg-gradient-to-br from-violet-50 to-purple-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="mt-20 min-h-screen bg-gradient-to-br from-violet-50 to-purple-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header */}
       <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-violet-200 dark:border-violet-600">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="mr-4 p-2 rounded-lg hover:bg-violet-100 dark:hover:bg-violet-900"
-              >
-                ☰
-              </button>
-              <h1 className="text-2xl font-bold text-violet-600 dark:text-violet-400">
-                🌾 AgriWeed AI - Powered by AGRIConnect
-              </h1>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setShowTutorial(true)}
-                className="p-2 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900 rounded-lg"
-                title="Show Tutorial"
-              >
-                <HelpCircle className="h-5 w-5" />
-              </button>
-
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-2 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-900 rounded-lg"
-                title="Toggle Dark Mode"
-              >
-                {darkMode ? (
-                  <Sun className="h-5 w-5" />
-                ) : (
-                  <Cloud className="h-5 w-5" />
-                )}
-              </button>
-            </div>
-          </div>
+          {/* <div className="flex items-center justify-between"> */}
+          {/* <div className="flex items-center space-x-4"> */}
+          <AgriWeedHero
+            className="h-10 w-10 text-violet-600 dark:text-violet-400"
+            setSidebarOpen={setSidebarOpen}
+          />
         </div>
+        {/* </div> */}
+        {/* </div> */}
       </header>
 
       {renderSidebar()}
@@ -939,48 +913,72 @@ const CropDashboard = () => {
 
       <div className="container mx-auto px-4 py-8">
         {/* Navigation Tabs */}
-        <nav className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-2 mb-10 max-w-4xl mx-auto border border-gray-200 dark:border-gray-700">
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+        <nav className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-4 mb-10 max-w-4xl mx-auto border border-gray-200 dark:border-gray-700 relative overflow-hidden">
+          {/* Decorative background gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-green-50 via-blue-50 to-violet-50 dark:from-green-950/40 dark:via-blue-950/40 dark:to-violet-950/40 opacity-40 rounded-2xl pointer-events-none"></div>
+
+          <div className="relative flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center items-center">
             {/* Live Crop Monitoring (Webcam) */}
             <button
-              className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all shadow-sm
+              className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all duration-300 ease-in-out shadow-sm relative group
         ${
           activeTab === "webcam"
-            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 scale-[1.02] shadow-md"
             : "text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-800"
         }`}
               onClick={() => setActiveTab("webcam")}
             >
-              <Camera className="h-5 w-5 mr-2 text-green-500" />
-              Live Crop Monitoring
+              <img
+                src="/src/assets/images/environment.gif"
+                alt="Live Monitor"
+                className="w-7 h-7 mr-2 object-contain rounded-full shadow-sm"
+              />
+              <span>Live Crop Monitoring</span>
+              {activeTab === "webcam" && (
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-green-400 rounded-b-xl animate-pulse"></span>
+              )}
             </button>
 
             {/* Video Study */}
             <button
-              className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all shadow-sm
+              className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all duration-300 ease-in-out shadow-sm relative group
         ${
           activeTab === "video"
-            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+            ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 scale-[1.02] shadow-md"
             : "text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-800"
         }`}
               onClick={() => setActiveTab("video")}
             >
-              <Video className="h-5 w-5 mr-2 text-blue-500" />
-              Video Study
+              <img
+                src="/src/assets/images/newi.gif"
+                alt="Video Study"
+                className="w-7 h-7 mr-2 object-contain rounded-full shadow-sm"
+              />
+              <span>Video Study</span>
+              {activeTab === "video" && (
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-blue-400 rounded-b-xl animate-pulse"></span>
+              )}
             </button>
 
             {/* Image Check */}
             <button
-              className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all shadow-sm
+              className={`flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all duration-300 ease-in-out shadow-sm relative group
         ${
           activeTab === "image"
-            ? "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200"
+            ? "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200 scale-[1.02] shadow-md"
             : "text-gray-700 dark:text-gray-300 hover:bg-violet-50 dark:hover:bg-violet-800"
         }`}
               onClick={() => setActiveTab("image")}
             >
-              <Image className="h-5 w-5 mr-2 text-violet-500" />
-              Image Check
+              <img
+                src="/src/assets/images/fruit.gif"
+                alt="Image Check"
+                className="w-7 h-7 mr-2 object-contain rounded-full shadow-sm"
+              />
+              <span>Image Check</span>
+              {activeTab === "image" && (
+                <span className="absolute bottom-0 left-0 w-full h-1 bg-violet-400 rounded-b-xl animate-pulse"></span>
+              )}
             </button>
           </div>
         </nav>

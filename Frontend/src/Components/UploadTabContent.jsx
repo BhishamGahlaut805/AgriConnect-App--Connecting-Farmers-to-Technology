@@ -12,6 +12,54 @@ import {
 } from "react-icons/fi";
 import { Tooltip } from "react-tooltip";
 import ModelOption from "./ModelOption";
+import CropHeader from "../NewComponents/CropHeader"
+// Import images and GIFs
+// Correct relative imports
+import cropImg from "../assets/images/crop.png";
+import cottonImg from "../assets/images/cotton.png";
+import potatoImg from "../assets/images/Potato.png";
+import campingImg from "../assets/images/camping.gif";
+import newImg from "../assets/images/newi.gif";
+import envirImg from "../assets/images/environment.gif";
+import harvestImg from "../assets/images/fruit.gif";
+import agribotImg from "../assets/images/chat-bot.gif";
+import communityImg from "../assets/images/communityimg.gif";
+
+
+import cardcontainerimage1 from "../assets/images/cont1.png";
+import cardcontainerimage2 from "../assets/images/cont2.png";
+import cardcontainerimage3 from "../assets/images/cont3.png";
+import cardcontainerimage4 from "../assets/images/cont4.png";
+import image1 from "../assets/images/bg1.png";
+import image2 from "../assets/images/bg2.png";
+import image3 from "../assets/images/bg3.png";
+import image4 from "../assets/images/bg4.png";
+import image5 from "../assets/images/bg5.png";
+import image6 from "../assets/images/bg6.png";
+import image8 from "../assets/images/bg8.png";
+import image7 from "../assets/images/bg7.png";
+import image9 from "../assets/images/bg9.png";
+import image10 from "../assets/images/bg10.png";
+import image11 from "../assets/images/bg11.png";
+import image12 from "../assets/images/bg12.png";
+import image13 from "../assets/images/card1.png";
+
+// Import images for graph cards
+import tempRainImg from "/src/assets/images/rain.gif";
+import analysisImg from "/src/assets/images/fruit.gif";
+import metricsImg from "/src/assets/images/newi.gif";
+import analyticsImg from "/src/assets/images/camping.gif";
+import seasonalImg from "/src/assets/images/environment.gif";
+
+// Import weather GIFs
+import stormgif from "/src/assets/images/storm.gif";
+import rain1gif from "/src/assets/images/rain1.gif";
+import clearsun from "/src/assets/images/sun.gif";
+import nightclouds from "/src/assets/images/night.gif";
+import windgif from "/src/assets/images/forest.gif";
+import cloudydaygif from "/src/assets/images/cloudy.gif";
+import hottempgif from "/src/assets/images/hot.gif";
+import clearnight from "/src/assets/images/night1.gif";
 
 const UploadTabContent = ({
   modelType,
@@ -82,54 +130,15 @@ const UploadTabContent = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 pb-3 border-b border-gray-200 dark:border-gray-700">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
-            Crop Disease Detection
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
-            Upload images of your crops to detect potential diseases
-          </p>
-        </div>
-        <div className="flex space-x-2 mt-3 md:mt-0">
-          {/* The existing clipboard button for URL is kept, but the paste event listener handles image files */}
-          <button
-            onClick={() =>
-              navigator.clipboard
-                .readText()
-                .then((text) => {
-                  if (text.match(/\.(jpeg|jpg|png|webp)$/i)) {
-                    setMessage({
-                      type: "info",
-                      text: "Pasted image URL detected",
-                    });
-                  } else {
-                    setMessage({
-                      type: "warning",
-                      text: "Clipboard does not contain a valid image URL. Try pasting an image file directly.",
-                    });
-                  }
-                })
-                .catch((err) => {
-                  setMessage({
-                    type: "error",
-                    text: "Failed to read clipboard: " + err.message,
-                  });
-                })
-            }
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 shadow-sm flex items-center"
-          >
-            <FiPlus className="mr-2" /> Paste Image URL
-          </button>
-        </div>
+      <div className="w-full flex flex-col md:flex-row justify-between items-center mb-6 pb-3 border-b border-gray-200 dark:border-gray-700">
+        <CropHeader />
       </div>
-
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Model Selector */}
         <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
           <div className="flex items-center mb-4">
             <h3 className="text-xl font-medium text-gray-800 dark:text-white">
-              Select AI Model
+              Select Your Crop Type
             </h3>
             <FiHelpCircle
               className="ml-2 text-gray-400 cursor-help"
@@ -137,7 +146,7 @@ const UploadTabContent = ({
               data-tooltip-content="Choose the AI model best suited for your crop type."
             />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ModelOption
               value="all"
               selected={modelType === "all"}
@@ -145,7 +154,14 @@ const UploadTabContent = ({
               title="General Model"
               description="Works for all common crops"
               icon={<FiGrid className="text-blue-500 mr-2" />}
-            />
+            >
+              <img
+                src={cropImg}
+                alt="General Model"
+                className="w-16 h-16 mx-auto rounded-full mb-3 object-cover shadow-lg"
+              />
+            </ModelOption>
+
             <ModelOption
               value="potato"
               selected={modelType === "potato"}
@@ -153,7 +169,14 @@ const UploadTabContent = ({
               title="Potato Model"
               description="Specialized for potato diseases"
               icon={<FiImage className="text-green-500 mr-2" />}
-            />
+            >
+              <img
+                src={potatoImg}
+                alt="Potato Model"
+                className="w-16 h-16 mx-auto rounded-full mb-3 object-cover shadow-lg"
+              />
+            </ModelOption>
+
             <ModelOption
               value="cotton"
               selected={modelType === "cotton"}
@@ -161,7 +184,13 @@ const UploadTabContent = ({
               title="Cotton Model"
               description="Specialized for cotton diseases"
               icon={<FiAlertCircle className="text-yellow-500 mr-2" />}
-            />
+            >
+              <img
+                src={cottonImg}
+                alt="Cotton Model"
+                className="w-16 h-16 mx-auto rounded-full mb-3 object-cover shadow-lg"
+              />
+            </ModelOption>
           </div>
         </div>
 

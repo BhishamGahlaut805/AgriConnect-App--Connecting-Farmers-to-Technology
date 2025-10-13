@@ -2,7 +2,7 @@ import os
 import requests
 import pandas as pd
 from typing import Optional
-from tqdm import tqdm
+from tqdm import tqdm   #type: ignore
 
 class WeatherAveragesExporter:
     def __init__(self, output_dir: str):
@@ -130,4 +130,3 @@ if __name__ == "__main__":
         output_dir=r"C:\Users\bhish\OneDrive\Desktop\AgriSupport\ML\FarmModels\datasets"
     )
     exporter.export_weather_averages()
-    

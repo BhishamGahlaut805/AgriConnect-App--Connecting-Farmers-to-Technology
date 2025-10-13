@@ -7,13 +7,17 @@
 *.env.*
 !*.env.example  # Keep template env files
 *.config
-config/
+# config/
 secrets/
 keys/
 *.json
 *.yml
 *.yaml
 *.mp4
+
+# Ignore India GeoJSON file
+Frontend/public/india.geojson
+
 # =========================
 # 🧠 Python and Virtual Environments
 # =========================

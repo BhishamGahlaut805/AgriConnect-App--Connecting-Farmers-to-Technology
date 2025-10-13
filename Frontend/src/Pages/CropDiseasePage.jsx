@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import AgriService from "../API/AgriService";
-import UploadTabContent from "../Components/UploadTabContent"; // Assuming this component handles image uploads
-import CropDiseaseResults from "../Components/CropDiseaseResults"; // Assuming this component displays results in card format
-import DetailedReportCard from "../Components/DetailedReport"; // For displaying detailed reports
-import ImageViewer from "../Components/ImageViewer"; // For image preview modal
+import UploadTabContent from "../Components/UploadTabContent";
+import CropDiseaseResults from "../Components/CropDiseaseResults";
+import DetailedReportCard from "../Components/DetailedReport";
+import ImageViewer from "../Components/ImageViewer";
+import WelcomeBanner from "../SubComponents/WelcomeCropDisease";
+import { useNavigate } from "react-router-dom";
 
 import {
   BellIcon,
@@ -13,10 +15,9 @@ import {
   CheckCircleIcon,
   ShieldExclamationIcon,
   XMarkIcon as XIcon,
-  ArrowLeftIcon, // Using Heroicon for back button
-} from "@heroicons/react/24/outline"; // Using Heroicons for a cleaner look
+  ArrowLeftIcon,
+} from "@heroicons/react/24/outline";
 
-// Re-importing Fi icons for specific uses if needed in UploadTabContent/CropDiseaseResults
 import {
   FiUpload,
   FiImage,
@@ -34,7 +35,7 @@ import {
   FiBarChart,
 } from "react-icons/fi";
 
-// Tooltip component (simple implementation - consistent with FarmerDashboard)
+// Tooltip component
 const Tooltip = ({ children, text }) => (
   <div className="relative flex items-center group">
     {children}
@@ -46,13 +47,13 @@ const Tooltip = ({ children, text }) => (
   </div>
 );
 
-// AlertMessage component (consistent with FarmerDashboard)
+// AlertMessage component
 const AlertMessage = ({ isOpen, title, message, type, onClose }) => {
   useEffect(() => {
     if (isOpen) {
       const timer = setTimeout(() => {
         onClose();
-      }, 2000); // Auto-disappear after 2 seconds
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [isOpen, onClose]);
@@ -95,24 +96,25 @@ const CropDiseasePage = () => {
     previews: [],
     modelType: "all",
     farmData: null,
-    result: null, // Holds the prediction results
+    result: null,
     loading: false,
-    activeTab: "upload", // Start directly on the upload tab
+    activeTab: "upload",
     stats: null,
     user: null,
     coords: { latitude: null, longitude: null },
     searchQuery: "",
     searchResults: [],
     pastSearches: [],
-    selectedReport: null, // For detailed report view
+    selectedReport: null,
     uploadProgress: 0,
     uploadError: null,
     isDragOver: false,
-    selectedImageModal: null, // For image preview modal
+    selectedImageModal: null,
     message: { type: "", text: "" },
   });
 
-  const [theme, setTheme] = useState("system"); // 'light', 'dark', 'system'
+  const [theme, setTheme] = useState("system");
+  const navigate = useNavigate();
 
   // Apply theme to HTML tag
   useEffect(() => {
@@ -168,14 +170,14 @@ const CropDiseasePage = () => {
     [updateState]
   );
 
+  const [user, setUser] = useState({ id: "Guest", username: "Guest" });
+
   // Initialize user and farm data
   useEffect(() => {
     const init = async () => {
       try {
         const raw = localStorage.getItem("userDetails");
-        const token = localStorage.getItem("LoginToken");
-
-        if (!raw || !token) {
+        if (!raw) {
           const guestId = `guest_${Date.now()}`;
           updateState({
             user: { id: guestId, username: "Guest" },
@@ -187,10 +189,10 @@ const CropDiseasePage = () => {
           await createAnonymousFarm(guestId);
         } else {
           const user = JSON.parse(raw);
+          setUser(user);
           updateState({ user });
           await loadPastSearches(user.id);
         }
-
         navigator.geolocation.getCurrentPosition(
           (pos) => {
             updateState({
@@ -229,6 +231,7 @@ const CropDiseasePage = () => {
 
     const fetchFarmData = async () => {
       try {
+        console.log("Fetching farm data for user:", state.user.id);
         const farm = await AgriService.getFarmData(state.user.id);
         updateState({ farmData: farm });
 
@@ -361,13 +364,22 @@ const CropDiseasePage = () => {
 
         updateState({
           result: prediction,
-          activeTab: "results", // Switch to results tab
           images: [],
           previews: [],
           loading: false,
           message: {
             type: "success",
             text: `Analyzed ${prediction.total_images} images`,
+          },
+        });
+
+        // Navigate to results page with the prediction data
+        const randomnumber=Math.floor(Math.random()*9000002920) + 100000090;
+        navigate(`/${randomnumber}cropAgriConnectDisease/results`, {
+          state: {
+            result: prediction,
+            farmData: state.farmData,
+            modelType: state.modelType,
           },
         });
       } catch (error) {
@@ -392,270 +404,15 @@ const CropDiseasePage = () => {
       state.modelType,
       state.previews,
       updateState,
+      navigate,
     ]
   );
-
-  const getDiseaseSeverity = useCallback((confidence) => {
-    if (confidence > 0.8) return "High";
-    if (confidence > 0.5) return "Medium";
-    return "Low";
-  }, []);
-
-  const downloadReport = useCallback(
-    (reportContent) => {
-      if (!reportContent) {
-        updateState({
-          message: { type: "warning", text: "No report to download." },
-        });
-        return;
-      }
-
-      try {
-        const blob = new Blob([JSON.stringify(reportContent, null, 2)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `AgriConnect_Report_${new Date()
-          .toISOString()
-          .slice(0, 10)}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-
-        updateState({
-          message: { type: "success", text: "Report downloaded successfully!" },
-        });
-      } catch (error) {
-        console.error("Download error:", error);
-        updateState({
-          message: { type: "error", text: "Failed to download report." },
-        });
-      }
-    },
-    [updateState]
-  );
-
-  const printReport = useCallback(() => {
-    window.print();
-  }, []);
 
   const triggerFileInput = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
 
-  // This function is for fetching detailed report when clicking on a card
-  const fetchCropReport = useCallback(
-    async (basicReport) => {
-      updateState({
-        message: { type: "info", text: "Fetching detailed report..." },
-      });
-      try {
-        let cropName =
-          basicReport.crop?.replace(/[^a-zA-Z_ ]/g, "") || "Unknown";
-        let diseaseName =
-          basicReport.disease?.replace(/[^a-zA-Z_]/g, "") || "Unknown";
-
-        if (
-          !cropName ||
-          typeof cropName !== "string" ||
-          cropName.includes("6878")
-        ) {
-          updateState({
-            message: {
-              type: "error",
-              text: "Invalid crop name. Please select a valid crop name.",
-            },
-          });
-          return;
-        }
-
-        if (
-          !diseaseName ||
-          typeof diseaseName !== "string" ||
-          diseaseName === "undefined"
-        ) {
-          updateState({
-            message: {
-              type: "error",
-              text: "Disease not identified or invalid.",
-            },
-          });
-          return;
-        }
-        const detailedReportData = await AgriService.getCropReport({
-          crop: cropName,
-          disease: diseaseName,
-          confidence: basicReport.confidence * 100,
-          imageUrl: basicReport.image_url || basicReport.imageUrl,
-        });
-
-        let safeConfidence = 0;
-        if (typeof detailedReportData.confidence === "string") {
-          const match = detailedReportData.confidence.match(/[\d.]+/);
-          if (match) safeConfidence = parseFloat(match[0]) / 100;
-        } else if (typeof detailedReportData.confidence === "number") {
-          safeConfidence = detailedReportData.confidence * 100;
-        }
-
-        const fullReport = {
-          ...basicReport,
-          ...detailedReportData,
-          confidence: safeConfidence,
-          image_url: basicReport.image_url,
-          recommendations:
-            detailedReportData.recommendations ||
-            (detailedReportData.best_practices?.length > 0
-              ? detailedReportData.best_practices
-                  .map((p) => `• ${p.practice}: ${p.description}`)
-                  .join("\n")
-              : "No recommendations provided."),
-          symptoms:
-            detailedReportData.symptoms ||
-            detailedReportData.favorable_conditions ||
-            "No symptoms available.",
-          treatment:
-            detailedReportData.treatment ||
-            (detailedReportData.chemical_pesticides?.length > 0
-              ? detailedReportData.chemical_pesticides
-                  .map((p) => `• ${p.name}: ${p.quantity} (${p.note})`)
-                  .join("\n")
-              : "No treatment information."),
-          pathogen: detailedReportData.pathogen || "N/A",
-          pathogen_type: detailedReportData.pathogen_type || "N/A",
-          spread:
-            detailedReportData.spread || "No information on spread available.",
-          favorable_conditions:
-            detailedReportData.favorable_conditions ||
-            "No information on favorable conditions available.",
-        };
-
-        updateState({ selectedReport: fullReport, activeTab: "report" });
-        updateState({
-          message: { type: "success", text: "Detailed report loaded." },
-        });
-      } catch (error) {
-        console.error("Error fetching crop report:", error);
-        updateState({
-          message: {
-            type: "error",
-            text: `Failed to load report: ${error.message}`,
-          },
-        });
-      }
-    },
-    [updateState]
-  );
-
-  const generateComprehensiveReport = useCallback(
-    (sourceData = null) => {
-      const reportData = sourceData || state.selectedReport || state.result;
-      if (!reportData) return null;
-
-      let findings = [];
-
-      if (reportData.id || reportData.crop) {
-        findings = [
-          {
-            crop: reportData.crop,
-            disease: reportData.disease,
-            confidence: parseFloat(reportData.confidence) || 0,
-            image_url:
-              reportData.image_url ||
-              reportData.imageUrl ||
-              reportData.image_path,
-            recommendations:
-              reportData.recommendations,
-            symptoms:
-              reportData.symptoms ,
-            treatment:
-              reportData.treatment
-             ,
-          },
-        ];
-      } else if (reportData.results) {
-        findings = reportData.results.map((pred) => ({
-          crop: pred.crop,
-          disease: pred.disease,
-          confidence: parseFloat(pred.confidence) * 100 || 0,
-          image_url: pred.image_url || pred.image_path || pred.imageUrl,
-          recommendations:
-            pred.recommendations ,
-          symptoms: pred.symptoms ,
-          treatment: pred.treatment ,
-        }));
-      }
-      const formattedFindings = findings.map((f, idx) => {
-        const confidence = isNaN(f.confidence) ? 0 : parseFloat(f.confidence);
-        const roundedConfidence = Math.round(confidence * 100);
-        const severity = getDiseaseSeverity(confidence);
-
-        return {
-          ...f,
-          severity,
-          imageUrl: f.image_url,
-          readableReport: `
-${idx + 1} (Image ${idx + 1})
-
-(Crop): ${f.crop || "(Unknown)"}
-(Disease): ${f.disease?.replace(/_/g, " ") || "(Unknown)"}
-(Confidence): ${roundedConfidence}% -${severity}
-(Symptoms):
-${f.symptoms}
-(Treatment):
-${f.treatment}
-
-(Recommendations):
-${f.recommendations}
-        `.trim(),
-        };
-      });
-
-      const timestamp = reportData.timestamp
-        ? new Date(reportData.timestamp).toLocaleString("en-IN", {
-            dateStyle: "full",
-            timeStyle: "short",
-          })
-        : new Date().toLocaleString("en-IN", {
-            dateStyle: "full",
-            timeStyle: "short",
-          });
-
-      return {
-        summary: {
-          totalImages: findings.length,
-          diseasesDetected: findings.filter(
-            (f) => f.disease?.toLowerCase?.() !== "healthy"
-          ).length,
-          timestamp: `(Report Time): ${timestamp}`,
-          modelType: state.modelType || "Unspecified Model",
-        },
-        findings: formattedFindings,
-        farmDetails: state.farmData
-          ? {
-              name: `(Farm Name): ${state.farmData.farm_name}`,
-              id: `ID: ${state.farmData.farm_id}`,
-              location: `स्थान (Location): ${
-                state.farmData.latitude?.toFixed(4) || "N/A"
-              }, ${state.farmData.longitude?.toFixed(4) || "N/A"}`,
-            }
-          : null,
-      };
-    },
-    [
-      state.selectedReport,
-      state.result,
-      state.farmData,
-      getDiseaseSeverity,
-      state.modelType,
-    ]
-  );
-
   const retryFailedUploads = useCallback(() => {
-    // This function would re-trigger uploads for any images that previously failed.
-    // For this simplified version, we'll just clear the error and allow re-uploading.
     updateState({
       uploadError: null,
       message: { type: "info", text: "Please re-select images to retry." },
@@ -667,11 +424,6 @@ ${f.recommendations}
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-30 bg-indigo-700 dark:bg-violet-950 shadow-md border-b border-indigo-600 dark:border-violet-900">
         <div className="flex items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
-          <div className="flex items-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-white dark:text-violet-200">
-              Crop Disease Analysis
-            </h1>
-          </div>
           <div className="flex items-center space-x-2 sm:space-x-4">
             <Tooltip text="Toggle theme">
               <button
@@ -714,10 +466,11 @@ ${f.recommendations}
         </div>
       </header>
 
-      {/* Main content area, adjusted for margins and responsiveness */}
+      {/* Main content area */}
       <div
         className={`flex flex-col flex-1 overflow-y-auto mt-16 px-4 md:px-6 py-6 space-y-6 transition-all duration-300 ease-in-out items-center`}
       >
+        <WelcomeBanner user={user.name} />
         <AlertMessage
           isOpen={state.message.text !== ""}
           title={state.message.type === "success" ? "Success" : "Error"}
@@ -751,158 +504,33 @@ ${f.recommendations}
           </div>
         )}
 
-        {/* Conditional Rendering of Upload or Results */}
-        {state.activeTab === "upload" && (
-          <div className="w-full max-w-4xl mx-auto">
-            {" "}
-            {/* Centering the upload content */}
-            <UploadTabContent
-              modelType={state.modelType}
-              setModelType={(newType) => updateState({ modelType: newType })}
-              handleImageChange={handleImageChange}
-              removeImage={removeImage}
-              fileInputRef={fileInputRef}
-              triggerFileInput={triggerFileInput}
-              handleSubmit={handleSubmit}
-              setMessage={(type, text) =>
-                updateState({ message: { type, text } })
-              }
-              previews={state.previews}
-              loading={state.loading}
-              images={state.images}
-              uploadProgress={state.uploadProgress}
-              uploadError={state.uploadError}
-              farmData={state.farmData}
-              isDragOver={state.isDragOver}
-              setIsDragOver={(isOver) => updateState({ isDragOver: isOver })}
-              setSelectedImageModal={(modal) =>
-                updateState({ selectedImageModal: modal })
-              }
-              retryFailedUploads={retryFailedUploads}
-            />
-          </div>
-        )}
-
-        {state.activeTab === "results" && state.result && (
-          <div className="w-full max-w-6xl mx-auto space-y-6">
-            {" "}
-            {/* Centering results content */}
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                Analysis Results
-              </h2>
-              <button
-                onClick={() =>
-                  updateState({
-                    activeTab: "upload",
-                    result: null,
-                    selectedReport: null,
-                  })
-                }
-                className="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium flex items-center shadow-md transition-colors"
-              >
-                <ArrowLeftIcon className="h-5 w-5 mr-2" />
-                Back to Upload
-              </button>
-            </div>
-            {/* Professional display of statistics */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 text-center">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Total Images Analyzed
-                </p>
-                <p className="text-3xl font-bold text-indigo-600 dark:text-violet-400 mt-1">
-                  {state.result.total_images || 0}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 text-center">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Diseased Images Found
-                </p>
-                <p className="text-3xl font-bold text-red-500 dark:text-red-400 mt-1">
-                  {state.result.diseased_images || 0}
-                </p>
-              </div>
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 text-center">
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                  Disease Rate
-                </p>
-                <p className="text-3xl font-bold text-orange-500 dark:text-orange-400 mt-1">
-                  {state.result.total_images > 0
-                    ? `${(
-                        (state.result.diseased_images /
-                          state.result.total_images) *
-                        100
-                      ).toFixed(1)}%`
-                    : "0.0%"}
-                </p>
-              </div>
-            </div>
-            <CropDiseaseResults
-              results={state.result?.results || []}
-              selectedReport={state.selectedReport}
-              setSelectedReport={(report) =>
-                updateState({ selectedReport: report })
-              }
-              downloadReport={downloadReport}
-              printReport={printReport}
-              generateComprehensiveReport={generateComprehensiveReport}
-              setActiveTab={(tab) => updateState({ activeTab: tab })}
-              fetchCropReport={fetchCropReport}
-              onBackToUpload={() =>
-                updateState({
-                  activeTab: "upload",
-                  result: null,
-                  selectedReport: null,
-                })
-              }
-            />
-          </div>
-        )}
-
-        {state.activeTab === "report" && state.selectedReport ? (
-          <div className="w-full max-w-4xl mx-auto">
-            {" "}
-            {/* Centering detailed report */}
-            <DetailedReportCard
-              report={state.selectedReport}
-              onClose={() => {
-                updateState({ selectedReport: null, activeTab: "results" }); // Go back to results list
-              }}
-              downloadReport={downloadReport}
-              printReport={printReport}
-              generateComprehensiveReport={generateComprehensiveReport}
-            />
-          </div>
-        ) : (
-          state.activeTab === "report" &&
-          !state.selectedReport && (
-            <div className="text-center text-gray-500 dark:text-gray-400 p-4">
-              No report selected. Please predict or search to view report.
-            </div>
-          )
-        )}
-
-        {/* If no result and not on upload tab, show a message or redirect */}
-        {state.activeTab !== "upload" &&
-          state.activeTab !== "results" &&
-          state.activeTab !== "report" && (
-            <div className="text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 w-full max-w-md mx-auto">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                Start a New Analysis
-              </h3>
-              <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Upload images to get crop disease predictions.
-              </p>
-              <button
-                onClick={() => updateState({ activeTab: "upload" })}
-                className="px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium flex items-center mx-auto shadow-md transition-colors"
-              >
-                <FiUpload className="h-5 w-5 mr-2" />
-                Upload Images
-              </button>
-            </div>
-          )}
+        {/* Upload Section */}
+        <div className="w-full max-w-4xl mx-auto">
+          <UploadTabContent
+            modelType={state.modelType}
+            setModelType={(newType) => updateState({ modelType: newType })}
+            handleImageChange={handleImageChange}
+            removeImage={removeImage}
+            fileInputRef={fileInputRef}
+            triggerFileInput={triggerFileInput}
+            handleSubmit={handleSubmit}
+            setMessage={(type, text) =>
+              updateState({ message: { type, text } })
+            }
+            previews={state.previews}
+            loading={state.loading}
+            images={state.images}
+            uploadProgress={state.uploadProgress}
+            uploadError={state.uploadError}
+            farmData={state.farmData}
+            isDragOver={state.isDragOver}
+            setIsDragOver={(isOver) => updateState({ isDragOver: isOver })}
+            setSelectedImageModal={(modal) =>
+              updateState({ selectedImageModal: modal })
+            }
+            retryFailedUploads={retryFailedUploads}
+          />
+        </div>
       </div>
     </div>
   );

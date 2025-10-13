@@ -258,7 +258,7 @@ const AuthPage = () => {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-blue-50 dark:from-green-900 dark:via-gray-800 dark:to-blue-900 flex items-center justify-center p-4"
+      className="mt-20 min-h-screen bg-gradient-to-br from-green-50 via-amber-50 to-blue-50 dark:from-green-900 dark:via-gray-800 dark:to-blue-900 flex items-center justify-center p-4"
     >
       <AlertMessage
         isOpen={alert.isOpen}

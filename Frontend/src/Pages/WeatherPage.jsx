@@ -15,6 +15,54 @@ import {
   BarElement,
 } from "chart.js";
 
+// Import images and GIFs
+import campingimg from "/src/assets/images/camping.gif";
+import newimg from "/src/assets/images/newi.gif";
+import envirimg from "/src/assets/images/environment.gif";
+import harvestimg from "/src/assets/images/fruit.gif";
+import agribotimg from "/src/assets/images/chat-bot.gif";
+import communityimg from "/src/assets/images/communityimg.gif";
+import playGif from "/src/assets/images/play.gif";
+import pauseGif from "/src/assets/images/play.gif";
+import stopGif from "/src/assets/images/play.gif";
+
+
+import cardcontainerimage1 from "../assets/images/cont1.png";
+import cardcontainerimage2 from "../assets/images/cont2.png";
+import cardcontainerimage3 from "../assets/images/cont3.png";
+import cardcontainerimage4 from "../assets/images/cont4.png";
+import image1 from "../assets/images/bg1.png";
+import image2 from "../assets/images/bg2.png";
+import image3 from "../assets/images/bg3.png";
+import image4 from "../assets/images/bg4.png";
+import image5 from "../assets/images/bg5.png";
+import image6 from "../assets/images/bg6.png";
+import image8 from "../assets/images/bg8.png";
+import image7 from "../assets/images/bg7.png";
+import image9 from "../assets/images/bg9.png";
+import image10 from "../assets/images/bg10.png";
+import image11 from "../assets/images/bg11.png";
+import image12 from "../assets/images/bg12.png";
+import image13 from "../assets/images/card1.png";
+
+// Import images for graph cards
+import tempRainImg from "/src/assets/images/rain.gif";
+import analysisImg from "/src/assets/images/fruit.gif";
+import metricsImg from "/src/assets/images/newi.gif";
+import analyticsImg from "/src/assets/images/camping.gif";
+import seasonalImg from "/src/assets/images/environment.gif";
+
+// Import weather GIFs
+import stormgif from "/src/assets/images/storm.gif";
+import rain1gif from "/src/assets/images/rain1.gif";
+import clearsun from "/src/assets/images/sun.gif";
+import nightclouds from "/src/assets/images/night.gif";
+import windgif from "/src/assets/images/forest.gif";
+import cloudydaygif from "/src/assets/images/cloudy.gif";
+import hottempgif from "/src/assets/images/hot.gif";
+import clearnight from "/src/assets/images/night1.gif";
+
+
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -29,35 +77,337 @@ ChartJS.register(
 
 // Default WMO weather code descriptions
 const defaultWmoDescriptions = {
-  0: { day: { description: "Clear sky", icon: "bi-brightness-high" }, night: { description: "Clear sky", icon: "bi-moon" } },
-  1: { day: { description: "Mainly clear", icon: "bi-brightness-high" }, night: { description: "Mainly clear", icon: "bi-moon-stars" } },
-  2: { day: { description: "Partly cloudy", icon: "bi-cloud-sun" }, night: { description: "Partly cloudy", icon: "bi-cloud-moon" } },
-  3: { day: { description: "Overcast", icon: "bi-cloudy" }, night: { description: "Overcast", icon: "bi-cloudy-fill" } },
-  45: { day: { description: "Fog", icon: "bi-cloud-fog" }, night: { description: "Fog", icon: "bi-cloud-fog" } },
-  48: { day: { description: "Depositing rime fog", icon: "bi-cloud-fog2" }, night: { description: "Depositing rime fog", icon: "bi-cloud-fog2" } },
-  51: { day: { description: "Light drizzle", icon: "bi-cloud-drizzle" }, night: { description: "Light drizzle", icon: "bi-cloud-drizzle" } },
-  53: { day: { description: "Moderate drizzle", icon: "bi-cloud-drizzle" }, night: { description: "Moderate drizzle", icon: "bi-cloud-drizzle" } },
-  55: { day: { description: "Dense drizzle", icon: "bi-cloud-drizzle" }, night: { description: "Dense drizzle", icon: "bi-cloud-drizzle" } },
-  56: { day: { description: "Light freezing drizzle", icon: "bi-cloud-sleet" }, night: { description: "Light freezing drizzle", icon: "bi-cloud-sleet" } },
-  57: { day: { description: "Dense freezing drizzle", icon: "bi-cloud-sleet" }, night: { description: "Dense freezing drizzle", icon: "bi-cloud-sleet" } },
-  61: { day: { description: "Slight rain", icon: "bi-cloud-rain" }, night: { description: "Slight rain", icon: "bi-cloud-rain" } },
-  63: { day: { description: "Moderate rain", icon: "bi-cloud-rain-fill" }, night: { description: "Moderate rain", icon: "bi-cloud-rain-fill" } },
-  65: { day: { description: "Heavy rain", icon: "bi-cloud-rain-heavy" }, night: { description: "Heavy rain", icon: "bi-cloud-rain-heavy" } },
-  66: { day: { description: "Light freezing rain", icon: "bi-cloud-sleet" }, night: { description: "Light freezing rain", icon: "bi-cloud-sleet" } },
-  67: { day: { description: "Heavy freezing rain", icon: "bi-cloud-sleet-fill" }, night: { description: "Heavy freezing rain", icon: "bi-cloud-sleet-fill" } },
-  71: { day: { description: "Slight snow fall", icon: "bi-cloud-snow" }, night: { description: "Slight snow fall", icon: "bi-cloud-snow" } },
-  73: { day: { description: "Moderate snow fall", icon: "bi-cloud-snow-fill" }, night: { description: "Moderate snow fall", icon: "bi-cloud-snow-fill" } },
-  75: { day: { description: "Heavy snow fall", icon: "bi-cloud-snow-heavy" }, night: { description: "Heavy snow fall", icon: "bi-cloud-snow-heavy" } },
-  77: { day: { description: "Snow grains", icon: "bi-snow" }, night: { description: "Snow grains", icon: "bi-snow" } },
-  80: { day: { description: "Slight rain showers", icon: "bi-cloud-drizzle" }, night: { description: "Slight rain showers", icon: "bi-cloud-drizzle" } },
-  81: { day: { description: "Moderate rain showers", icon: "bi-cloud-rain" }, night: { description: "Moderate rain showers", icon: "bi-cloud-rain" } },
-  82: { day: { description: "Violent rain showers", icon: "bi-cloud-rain-heavy" }, night: { description: "Violent rain showers", icon: "bi-cloud-rain-heavy" } },
-  85: { day: { description: "Slight snow showers", icon: "bi-cloud-snow" }, night: { description: "Slight snow showers", icon: "bi-cloud-snow" } },
-  86: { day: { description: "Heavy snow showers", icon: "bi-cloud-snow-heavy" }, night: { description: "Heavy snow showers", icon: "bi-cloud-snow-heavy" } },
-  95: { day: { description: "Thunderstorm", icon: "bi-cloud-lightning" }, night: { description: "Thunderstorm", icon: "bi-cloud-lightning" } },
-  96: { day: { description: "Thunderstorm with slight hail", icon: "bi-cloud-lightning-rain" }, night: { description: "Thunderstorm with slight hail", icon: "bi-cloud-lightning-rain" } },
-  99: { day: { description: "Thunderstorm with heavy hail", icon: "bi-cloud-lightning-rain-fill" }, night: { description: "Thunderstorm with heavy hail", icon: "bi-cloud-lightning-rain-fill" } }
+  0: {
+    day: {
+      description: "Clear sky",
+      icon: "bi-brightness-high",
+      gif: clearsun,
+    },
+    night: { description: "Clear sky", icon: "bi-moon", gif: clearnight },
+  },
+  1: {
+    day: {
+      description: "Mainly clear",
+      icon: "bi-brightness-high",
+      gif: clearsun,
+    },
+    night: {
+      description: "Mainly clear",
+      icon: "bi-moon-stars",
+      gif: nightclouds,
+    },
+  },
+  2: {
+    day: {
+      description: "Partly cloudy",
+      icon: "bi-cloud-sun",
+      gif: cloudydaygif,
+    },
+    night: {
+      description: "Partly cloudy",
+      icon: "bi-cloud-moon",
+      gif: nightclouds,
+    },
+  },
+  3: {
+    day: { description: "Overcast", icon: "bi-cloudy", gif: cloudydaygif },
+    night: {
+      description: "Overcast",
+      icon: "bi-cloudy-fill",
+      gif: nightclouds,
+    },
+  },
+  45: {
+    day: { description: "Fog", icon: "bi-cloud-fog", gif: cloudydaygif },
+    night: { description: "Fog", icon: "bi-cloud-fog", gif: nightclouds },
+  },
+  48: {
+    day: {
+      description: "Depositing rime fog",
+      icon: "bi-cloud-fog2",
+      gif: cloudydaygif,
+    },
+    night: {
+      description: "Depositing rime fog",
+      icon: "bi-cloud-fog2",
+      gif: nightclouds,
+    },
+  },
+  51: {
+    day: {
+      description: "Light drizzle",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Light drizzle",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+  },
+  53: {
+    day: {
+      description: "Moderate drizzle",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Moderate drizzle",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+  },
+  55: {
+    day: {
+      description: "Dense drizzle",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Dense drizzle",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+  },
+  56: {
+    day: {
+      description: "Light freezing drizzle",
+      icon: "bi-cloud-sleet",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Light freezing drizzle",
+      icon: "bi-cloud-sleet",
+      gif: rain1gif,
+    },
+  },
+  57: {
+    day: {
+      description: "Dense freezing drizzle",
+      icon: "bi-cloud-sleet",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Dense freezing drizzle",
+      icon: "bi-cloud-sleet",
+      gif: rain1gif,
+    },
+  },
+  61: {
+    day: { description: "Slight rain", icon: "bi-cloud-rain", gif: rain1gif },
+    night: { description: "Slight rain", icon: "bi-cloud-rain", gif: rain1gif },
+  },
+  63: {
+    day: {
+      description: "Moderate rain",
+      icon: "bi-cloud-rain-fill",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Moderate rain",
+      icon: "bi-cloud-rain-fill",
+      gif: rain1gif,
+    },
+  },
+  65: {
+    day: {
+      description: "Heavy rain",
+      icon: "bi-cloud-rain-heavy",
+      gif: stormgif,
+    },
+    night: {
+      description: "Heavy rain",
+      icon: "bi-cloud-rain-heavy",
+      gif: stormgif,
+    },
+  },
+  66: {
+    day: {
+      description: "Light freezing rain",
+      icon: "bi-cloud-sleet",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Light freezing rain",
+      icon: "bi-cloud-sleet",
+      gif: rain1gif,
+    },
+  },
+  67: {
+    day: {
+      description: "Heavy freezing rain",
+      icon: "bi-cloud-sleet-fill",
+      gif: stormgif,
+    },
+    night: {
+      description: "Heavy freezing rain",
+      icon: "bi-cloud-sleet-fill",
+      gif: stormgif,
+    },
+  },
+  71: {
+    day: {
+      description: "Slight snow fall",
+      icon: "bi-cloud-snow",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Slight snow fall",
+      icon: "bi-cloud-snow",
+      gif: rain1gif,
+    },
+  },
+  73: {
+    day: {
+      description: "Moderate snow fall",
+      icon: "bi-cloud-snow-fill",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Moderate snow fall",
+      icon: "bi-cloud-snow-fill",
+      gif: rain1gif,
+    },
+  },
+  75: {
+    day: {
+      description: "Heavy snow fall",
+      icon: "bi-cloud-snow-heavy",
+      gif: stormgif,
+    },
+    night: {
+      description: "Heavy snow fall",
+      icon: "bi-cloud-snow-heavy",
+      gif: stormgif,
+    },
+  },
+  77: {
+    day: { description: "Snow grains", icon: "bi-snow", gif: rain1gif },
+    night: { description: "Snow grains", icon: "bi-snow", gif: rain1gif },
+  },
+  80: {
+    day: {
+      description: "Slight rain showers",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Slight rain showers",
+      icon: "bi-cloud-drizzle",
+      gif: rain1gif,
+    },
+  },
+  81: {
+    day: {
+      description: "Moderate rain showers",
+      icon: "bi-cloud-rain",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Moderate rain showers",
+      icon: "bi-cloud-rain",
+      gif: rain1gif,
+    },
+  },
+  82: {
+    day: {
+      description: "Violent rain showers",
+      icon: "bi-cloud-rain-heavy",
+      gif: stormgif,
+    },
+    night: {
+      description: "Violent rain showers",
+      icon: "bi-cloud-rain-heavy",
+      gif: stormgif,
+    },
+  },
+  85: {
+    day: {
+      description: "Slight snow showers",
+      icon: "bi-cloud-snow",
+      gif: rain1gif,
+    },
+    night: {
+      description: "Slight snow showers",
+      icon: "bi-cloud-snow",
+      gif: rain1gif,
+    },
+  },
+  86: {
+    day: {
+      description: "Heavy snow showers",
+      icon: "bi-cloud-snow-heavy",
+      gif: stormgif,
+    },
+    night: {
+      description: "Heavy snow showers",
+      icon: "bi-cloud-snow-heavy",
+      gif: stormgif,
+    },
+  },
+  95: {
+    day: {
+      description: "Thunderstorm",
+      icon: "bi-cloud-lightning",
+      gif: stormgif,
+    },
+    night: {
+      description: "Thunderstorm",
+      icon: "bi-cloud-lightning",
+      gif: stormgif,
+    },
+  },
+  96: {
+    day: {
+      description: "Thunderstorm with slight hail",
+      icon: "bi-cloud-lightning-rain",
+      gif: stormgif,
+    },
+    night: {
+      description: "Thunderstorm with slight hail",
+      icon: "bi-cloud-lightning-rain",
+      gif: stormgif,
+    },
+  },
+  99: {
+    day: {
+      description: "Thunderstorm with heavy hail",
+      icon: "bi-cloud-lightning-rain-fill",
+      gif: stormgif,
+    },
+    night: {
+      description: "Thunderstorm with heavy hail",
+      icon: "bi-cloud-lightning-rain-fill",
+      gif: stormgif,
+    },
+  },
 };
+
+// Array of background images for cards
+const backgroundImages = [
+  image1,
+  image2,
+  image3,
+  image4,
+  image5,
+  image6,
+  image7,
+  image8,
+  image9,
+  image10,
+  image11,
+  image12,
+  image13,
+];
+
+// Storage keys
+const STORAGE_KEYS = {
+  WEATHER_DATA: "agriweather_data",
+  TIMESTAMP: "agriweather_timestamp",
+};
+
+// Cache duration - 30 minutes
+const CACHE_DURATION = 30 * 60 * 1000;
 
 export default function WeatherPage() {
   // State management
@@ -75,6 +425,7 @@ export default function WeatherPage() {
     defaultWmoDescriptions
   );
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [graphDataLoaded, setGraphDataLoaded] = useState(false);
 
   // Refs for graph containers
   const c2Ref = useRef(null);
@@ -84,16 +435,79 @@ export default function WeatherPage() {
   const synthRef = useRef(window.speechSynthesis);
   const utterRef = useRef(null);
 
+  // Load data from localStorage
+  const loadCachedData = useCallback(() => {
+    try {
+      const cachedData = localStorage.getItem(STORAGE_KEYS.WEATHER_DATA);
+      const cachedTimestamp = localStorage.getItem(STORAGE_KEYS.TIMESTAMP);
+
+      if (cachedData && cachedTimestamp) {
+        const timestamp = parseInt(cachedTimestamp);
+        const now = Date.now();
+
+        if (now - timestamp < CACHE_DURATION) {
+          const data = JSON.parse(cachedData);
+          setCurrent(data.current);
+          setHourly(data.hourly);
+          setDaily(data.daily);
+          setSeasonal(data.seasonal);
+          setCityMeta(data.cityMeta);
+          setGraphDataLoaded(true);
+          return true;
+        } else {
+          // Clear expired cache
+          localStorage.removeItem(STORAGE_KEYS.WEATHER_DATA);
+          localStorage.removeItem(STORAGE_KEYS.TIMESTAMP);
+        }
+      }
+    } catch (error) {
+      console.warn("Error loading cached data:", error);
+    }
+    return false;
+  }, []);
+
+  // Save data to localStorage
+  const saveDataToCache = useCallback((data) => {
+    try {
+      const cacheData = {
+        current: data.current,
+        hourly: data.hourly,
+        daily: data.daily,
+        seasonal: data.seasonal,
+        cityMeta: data.cityMeta,
+        timestamp: Date.now(),
+      };
+      localStorage.setItem(
+        STORAGE_KEYS.WEATHER_DATA,
+        JSON.stringify(cacheData)
+      );
+      localStorage.setItem(STORAGE_KEYS.TIMESTAMP, Date.now().toString());
+    } catch (error) {
+      console.warn("Error saving data to cache:", error);
+    }
+  }, []);
+
   // Helper to run scripts after injecting HTML from backend
   const runScripts = useCallback((container) => {
+    if (!container) return;
+
     const scripts = Array.from(container.querySelectorAll("script"));
-    scripts.forEach((s) => {
+    scripts.forEach((oldScript, i) => {
       try {
         const newScript = document.createElement("script");
-        if (s.src) newScript.src = s.src;
-        else newScript.textContent = s.textContent;
-        document.body.appendChild(newScript);
-        document.body.removeChild(newScript);
+        // Copy script attributes
+        Array.from(oldScript.attributes).forEach((attr) =>
+          newScript.setAttribute(attr.name, attr.value)
+        );
+        if (oldScript.src) {
+          // Load external scripts independently
+          newScript.src = oldScript.src;
+        } else {
+          // Wrap inline scripts in an IIFE to isolate scope
+          newScript.textContent = `(function(){\n${oldScript.textContent}\n})();`;
+        }
+        // Append inside the same container instead of document.body
+        container.appendChild(newScript);
       } catch (err) {
         console.warn("Error running injected script:", err);
       }
@@ -101,19 +515,70 @@ export default function WeatherPage() {
   }, []);
 
   // TTS Functions
+  //  Voice selection function (handles Hindi + English robustly)
+  const getVoiceByLang = useCallback((lang) => {
+    const voices = window.speechSynthesis.getVoices();
+    if (!voices || voices.length === 0) return null;
+
+    // Prioritize Hindi voices (Microsoft, Google, native)
+    if (lang === "hi-IN") {
+      const preferredHindiVoices = voices.filter(
+        (v) =>
+          v.lang.toLowerCase().includes("hi") ||
+          v.name.toLowerCase().includes("swara") ||
+          v.name.toLowerCase().includes("hindi") ||
+          v.name.toLowerCase().includes("female") ||
+          v.name.toLowerCase().includes("google हिन्दी")
+      );
+
+      if (preferredHindiVoices.length > 0) {
+        return preferredHindiVoices[0];
+      }
+    }
+
+    // Fallback to English voice
+    const englishVoice =
+      voices.find((v) => v.lang.startsWith("en")) || voices[0];
+    return englishVoice;
+  }, []);
+
+  // Main Speak function (robust & loud TTS for Hindi + English)
   const speak = useCallback(
-    (text, lang = ttsLang, voiceIdx = voiceIndex) => {
+    (text) => {
       if (!text) return;
-      stopSpeech();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = lang;
-      if (voices.length > 0) u.voice = voices[voiceIdx];
-      utterRef.current = u;
-      u.onend = () => setIsSpeaking(false);
-      u.onstart = () => setIsSpeaking(true);
-      synthRef.current.speak(u);
+      try {
+        window.speechSynthesis.cancel(); // stop any ongoing speech
+      } catch (e) {
+        console.warn("Speech cancel failed:", e);
+      }
+
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = ttsLang;
+      utter.voice = getVoiceByLang(ttsLang);
+      utter.rate = 0.95; // slightly slower for clarity
+      utter.pitch = 1; // natural tone
+      utter.volume = 1; // loud and clear
+
+      utter.onstart = () => setIsSpeaking(true);
+      utter.onend = () => setIsSpeaking(false);
+      utter.onerror = (err) => {
+        console.error("Speech error:", err);
+        setIsSpeaking(false);
+      };
+
+      // If voices are not yet loaded, wait and retry
+      if (!utter.voice) {
+        const handleVoicesChanged = () => {
+          utter.voice = getVoiceByLang(ttsLang);
+          window.speechSynthesis.speak(utter);
+          window.speechSynthesis.onvoiceschanged = null;
+        };
+        window.speechSynthesis.onvoiceschanged = handleVoicesChanged;
+      } else {
+        window.speechSynthesis.speak(utter);
+      }
     },
-    [ttsLang, voiceIndex, voices]
+    [ttsLang, getVoiceByLang]
   );
 
   const stopSpeech = useCallback(() => {
@@ -146,6 +611,14 @@ export default function WeatherPage() {
           WeatherService.fetchSeasonalWeather(latitude, longitude),
         ]);
 
+        const weatherData = {
+          current: cur,
+          hourly: h,
+          daily: d,
+          seasonal: s,
+          cityMeta: nameHint,
+        };
+
         setCurrent(cur);
         setHourly(h);
         setDaily(d);
@@ -168,13 +641,25 @@ export default function WeatherPage() {
         }
         setCityMeta(determinedCityMeta || "");
 
+        // Save to cache
+        saveDataToCache({
+          current: cur,
+          hourly: h,
+          daily: d,
+          seasonal: s,
+          cityMeta: determinedCityMeta,
+        });
+
         // Generate graphs
         if (h && d) {
           const prepared = prepareGraphPayload(h, d);
           try {
             const backendResponse =
               await WeatherService.generateHourlyGraphsBackend(prepared);
-            injectBackendGraphs(backendResponse);
+            setTimeout(() => {
+              injectBackendGraphs(backendResponse);
+              setGraphDataLoaded(true);
+            }, 100);
           } catch (err) {
             console.warn("Backend hourly graph generation failed:", err);
           }
@@ -194,8 +679,11 @@ export default function WeatherPage() {
                 seasonalDataFormatted
               );
             if (seasonalBackendResponse?.graph_html && seasonRef.current) {
-              seasonRef.current.innerHTML = seasonalBackendResponse.graph_html;
-              runScripts(seasonRef.current);
+              setTimeout(() => {
+                seasonRef.current.innerHTML =
+                  seasonalBackendResponse.graph_html;
+                runScripts(seasonRef.current);
+              }, 100);
             }
           } catch (err) {
             console.warn("Backend seasonal graph generation failed:", err);
@@ -207,7 +695,7 @@ export default function WeatherPage() {
         setLoading(false);
       }
     },
-    [runScripts]
+    [runScripts, saveDataToCache]
   );
 
   const handleSearch = useCallback(
@@ -377,48 +865,48 @@ export default function WeatherPage() {
   const injectBackendGraphs = useCallback(
     (payload) => {
       try {
-        // Clear previous content
-        if (c2Ref.current) c2Ref.current.innerHTML = "";
-        if (c3Ref.current) c3Ref.current.innerHTML = "";
-        if (c4Ref.current) c4Ref.current.innerHTML = "";
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+          if (payload?.graph_html && c2Ref.current) {
+            c2Ref.current.innerHTML = payload.graph_html;
+            runScripts(c2Ref.current);
+          }
 
-        // Graph 1
-        if (payload?.graph_html && c2Ref.current) {
-          const div = document.createElement("div");
-          div.innerHTML = payload.graph_html;
-          c2Ref.current.appendChild(div);
-          runScripts(div);
-        }
+          if (payload?.graph_html2 && c3Ref.current) {
+            c3Ref.current.innerHTML = payload.graph_html2;
+            runScripts(c3Ref.current);
+          }
 
-        // Graph 2 and Pie Chart
-        if (payload?.graph_html2 && c3Ref.current) {
-          const div = document.createElement("div");
-          div.innerHTML = payload.graph_html2;
-          c3Ref.current.appendChild(div);
-          runScripts(div);
-        }
+          if (payload?.pie_chart_html && c3Ref.current) {
+            const existingPie = c3Ref.current.querySelector(
+              ".pie-chart-container"
+            );
+            if (!existingPie) {
+              const pie = document.createElement("div");
+              pie.className = "pie-chart-container";
+              pie.innerHTML = payload.pie_chart_html;
+              c3Ref.current.appendChild(pie);
+              runScripts(pie);
+            }
+          }
 
-        if (payload?.pie_chart_html && c3Ref.current) {
-          const pie = document.createElement("div");
-          pie.innerHTML = payload.pie_chart_html;
-          c3Ref.current.appendChild(pie);
-          runScripts(pie);
-        }
+          if (payload?.graph_html3 && c4Ref.current) {
+            c4Ref.current.innerHTML = payload.graph_html3;
+            runScripts(c4Ref.current);
+          }
 
-        // Graph 3 & 4
-        if (payload?.graph_html3 && c4Ref.current) {
-          const div = document.createElement("div");
-          div.innerHTML = payload.graph_html3;
-          c4Ref.current.appendChild(div);
-          runScripts(div);
-        }
-
-        if (payload?.graph_html4 && c4Ref.current) {
-          const el = document.createElement("div");
-          el.innerHTML = payload.graph_html4;
-          c4Ref.current.appendChild(el);
-          runScripts(el);
-        }
+          if (payload?.graph_html4 && c4Ref.current) {
+            const existingGraph4 =
+              c4Ref.current.querySelector(".graph4-container");
+            if (!existingGraph4) {
+              const el = document.createElement("div");
+              el.className = "graph4-container";
+              el.innerHTML = payload.graph_html4;
+              c4Ref.current.appendChild(el);
+              runScripts(el);
+            }
+          }
+        }, 100);
       } catch (err) {
         console.warn("Error injecting backend graphs:", err);
       }
@@ -439,15 +927,21 @@ export default function WeatherPage() {
       }
     }
 
-    const sliceTimes = times.slice(startIndex, startIndex + 24);
+    const sliceTimes = times.slice(
+      startIndex,
+      Math.min(startIndex + 48, times.length)
+    );
     const labels = sliceTimes.map((t) => formatTimeLabel(t));
     const temps =
-      hourly.hourly?.temperature_2m?.slice(startIndex, startIndex + 24) || [];
+      hourly.hourly?.temperature_2m?.slice(
+        startIndex,
+        startIndex + sliceTimes.length
+      ) || [];
     const precip = (
       hourly.hourly?.precipitation ||
       hourly.hourly?.precipitation_probability ||
       []
-    ).slice(startIndex, startIndex + 24);
+    ).slice(startIndex, startIndex + sliceTimes.length);
 
     return {
       labels,
@@ -459,62 +953,56 @@ export default function WeatherPage() {
           backgroundColor: "rgba(31, 142, 241, 0.12)",
           yAxisID: "y",
           tension: 0.25,
-          pointRadius: 2,
+          pointRadius: 3,
         },
         {
           label: "Precipitation (mm)",
           data: precip,
           type: "bar",
-          backgroundColor: "rgba(16, 185, 129, 0.6)",
+          backgroundColor: "rgba(16, 185, 129, 0.7)",
           yAxisID: "y1",
         },
       ],
     };
   }, [hourly, formatTimeLabel]);
 
-  const buildCurrentReport = useCallback(() => {
-    if (!current) return "No weather data available for this location.";
+  // Enhanced TTS Reports with Farmer-Friendly Language
+  const buildCurrentReport = useCallback(
+    (long = false) => {
+      if (!current) return "No weather data available.";
 
-    const name = cityMeta || current.name || "this location";
-    const description = current.weather?.[0]?.description || "clear skies";
-    const temp = Math.round(current.main?.temp ?? 0);
-    const humidity = current.main?.humidity ?? "unknown";
-    const wind = current.wind
-      ? `${current.wind.speed} meters per second`
-      : "calm";
-    const rain1hr = current.rain?.["1h"]
-      ? `${current.rain["1h"]} mm rain in last 1 hour`
-      : "no rain in last 1 hour";
-    const cloudiness = current.clouds?.all ?? "unknown";
+      const name = cityMeta || current.name || "your area";
+      const temp = Math.round(current.main?.temp ?? 0);
+      const humidity = current.main?.humidity ?? "unknown";
+      const wind = current.wind?.speed ?? "unknown";
+      const desc = current.weather?.[0]?.description || "clear skies";
 
-    const baseReport = `Weather at ${name}. ${description}. Temperature ${temp} degrees Celsius. Humidity ${humidity} percent. Wind ${wind}.`;
-
-    if (hourly && hourly.hourly?.time?.length > 0) {
-      const currentHourIndex = new Date().getHours();
-      const hTemp = Math.round(
-        hourly.hourly?.temperature_2m?.[currentHourIndex] ?? 0
-      );
-      const hPrecip = hourly.hourly?.precipitation?.[currentHourIndex] ?? 0;
-      const hWindSpeed = hourly.hourly?.wind_speed_10m?.[currentHourIndex] ?? 0;
-      const hHumidity =
-        hourly.hourly?.relative_humidity_2m?.[currentHourIndex] ?? 0;
-      const hSoilMoisture = (
-        hourly.hourly?.soil_moisture_0_to_1cm?.[currentHourIndex] * 100 ?? 0
-      ).toFixed(1);
-      const hSoilTemp =
-        hourly.hourly?.soil_temperature_18cm?.[currentHourIndex] ?? 0;
-      const hVisibility = hourly.hourly?.visibility?.[currentHourIndex] ?? 0;
-      const hCloudCover = hourly.hourly?.cloud_cover?.[currentHourIndex] ?? 0;
-
-      return `Hello Farmer Friend! Here is today's weather update for ${name}: The current temperature is ${hTemp}°C. Humidity is ${hHumidity} percent. Wind speed is ${hWindSpeed} meters per second. Cloud cover is ${hCloudCover} percent. Rain forecast for the current hour: ${hPrecip} millimeters. Soil moisture is ${hSoilMoisture} percent. Soil temperature at 18 cm depth is ${hSoilTemp}°C. Visibility is ${hVisibility} meters.`;
-    }
-
-    return baseReport;
-  }, [current, hourly, cityMeta]);
+      if (ttsLang === "hi-IN") {
+        return `नमस्कार किसान मित्र! आपका स्वागत है एग्रीकनेक्ट मौसम सेवा में।
+${name} के लिए मौसम की जानकारी:
+वर्तमान तापमान ${temp} डिग्री सेल्सियस है।
+आर्द्रता लगभग ${humidity} प्रतिशत है और हवा की गति ${wind} मीटर प्रति सेकंड है।
+आज का मौसम ${desc} रहने की संभावना है।
+कृपया खेत में काम करते समय सावधानी रखें, सिंचाई या छिड़काव की योजना सुबह या शाम के समय बनाएं।
+एग्रीकनेक्ट आपकी खेती में हर मौसम में मददगार रहेगा।`;
+      } else {
+        return `Hello dear farmer! Welcome to AgriConnect Weather Service.
+Here’s your weather update for ${name}.
+The current temperature is around ${temp}°C with humidity near ${humidity}% and wind speed about ${wind} m/s.
+Today’s weather is expected to be ${desc}.
+Stay hydrated and plan your field activities wisely — early mornings or evenings are best for spraying and irrigation.
+AgriConnect stands with you in every season!`;
+      }
+    },
+    [current, cityMeta, ttsLang]
+  );
 
   const buildOffsetReport = useCallback(
     (hours = 5) => {
-      if (!hourly) return "Hourly forecast not available.";
+      if (!hourly)
+        return ttsLang === "hi-IN"
+          ? "घंटे के हिसाब से पूर्वानुमान उपलब्ध नहीं है।"
+          : "Hourly forecast not available.";
 
       const now = new Date();
       const targetTime = new Date(now.getTime() + hours * 3600 * 1000);
@@ -537,12 +1025,6 @@ export default function WeatherPage() {
       const precip = hourly.hourly?.precipitation?.[bestIdx] ?? 0;
       const wind = hourly.hourly?.wind_speed_10m?.[bestIdx] ?? 0;
       const cloud = hourly.hourly?.cloud_cover?.[bestIdx] ?? 0;
-      const soilMoisture = (
-        hourly.hourly?.soil_moisture_0_to_1cm?.[bestIdx] * 100 ?? 0
-      ).toFixed(1);
-      const soilTemp = hourly.hourly?.soil_temperature_18cm?.[bestIdx] ?? 0;
-      const humidity = hourly.hourly?.relative_humidity_2m?.[bestIdx] ?? 0;
-      const visibility = hourly.hourly?.visibility?.[bestIdx] ?? 0;
 
       const weatherCode = hourly.hourly?.weather_code?.[bestIdx];
       const isDaytime =
@@ -552,11 +1034,12 @@ export default function WeatherPage() {
           ?.description || "unknown";
 
       const timeLabel = formatTimeLabel(t);
-      const dateLabel = formatDateLabel(t);
 
       if (hours === 24) {
         if (!daily || !daily.daily?.time || daily.daily.time.length < 2) {
-          return "Daily forecast for tomorrow not available.";
+          return ttsLang === "hi-IN"
+            ? "कल के लिए दैनिक पूर्वानुमान उपलब्ध नहीं है।"
+            : "Daily forecast for tomorrow not available.";
         }
 
         const tomorrowIndex = 1;
@@ -573,14 +1056,20 @@ export default function WeatherPage() {
         const tomorrowDescription =
           wmoDescriptions?.[tomorrowWeatherCode]?.day?.description || "unknown";
 
-        return `Hello Farmer Friend! Here is the weather forecast for ${formatDateLabel(
-          tomorrowDate
-        )}: Maximum temperature ${tomorrowMaxTemp}°C, minimum temperature ${tomorrowMinTemp}°C. Total rainfall ${tomorrowRainSum} millimeters. Maximum wind speed ${tomorrowWindMax} meters per second. Weather condition: ${tomorrowDescription}. Please plan your farming activities accordingly. Thank you!`;
+        if (ttsLang === "hi-IN") {
+          return `कल के मौसम का पूर्वानुमान: अधिकतम तापमान ${tomorrowMaxTemp} डिग्री सेल्सियस, न्यूनतम तापमान ${tomorrowMinTemp} डिग्री सेल्सियस रहेगा। कुल वर्षा ${tomorrowRainSum} मिलीमीटर होने की संभावना है। अधिकतम हवा की गति ${tomorrowWindMax} मीटर प्रति सेकंड रहेगी। मौसम की स्थिति: ${tomorrowDescription}। कृपया अपनी खेती की गतिविधियों की योजना इसी के अनुसार बनाएं। धन्यवाद!`;
+        } else {
+          return `Tomorrow's weather forecast: Maximum temperature ${tomorrowMaxTemp}°C, minimum temperature ${tomorrowMinTemp}°C. Total rainfall ${tomorrowRainSum} millimeters expected. Maximum wind speed ${tomorrowWindMax} meters per second. Weather condition: ${tomorrowDescription}. Please plan your farming activities accordingly. Thank you!`;
+        }
       } else {
-        return `At ${timeLabel} on ${dateLabel}, expected temperature ${temp} degrees Celsius. Precipitation ${precip} millimeters. Wind speed ${wind} meters per second. Cloud cover ${cloud} percent. Soil moisture ${soilMoisture} percent. Soil temperature ${soilTemp}°C. Humidity ${humidity} percent. Visibility ${visibility} meters. Weather condition: ${description}.`;
+        if (ttsLang === "hi-IN") {
+          return `अगले ${hours} घंटे में मौसम: समय ${timeLabel} पर तापमान ${temp} डिग्री सेल्सियस रहने की संभावना है। वर्षा ${precip} मिलीमीटर, हवा की गति ${wind} मीटर प्रति सेकंड, और बादल ${cloud} प्रतिशत छाए रहेंगे। मौसम की स्थिति: ${description}।`;
+        } else {
+          return `In the next ${hours} hours at ${timeLabel}, expected temperature ${temp} degrees Celsius. Precipitation ${precip} millimeters. Wind speed ${wind} meters per second. Cloud cover ${cloud} percent. Weather condition: ${description}.`;
+        }
       }
     },
-    [hourly, daily, formatTimeLabel, formatDateLabel, wmoDescriptions]
+    [hourly, daily, formatTimeLabel, wmoDescriptions, ttsLang]
   );
 
   // Component Effects
@@ -599,605 +1088,832 @@ export default function WeatherPage() {
       })
       .catch((err) => console.error("Failed to load WMO descriptions:", err));
 
+    // Load cached data on initial render
+    if (loadCachedData()) {
+      setGraphDataLoaded(true);
+    }
+
     return () => {
       window.speechSynthesis.onvoiceschanged = null;
       stopSpeech();
     };
-  }, [stopSpeech]);
+  }, [stopSpeech, loadCachedData]);
 
-  // Initial load effect for user's location
+  // Initial data load effect
   useEffect(() => {
-    useMyLocation();
-  }, [useMyLocation]);
+    if (!current && !hourly && !daily && !loading) {
+      useMyLocation();
+    }
+  }, [current, hourly, daily, loading, useMyLocation]);
 
-  // Utility for getting weather icon and styling
-  const getWeatherStyle = useCallback(
-    (weatherCode, isDaytime, temperature, precipitation, windSpeed) => {
-      const weatherDetail = wmoDescriptions[weatherCode];
-      let description = "Unknown";
-      let icon = "bi-question-circle";
-      let bgColor = "bg-blue-200";
-      let textColor = "text-slate-900";
+  // Chart options
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: "index", intersect: false },
+    plugins: {
+      legend: { position: "top" },
+      tooltip: { mode: "index", intersect: false },
+    },
+    scales: {
+      x: { grid: { display: false } },
+      y: {
+        type: "linear",
+        display: true,
+        position: "left",
+        title: { display: true, text: "Temperature (°C)" },
+      },
+      y1: {
+        type: "linear",
+        display: true,
+        position: "right",
+        title: { display: true, text: "Precipitation (mm)" },
+        grid: { drawOnChartArea: false },
+      },
+    },
+  };
 
-      if (weatherDetail) {
-        const dailyOrNightly = isDaytime
-          ? weatherDetail.day
-          : weatherDetail.night;
-        description = dailyOrNightly.description;
-        icon = dailyOrNightly.icon;
-
-        if (precipitation > 0.5) {
-          bgColor = "bg-blue-600";
-          textColor = "text-white";
-        } else if (windSpeed > 10) {
-          bgColor = "bg-slate-500";
-          textColor = "text-white";
-        } else if (
-          description.includes("clear") ||
-          description.includes("sunny")
-        ) {
-          bgColor = isDaytime ? "bg-yellow-200" : "bg-indigo-700";
-          textColor = isDaytime ? "text-slate-900" : "text-white";
-        } else if (
-          description.includes("cloud") ||
-          description.includes("overcast")
-        ) {
-          bgColor = isDaytime ? "bg-slate-300" : "bg-slate-600";
-          textColor = "text-slate-900";
-        } else if (
-          description.includes("drizzle") ||
-          description.includes("rain")
-        ) {
-          bgColor = isDaytime ? "bg-blue-400" : "bg-blue-700";
-          textColor = "text-white";
-        } else if (
-          description.includes("snow") ||
-          description.includes("sleet")
-        ) {
-          bgColor = "bg-sky-100";
-          textColor = "text-slate-900";
-        } else if (description.includes("thunderstorm")) {
-          bgColor = "bg-purple-700";
-          textColor = "text-white";
-        } else if (description.includes("fog")) {
-          bgColor = "bg-gray-400";
-          textColor = "text-slate-900";
-        }
-      }
-
-      return { description, icon, bgColor, textColor };
+  // Get weather GIF based on conditions
+  const getWeatherGif = useCallback(
+    (weatherCode, isDaytime = true) => {
+      const weatherInfo =
+        wmoDescriptions[weatherCode]?.[isDaytime ? "day" : "night"];
+      return weatherInfo?.gif || clearsun;
     },
     [wmoDescriptions]
   );
 
-  // UI Components
-  const SmallInfoGrid = () => {
-    const items = [
-      {
-        title: "Weather Info",
-        subtitle: "Temp, humidity, and more",
-        icon: "bi-cloud-sun",
-        bg: "bg-blue-100",
-      },
-      {
-        title: "Irrigation",
-        subtitle: "Optimal water usage",
-        icon: "bi-droplet-fill",
-        bg: "bg-green-100",
-      },
-      {
-        title: "Temperature",
-        subtitle: "Daily and hourly updates",
-        icon: "bi-thermometer-sun",
-        bg: "bg-indigo-100",
-      },
-      {
-        title: "Location",
-        subtitle: "GPS-based weather",
-        icon: "bi-geo-alt-fill",
-        bg: "bg-amber-100",
-      },
-      {
-        title: "Crop Info",
-        subtitle: "Recommendations for crops",
-        icon: "bi-tree-fill",
-        bg: "bg-emerald-100",
-      },
-      {
-        title: "Wind",
-        subtitle: "Monitor wind patterns",
-        icon: "bi-wind",
-        bg: "bg-lime-100",
-      },
-      {
-        title: "Rainfall",
-        subtitle: "Rain predictions",
-        icon: "bi-cloud-rain",
-        bg: "bg-sky-100",
-      },
-      {
-        title: "Night",
-        subtitle: "Monitor night weather",
-        icon: "bi-moon-stars",
-        bg: "bg-slate-100",
-      },
-      {
-        title: "Soil Temp",
-        subtitle: "Check soil temperature",
-        icon: "bi-thermometer-half",
-        bg: "bg-amber-100",
-      },
-      {
-        title: "Analytics",
-        subtitle: "Detailed insights",
-        icon: "bi-bar-chart-fill",
-        bg: "bg-cyan-100",
-      },
+  // Get weather icon based on conditions
+  const getWeatherIcon = useCallback(
+    (weatherCode, isDaytime = true) => {
+      const weatherInfo =
+        wmoDescriptions[weatherCode]?.[isDaytime ? "day" : "night"];
+      return weatherInfo?.icon || "bi-brightness-high";
+    },
+    [wmoDescriptions]
+  );
+
+  // Get background color based on weather
+  const getWeatherColor = useCallback((weatherCode, isDaytime = true) => {
+    if (weatherCode >= 0 && weatherCode <= 3) {
+      return isDaytime
+        ? "linear-gradient(135deg, #87CEEB, #1E90FF)"
+        : "linear-gradient(135deg, #2C3E50, #34495E)";
+    } else if (weatherCode >= 45 && weatherCode <= 48) {
+      return "linear-gradient(135deg, #BDC3C7, #7F8C8D)";
+    } else if (weatherCode >= 51 && weatherCode <= 67) {
+      return "linear-gradient(135deg, #3498DB, #2980B9)";
+    } else if (weatherCode >= 71 && weatherCode <= 77) {
+      return "linear-gradient(135deg, #ECF0F1, #BDC3C7)";
+    } else if (weatherCode >= 80 && weatherCode <= 86) {
+      return "linear-gradient(135deg, #5DADE2, #3498DB)";
+    } else if (weatherCode >= 95 && weatherCode <= 99) {
+      return "linear-gradient(135deg, #2C3E50, #E74C3C)";
+    } else {
+      return "linear-gradient(135deg, #87CEEB, #1E90FF)";
+    }
+  }, []);
+
+  // Render 12-hour forecast cards
+  // 🌤 Enhanced 12-Hour Forecast Cards (Farmer-Friendly, Colorful, Responsive)
+  const render12HourForecast = useCallback(() => {
+    if (!hourly || !hourly.hourly) return null;
+
+    const now = new Date();
+    const times = hourly.hourly.time || [];
+    let startIndex = 0;
+    for (let i = 0; i < times.length; i++) {
+      if (new Date(times[i]) >= now) {
+        startIndex = i;
+        break;
+      }
+    }
+
+    const forecastHours = times.slice(
+      startIndex,
+      Math.min(startIndex + 12, times.length)
+    );
+
+    // 🌾 Alternate background images for variety
+    const bgImages = [
+      cardcontainerimage1,
+      cardcontainerimage2,
+      cardcontainerimage3,
+      cardcontainerimage4,
+      image1,
+      image2,
+      image3,
+      image4,
+      image5,
+      image6,
+      image7,
+      image8,
+      image9,
+      image10,
+      image11,
+      image12,
     ];
 
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-        {items.map((it, idx) => (
-          <motion.div
-            key={idx}
-            className={`${it.bg} rounded-xl shadow-md p-4 flex flex-col items-center justify-center transition-all duration-300`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <i className={`bi ${it.icon} text-3xl mb-2 text-blue-600`} />
-            <h6 className="font-semibold text-sm text-center">{it.title}</h6>
-            <p className="text-xs text-center text-gray-600">{it.subtitle}</p>
-          </motion.div>
-        ))}
-      </div>
-    );
-  };
-
-  const HourlyCarousel = () => {
-    if (!hourly || !hourly.hourly?.time || hourly.hourly.time.length === 0) {
-      return (
-        <div className="text-center py-8 text-gray-500">
-          <i className="bi bi-cloud-slash text-4xl mb-2" />
-          <p>Hourly data not available</p>
-        </div>
-      );
-    }
-
-    const now = new Date();
-    const currentHour = now.getHours();
-    const cards = [];
-
-    for (let i = 0; i < 24; i++) {
-      const dataIndex = (currentHour + i) % hourly.hourly.time.length;
-      const t = hourly.hourly.time[dataIndex];
-      const date = new Date(t);
-      const isDaytime = date.getHours() >= 6 && date.getHours() < 18;
-
-      const weatherCode = hourly.hourly.weather_code[dataIndex];
-      const temp = Math.round(hourly.hourly.temperature_2m[dataIndex] ?? 0);
-      const precip = hourly.hourly.precipitation?.[dataIndex] ?? 0;
-      const windSpeed = hourly.hourly.wind_speed_10m[dataIndex] ?? 0;
-      const windDir = hourly.hourly.wind_direction_10m?.[dataIndex] ?? 0;
-      const cloudCover = hourly.hourly.cloud_cover?.[dataIndex] ?? 0;
-      const humidity = hourly.hourly.relative_humidity_2m?.[dataIndex] ?? 0;
-
-      const { description, icon, bgColor, textColor } = getWeatherStyle(
-        weatherCode,
-        isDaytime,
-        temp,
-        precip,
-        windSpeed
-      );
-
-      cards.push(
-        <motion.div
-          key={`${t}-${dataIndex}`}
-          className={`flex-shrink-0 w-48 p-4 rounded-xl shadow-md ${bgColor} ${textColor} mx-2`}
-          whileHover={{ scale: 1.05 }}
-        >
-          <div className="text-center">
-            <h6 className="font-semibold">{formatTimeLabel(t)}</h6>
-            <p className="text-sm">{formatDateLabel(t)}</p>
-          </div>
-          <div className="flex flex-col items-center my-3">
-            <i className={`bi ${icon} text-4xl mb-2`} />
-            <p className="text-2xl font-bold">{temp}°C</p>
-          </div>
-          <div className="text-xs space-y-1">
-            <p className="font-medium">{description}</p>
-            <p>Rain: {precip} mm</p>
-            <p>
-              Wind: {windSpeed} m/s (
-              {WeatherService.getCardinalDirection(windDir)})
-            </p>
-            <p>Clouds: {cloudCover}%</p>
-            <p>Humidity: {humidity}%</p>
-          </div>
-        </motion.div>
-      );
-    }
-
-    return (
-      <div className="overflow-x-auto py-4 scrollbar-hide">
-        <div className="flex space-x-4 px-4">{cards}</div>
-      </div>
-    );
-  };
-
-  const DailyCards = () => {
-    if (!daily || !daily.daily?.time || daily.daily.time.length === 0) {
-      return (
-        <div className="text-center py-8 text-gray-500">
-          <i className="bi bi-calendar-x text-4xl mb-2" />
-          <p>Daily forecast not available</p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {daily.daily.time.slice(0, 7).map((date, idx) => {
-          const isToday = idx === 0;
-          const weatherCode = daily.daily.weather_code[idx];
-          const maxTemp = Math.round(daily.daily.temperature_2m_max[idx] ?? 0);
-          const minTemp = Math.round(daily.daily.temperature_2m_min[idx] ?? 0);
-          const precip = daily.daily.precipitation_sum?.[idx] ?? 0;
-          const windSpeed = daily.daily.wind_speed_10m_max?.[idx] ?? 0;
-          const sunrise = daily.daily.sunrise?.[idx];
-          const sunset = daily.daily.sunset?.[idx];
-
-          const { description, icon, bgColor, textColor } = getWeatherStyle(
-            weatherCode,
-            true,
-            maxTemp,
-            precip,
-            windSpeed
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6 mb-10">
+        {forecastHours.map((time, index) => {
+          const actualIndex = startIndex + index;
+          const temp = Math.round(
+            hourly.hourly.temperature_2m?.[actualIndex] || 0
           );
+          const weatherCode = hourly.hourly.weather_code?.[actualIndex] || 0;
+          const precip = hourly.hourly.precipitation?.[actualIndex] || 0;
+          const windSpeed = hourly.hourly.wind_speed_10m?.[actualIndex] || 0;
+          const isDaytime =
+            new Date(time).getHours() >= 6 && new Date(time).getHours() < 18;
+          const weatherGif = getWeatherGif(weatherCode, isDaytime);
+          const weatherColor = getWeatherColor(weatherCode, isDaytime);
+          const weatherIcon = getWeatherIcon(weatherCode, isDaytime);
+          const formattedTime = formatTimeLabel(time);
+
+          const bgImg = bgImages[index % bgImages.length];
+
+          // Farmer-friendly text
+          const conditionText = wmoDescriptions?.[weatherCode]?.day?.description
+            ? wmoDescriptions[weatherCode][isDaytime ? "day" : "night"]
+                .description
+            : "Clear and calm skies";
 
           return (
             <motion.div
-              key={date}
-              className={`rounded-xl shadow-md p-4 ${bgColor} ${textColor}`}
-              whileHover={{ scale: 1.02 }}
+              key={time}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.03] transition-transform duration-300"
             >
-              <div className="flex justify-between items-center mb-2">
-                <h3 className="font-bold text-lg">
-                  {isToday ? "Today" : formatDateLabel(date)}
-                </h3>
-                <i className={`bi ${icon} text-3xl`} />
+              {/* Background with alternating GIFs */}
+              <div className="absolute inset-0">
+                <img
+                  src={bgImg}
+                  alt="Weather background"
+                  className="w-full h-full object-cover opacity-90"
+                />
+                <div
+                  className="absolute inset-0 backdrop-blur-sm"
+                  style={{
+                    background: `${weatherColor}AA`,
+                  }}
+                ></div>
               </div>
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span>High:</span>
-                  <span className="font-semibold">{maxTemp}°C</span>
+
+              {/* Foreground content */}
+              <div className="relative z-10 text-center text-white p-5 flex flex-col justify-between h-full">
+                <div>
+                  <p className="text-lg font-bold drop-shadow-md mb-2">
+                    {formattedTime}
+                  </p>
+
+                  <div className="flex flex-col items-center">
+                    <img
+                      src={weatherGif}
+                      alt="Weather"
+                      className="w-20 h-20 rounded-xl mb-2 shadow-lg"
+                    />
+                    <p className="text-4xl font-extrabold mb-1 drop-shadow-xl">
+                      🌡️ {temp}°C
+                    </p>
+                    <p className="text-md font-semibold text-white/90 capitalize">
+                      {conditionText}
+                    </p>
+                  </div>
                 </div>
-                <div className="flex justify-between">
-                  <span>Low:</span>
-                  <span className="font-semibold">{minTemp}°C</span>
+
+                {/* Weather Details */}
+                <div className="mt-4 flex flex-col items-center space-y-1 text-sm font-semibold">
+                  <p className="flex items-center gap-2">
+                    🌧️ <span>Rain: {precip} mm</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    💨 <span>Wind: {windSpeed} m/s</span>
+                  </p>
                 </div>
-                <div className="flex justify-between">
-                  <span>Precipitation:</span>
-                  <span className="font-semibold">{precip} mm</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Wind:</span>
-                  <span className="font-semibold">{windSpeed} m/s</span>
-                </div>
-                {sunrise && sunset && (
-                  <>
-                    <div className="flex justify-between">
-                      <span>Sunrise:</span>
-                      <span className="font-semibold">
-                        {formatTimeLabel(sunrise)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Sunset:</span>
-                      <span className="font-semibold">
-                        {formatTimeLabel(sunset)}
-                      </span>
-                    </div>
-                  </>
-                )}
+
+                {/* Farmer message */}
+                <p className="mt-3 text-xs italic text-yellow-200 font-medium">
+                  {isDaytime
+                    ? "सुबह का मौसम खेती के काम के लिए अच्छा है 🌞"
+                    : "रात में फसलों को ठंडी हवा का असर हो सकता है 🌙"}
+                </p>
               </div>
-              <p className="mt-2 text-sm italic">{description}</p>
             </motion.div>
           );
         })}
       </div>
     );
-  };
+  }, [
+    hourly,
+    formatTimeLabel,
+    getWeatherGif,
+    getWeatherColor,
+    getWeatherIcon,
+    wmoDescriptions,
+  ]);
 
-  const CurrentWeatherCard = () => {
-    if (!current) {
-      return (
-        <div className="text-center py-8 text-gray-500">
-          <i className="bi bi-cloud-slash text-4xl mb-2" />
-          <p>Current weather data not available</p>
-        </div>
-      );
-    }
+  // Render 7-day forecast cards
+  // 🌤 Enhanced 7-Day Forecast Cards (Farmer-Friendly, Colorful, Responsive)
+  const render7DayForecast = useCallback(() => {
+    if (!daily || !daily.daily) return null;
 
-    const weatherCode = current.weather?.[0]?.id ?? 0;
-    const isDaytime = new Date().getHours() >= 6 && new Date().getHours() < 18;
-    const temp = Math.round(current.main?.temp ?? 0);
-    const precip = current.rain?.["1h"] ?? 0;
-    const windSpeed = current.wind?.speed ?? 0;
-    const humidity = current.main?.humidity ?? 0;
-    const pressure = current.main?.pressure ?? 0;
-    const visibility = current.visibility ? current.visibility / 1000 : 0;
+    const days = daily.daily.time || [];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    const { description, icon, bgColor, textColor } = getWeatherStyle(
-      weatherCode,
-      isDaytime,
-      temp,
-      precip,
-      windSpeed
-    );
+    // 🌾 Background images for variety
+    const bgImages = [
+      cardcontainerimage1,
+      cardcontainerimage2,
+      cardcontainerimage3,
+      cardcontainerimage4,
+      image1,
+      image2,
+      image3,
+      image4,
+      image5,
+      image6,
+      image7,
+    ];
 
     return (
-      <div className={`rounded-xl shadow-lg p-6 ${bgColor} ${textColor}`}>
-        <div className="flex justify-between items-start">
-          <div>
-            <h2 className="text-2xl font-bold">
-              {cityMeta || current.name || "Current Location"}
-            </h2>
-            <p className="text-lg">{description}</p>
-            <p className="text-5xl font-bold my-4">{temp}°C</p>
-          </div>
-          <i className={`bi ${icon} text-6xl`} />
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-6 mb-10">
+        {days.slice(0, 7).map((day, index) => {
+          const maxTemp = Math.round(
+            daily.daily.temperature_2m_max?.[index] || 0
+          );
+          const minTemp = Math.round(
+            daily.daily.temperature_2m_min?.[index] || 0
+          );
+          const weatherCode = daily.daily.weather_code?.[index] || 0;
+          const precip = daily.daily.precipitation_sum?.[index] || 0;
+          const windSpeed = daily.daily.wind_speed_10m_max?.[index] || 0;
 
-        <div className="grid grid-cols-2 gap-4 mt-6">
-          <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-            <p className="flex items-center">
-              <i className="bi bi-droplet mr-2" /> Humidity: {humidity}%
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-            <p className="flex items-center">
-              <i className="bi bi-wind mr-2" /> Wind: {windSpeed} m/s
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-            <p className="flex items-center">
-              <i className="bi bi-speedometer2 mr-2" /> Pressure: {pressure} hPa
-            </p>
-          </div>
-          <div className="bg-white bg-opacity-20 p-3 rounded-lg">
-            <p className="flex items-center">
-              <i className="bi bi-eye mr-2" /> Visibility: {visibility} km
-            </p>
-          </div>
-        </div>
+          const isDaytime = true; // Daily forecast generally considered daytime
+          const weatherGif = getWeatherGif(weatherCode, isDaytime);
+          const weatherColor = getWeatherColor(weatherCode, isDaytime);
+          const weatherIcon = getWeatherIcon(weatherCode, isDaytime);
 
-        <div className="mt-6 flex justify-center space-x-4">
-          <button
-            onClick={() => speak(buildCurrentReport())}
-            className="bg-white bg-opacity-30 hover:bg-opacity-40 px-4 py-2 rounded-full flex items-center"
-          >
-            <i className="bi bi-megaphone mr-2" /> Current Report
-          </button>
-          <button
-            onClick={() => speak(buildOffsetReport(5))}
-            className="bg-white bg-opacity-30 hover:bg-opacity-40 px-4 py-2 rounded-full flex items-center"
-          >
-            <i className="bi bi-clock mr-2" /> 5-Hour Forecast
-          </button>
-          <button
-            onClick={() => speak(buildOffsetReport(24))}
-            className="bg-white bg-opacity-30 hover:bg-opacity-40 px-4 py-2 rounded-full flex items-center"
-          >
-            <i className="bi bi-calendar mr-2" /> Tomorrow's Forecast
-          </button>
-        </div>
+          const dateObj = new Date(day);
+          const dayName = dayNames[dateObj.getDay()];
+          const dateStr = dateObj.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+          });
+
+          const bgImg = bgImages[index % bgImages.length];
+
+          // Farmer-friendly weather text
+          const conditionText =
+            wmoDescriptions?.[weatherCode]?.day?.description ||
+            "Clear and calm skies";
+
+          return (
+            <motion.div
+              key={day}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative rounded-2xl overflow-hidden shadow-2xl transform hover:scale-[1.03] transition-transform duration-300"
+            >
+              {/* Background Image */}
+              <div className="absolute inset-0">
+                <img
+                  src={bgImg}
+                  alt="Weather background"
+                  className="w-full h-full object-cover opacity-90"
+                />
+                <div
+                  className="absolute inset-0 backdrop-blur-sm"
+                  style={{ background: `${weatherColor}AA` }}
+                ></div>
+              </div>
+
+              {/* Foreground content */}
+              <div className="relative z-10 text-center text-white p-5 flex flex-col justify-between h-full">
+                <div>
+                  <p className="text-lg font-bold drop-shadow-md mb-2">
+                    {dayName}
+                  </p>
+                  <p className="text-sm drop-shadow-md mb-3">{dateStr}</p>
+
+                  <div className="flex flex-col items-center">
+                    <img
+                      src={weatherGif}
+                      alt="Weather"
+                      className="w-20 h-20 rounded-xl mb-2 shadow-lg"
+                    />
+                    <p className="text-3xl font-extrabold mb-1 drop-shadow-xl">
+                      🌡️ {maxTemp}°C / {minTemp}°C
+                    </p>
+                    <p className="text-md font-semibold text-white/90 capitalize mb-1">
+                      {conditionText}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Weather Details */}
+                <div className="mt-4 flex flex-col items-center space-y-1 text-sm font-semibold">
+                  <p className="flex items-center gap-2">
+                    🌧️ <span>Rain: {precip} mm</span>
+                  </p>
+                  <p className="flex items-center gap-2">
+                    💨 <span>Wind: {windSpeed} m/s</span>
+                  </p>
+                </div>
+
+                {/* Farmer message */}
+                <p className="mt-3 text-xs italic text-yellow-200 font-medium">
+                  {isDaytime
+                    ? "आज का मौसम खेती के लिए अच्छा है 🌞"
+                    : "रात में फसलों को ठंडी हवा का असर हो सकता है 🌙"}
+                </p>
+              </div>
+            </motion.div>
+          );
+        })}
       </div>
     );
-  };
+  }, [daily, getWeatherGif, getWeatherColor, getWeatherIcon, wmoDescriptions]);
+
+  // Render TTS cards for farmers
+  const renderTtsCards = useCallback(() => {
+    const ttsReports = [
+      {
+        title:
+          ttsLang === "hi-IN" ? "आज का मौसम सारांश" : "Today's Weather Summary",
+        content: buildCurrentReport(true),
+        bgColor: "linear-gradient(135deg, #84fab0, #8fd3f4)",
+        gif: agribotimg,
+      },
+      {
+        title:
+          ttsLang === "hi-IN"
+            ? "अगले कुछ घंटों का पूर्वानुमान"
+            : "Upcoming 5-Hour Forecast",
+        content: buildOffsetReport(5, true),
+        bgColor: "linear-gradient(135deg, #f093fb, #f5576c)",
+        gif: communityimg,
+      },
+      {
+        title:
+          ttsLang === "hi-IN"
+            ? "कल का विस्तृत पूर्वानुमान"
+            : "Tomorrow's Detailed Forecast",
+        content: buildOffsetReport(24, true),
+        bgColor: "linear-gradient(135deg, #43e97b, #38f9d7)",
+        gif: harvestimg,
+      },
+    ];
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+        {ttsReports.map((report, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.2 }}
+            className="relative rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition-transform duration-300"
+            style={{ background: report.bgColor }}
+          >
+            {/* Background */}
+            <div className="absolute inset-0">
+              <img
+                src={cardcontainerimage1}
+                alt="Weather background"
+                className="w-full h-full object-cover opacity-25"
+              />
+              <div className="absolute inset-0 bg-black/30 dark:bg-black/50 backdrop-blur-sm"></div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 p-6 flex flex-col justify-between h-full">
+              <div>
+                <h3 className="text-2xl font-bold text-white drop-shadow-lg mb-3">
+                  {report.title}
+                </h3>
+
+                <p className="text-white/90 text-base md:text-lg leading-relaxed mb-6 font-medium whitespace-pre-line">
+                  {report.content}
+                </p>
+              </div>
+
+              {/* Controls */}
+              <div className="flex flex-wrap gap-3 justify-center">
+                {/* Play / Pause Button */}
+                <button
+                  onClick={() =>
+                    isSpeaking ? stopSpeech() : speak(report.content)
+                  }
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium shadow-md text-white transition-all duration-300 ${
+                    isSpeaking
+                      ? "bg-yellow-600 hover:bg-yellow-700"
+                      : "bg-green-600 hover:bg-green-700"
+                  }`}
+                >
+                  <img
+                    src={isSpeaking ? pauseGif : playGif}
+                    alt="Play or Pause"
+                    className="w-7 h-7 object-contain"
+                  />
+                  <span>{isSpeaking ? "Pause" : "Play"}</span>
+                </button>
+
+                {/* Change Language */}
+                <button
+                  onClick={cycleLanguage}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-xl text-white font-medium shadow-md transition-all duration-300"
+                >
+                  <i className="bi bi-translate text-lg"></i>
+                  <span>{ttsLang === "hi-IN" ? "हिंदी" : "English"}</span>
+                </button>
+
+                {/* Stop */}
+                <button
+                  onClick={stopSpeech}
+                  className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-white font-medium shadow-md transition-all duration-300"
+                >
+                  <img
+                    src={stopGif}
+                    alt="Stop"
+                    className="w-7 h-7 object-contain"
+                  />
+                  <span>Stop</span>
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    );
+  }, [
+    ttsLang,
+    isSpeaking,
+    speak,
+    stopSpeech,
+    cycleLanguage,
+    buildCurrentReport,
+    buildOffsetReport,
+  ]);
+
+  // Main Render
 
   return (
-    <div className="mt-16 min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              Farm Weather Dashboard
-            </h1>
-            <p className="text-gray-600">
-              Real-time weather data and forecasts for agricultural planning
-            </p>
+    <div className="mt-20 min-h-screen bg-gradient-to-br from-blue-50 to-green-50 p-4 md:p-6">
+      {/* Header + Search Section */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative mb-12 rounded-3xl overflow-hidden shadow-2xl"
+      >
+        {/* Background Image Layer */}
+        <div className="absolute inset-0">
+          <img
+            src={image1}
+            alt="Farming background"
+            className="w-full h-full object-cover opacity-80"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-green-800/70 via-blue-900/70 to-sky-700/60"></div>
+        </div>
+
+        {/* Foreground Content */}
+        <div className="relative z-10 text-center py-16 px-6 md:px-12 text-white">
+          <motion.h1
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-4xl md:text-6xl font-extrabold tracking-wide drop-shadow-lg"
+          >
+            🌾 Welcome to{" "}
+            <span className="text-yellow-300">AgriConnect Weather</span>
+          </motion.h1>
+
+          <p className="mt-4 text-lg md:text-2xl text-yellow-100 max-w-3xl mx-auto font-medium">
+            Helping farmers make smarter field decisions with{" "}
+            <br className="hidden md:block" />
+            <span className="text-yellow-300 font-semibold">
+              accurate, real-time weather insights.
+            </span>
+          </p>
+
+          {/* Animated weather GIFs */}
+          <div className="flex justify-center mt-6 gap-4 flex-wrap">
+            <img
+              src="/src/assets/images/sun.gif"
+              alt="Sun"
+              className="w-20 h-20 object-contain rounded-full shadow-lg"
+            />
+            <img
+              src="/src/assets/images/cloudy.gif"
+              alt="Cloudy"
+              className="w-20 h-20 object-contain rounded-full shadow-lg"
+            />
+            <img
+              src="/src/assets/images/rain1.gif"
+              alt="Rain"
+              className="w-20 h-20 object-contain rounded-full shadow-lg"
+            />
+            <img
+              src="/src/assets/images/forest.gif"
+              alt="Wind"
+              className="w-20 h-20 object-contain rounded-full shadow-lg"
+            />
           </div>
 
-          {/* Search Bar */}
-          <div className="w-full md:w-auto flex flex-col sm:flex-row gap-2">
-            <div className="relative flex-grow">
+          {/* Friendly tagline */}
+          <p className="mt-6 text-lg text-gray-100 italic">
+            “A farmer’s best friend under the sun, rain, and clouds — always
+            with you in every season.”
+          </p>
+        </div>
+
+        {/* Search Bar Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="relative z-20 max-w-5xl mb-6 mx-auto -mt-8 bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl p-6"
+        >
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-center">
+            <div className="flex-1 w-full">
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search location..."
-                className="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+                placeholder="🔍 Enter your village, city, or location..."
+                className="w-full px-6 py-4 rounded-2xl border border-gray-300 focus:border-green-600 focus:ring-4 focus:ring-green-200 outline-none transition-all duration-300 text-lg shadow-md placeholder:text-gray-500"
               />
+            </div>
+            <div className="flex gap-3 flex-wrap justify-center">
               <button
                 onClick={() => handleSearch()}
                 disabled={loading}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-blue-600"
+                className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-green-500/40 disabled:opacity-50"
               >
-                <i
-                  className={`bi ${
-                    loading ? "bi-arrow-clockwise animate-spin" : "bi-search"
-                  }`}
-                />
-              </button>
-            </div>
-
-            <div className="flex gap-2">
-              <button
-                onClick={startMicSearch}
-                className="px-3 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 flex items-center"
-              >
-                <i className="bi bi-mic" />
+                <i className="bi bi-search"></i>
+                <span>{loading ? "Searching..." : "Search"}</span>
               </button>
               <button
                 onClick={useMyLocation}
-                className="px-3 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 flex items-center"
+                disabled={loading}
+                className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-yellow-400/40 disabled:opacity-50"
               >
-                <i className="bi bi-geo-alt" />
+                <i className="bi bi-geo-alt"></i>
+                <span>Use My Location</span>
               </button>
               <button
-                onClick={cycleLanguage}
-                className="px-3 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 flex items-center"
+                onClick={startMicSearch}
+                className="flex items-center gap-2 bg-sky-600 hover:bg-sky-700 text-white px-6 py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-sky-400/40"
               >
-                <i className="bi bi-translate" />
+                <i className="bi bi-mic"></i>
+                <span>Voice Search</span>
               </button>
-              <button
-                onClick={cycleVoice}
-                className="px-3 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 flex items-center"
-              >
-                <i className="bi bi-person-voice" />
-              </button>
-              {isSpeaking && (
-                <button
-                  onClick={stopSpeech}
-                  className="px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 flex items-center"
-                >
-                  <i className="bi bi-stop-circle" />
-                </button>
-              )}
             </div>
           </div>
-        </div>
 
-        {/* Main Content */}
-        <div className="space-y-8">
-          {/* Current Weather */}
-          <CurrentWeatherCard />
-
-          {/* Small Info Grid */}
-          <SmallInfoGrid />
-
-          {/* Hourly Forecast */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Hourly Forecast</h2>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => speak("Here is the hourly weather forecast")}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  <i className="bi bi-megaphone" />
-                </button>
-              </div>
+          {/* Extra visual touch below search */}
+          <div className="mt-6 flex justify-center gap-6 flex-wrap text-gray-600 text-sm">
+            <div className="flex items-center gap-2">
+              <img
+                src="/src/assets/images/hot.gif"
+                alt="Temp"
+                className="w-10 h-10"
+              />
+              <span>Temperature Alerts</span>
             </div>
-            <HourlyCarousel />
-          </div>
-
-          {/* Daily Forecast */}
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">7-Day Forecast</h2>
-              <div className="flex space-x-2">
-                <button
-                  onClick={() => speak("Here is the 7 day weather forecast")}
-                  className="text-blue-600 hover:text-blue-800"
-                >
-                  <i className="bi bi-megaphone" />
-                </button>
-              </div>
+            <div className="flex items-center gap-2">
+              <img
+                src="/src/assets/images/rain1.gif"
+                alt="Rain"
+                className="w-10 h-10"
+              />
+              <span>Rain Forecast</span>
             </div>
-            <DailyCards />
+            <div className="flex items-center gap-2">
+              <img
+                src="/src/assets/images/forest.gif"
+                alt="Wind"
+                className="w-10 h-10"
+              />
+              <span>Wind & Soil Insights</span>
+            </div>
           </div>
+        </motion.div>
+      </motion.div>
 
-          {/* Charts Section */}
-          <div className="space-y-6">
-            {/* 24 Hour Temperature/Precipitation Chart */}
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h2 className="text-xl font-bold mb-4">
-                24 Hour Temperature & Precipitation
-              </h2>
-              <div className="h-80">
-                <Line
-                  data={build24HourChartData()}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                      legend: { position: "top" },
-                      tooltip: {
-                        callbacks: {
-                          label: (context) => {
-                            let label = context.dataset.label || "";
-                            if (label) label += ": ";
-                            if (context.parsed.y !== null) {
-                              label +=
-                                context.datasetIndex === 0
-                                  ? `${context.parsed.y}°C`
-                                  : `${context.parsed.y} mm`;
-                            }
-                            return label;
-                          },
-                        },
-                      },
-                    },
-                    scales: {
-                      y: {
-                        type: "linear",
-                        display: true,
-                        position: "left",
-                        title: { display: true, text: "Temperature (°C)" },
-                      },
-                      y1: {
-                        type: "linear",
-                        display: true,
-                        position: "right",
-                        title: { display: true, text: "Precipitation (mm)" },
-                        grid: { drawOnChartArea: false },
-                      },
-                    },
-                  }}
+      {/* 🌾 Current Weather Display */}
+      {current && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="max-w-6xl mx-auto mb-10"
+        >
+          <div className="relative overflow-hidden rounded-3xl shadow-2xl border border-white/20 bg-gradient-to-r from-green-100 via-blue-100 to-yellow-50 dark:from-gray-800 dark:via-gray-900 dark:to-green-900">
+            {/* Decorative top bar */}
+            <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-r from-green-500 via-sky-500 to-yellow-500"></div>
+
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between p-8 backdrop-blur-sm">
+              {/* Left: Weather overview */}
+              <div className="flex items-center space-x-6">
+                <img
+                  src={getWeatherGif(current.weather?.[0]?.id || 800, true)}
+                  alt="Weather"
+                  className="w-28 h-28 rounded-2xl shadow-lg border-2 border-white/50 bg-white/50"
                 />
+                <div>
+                  <h2 className="text-4xl font-extrabold text-green-800 dark:text-green-200">
+                    {cityMeta || current.name}
+                  </h2>
+                  <p className="text-xl capitalize text-gray-700 dark:text-gray-300">
+                    {current.weather?.[0]?.description || "Weather Info"}
+                  </p>
+                  <p className="text-6xl font-bold text-sky-700 dark:text-sky-300 mt-2 drop-shadow-lg">
+                    {Math.round(current.main?.temp)}°C
+                  </p>
+                </div>
+              </div>
+
+              {/* Right: Weather stats grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8 md:mt-0 bg-white/50 dark:bg-gray-800/50 rounded-2xl p-4 backdrop-blur-sm">
+                <div className="text-center">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    🌡️ Feels Like
+                  </p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                    {Math.round(current.main?.feels_like)}°C
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    💧 Humidity
+                  </p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                    {current.main?.humidity}%
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    🌬️ Wind Speed
+                  </p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                    {current.wind?.speed} m/s
+                  </p>
+                </div>
+                <div className="text-center">
+                  <p className="text-gray-600 dark:text-gray-400 text-sm font-medium">
+                    📊 Pressure
+                  </p>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                    {current.main?.pressure} hPa
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* Backend Generated Charts */}
-            <div
-              ref={c2Ref}
-              className="bg-white rounded-xl shadow-md p-6"
-            ></div>
-            <div
-              ref={c3Ref}
-              className="bg-white rounded-xl shadow-md p-6"
-            ></div>
-            <div
-              ref={c4Ref}
-              className="bg-white rounded-xl shadow-md p-6"
-            ></div>
+            {/* Bottom line with friendly note */}
+            <div className="px-6 py-4 bg-gradient-to-r from-yellow-100 via-green-100 to-blue-100 dark:from-gray-700 dark:via-gray-800 dark:to-gray-700 text-center text-gray-800 dark:text-gray-200 font-medium italic text-sm">
+              🌻{" "}
+              <span className="text-green-700 dark:text-green-300">Tip:</span>{" "}
+              Keep an eye on humidity before spraying crops. Ideal time is early
+              morning or late evening for best results.
+            </div>
+          </div>
+        </motion.div>
+      )}
 
-            {/* Seasonal Forecast */}
-            {seasonal && (
-              <div className="bg-white rounded-xl shadow-md p-6">
-                <h2 className="text-xl font-bold mb-4">Seasonal Forecast</h2>
-                <div ref={seasonRef}></div>
+      {/* TTS Reports Section */}
+      {renderTtsCards()}
+
+      {/* 12-Hour Forecast */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="max-w-7xl mx-auto mb-12"
+      >
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          {ttsLang === "hi-IN"
+            ? "अगले 12 घंटे का पूर्वानुमान"
+            : "12-Hour Forecast"}
+        </h2>
+        {render12HourForecast()}
+      </motion.section>
+
+      {/* Graphs Section */}
+      {graphDataLoaded && (
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="max-w-7xl mx-auto space-y-8"
+        >
+          {/* 24-Hour Chart */}
+          {hourly && (
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-white/20">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                {ttsLang === "hi-IN"
+                  ? "24 घंटे का तापमान और वर्षा"
+                  : "24-Hour Temperature & Precipitation"}
+              </h3>
+              <div className="h-80">
+                <Line data={build24HourChartData()} options={chartOptions} />
               </div>
-            )}
+            </div>
+          )}
+
+          {/* Backend Generated Graphs */}
+          <div className="overflow-x-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 min-w-[600px]">
+              {/* Card 1 */}
+              <div className="backend-graph-container bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col">
+                <img
+                  src={image1} // Replace with your image
+                  alt="Graph 1"
+                  className="w-full h-92 object-cover rounded-lg mb-4"
+                />
+                <div ref={c2Ref} className="flex-1"></div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="backend-graph-container bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 flex flex-col">
+                <img
+                  src={image2} // Replace with your image
+                  alt="Graph 2"
+                  className="w-full h-92 object-cover rounded-lg mb-4"
+                />
+                <div ref={c3Ref} className="flex-1"></div>
+              </div>
+            </div>
+          </div>
+          {/* 7-Day Forecast */}
+          <div>
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="max-w-7xl mx-auto mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+                {ttsLang === "hi-IN"
+                  ? "7 दिन का पूर्वानुमान"
+                  : "7-Day Forecast"}
+              </h2>
+              {render7DayForecast()}
+            </motion.section>
+          </div>
+          {/* <div ref={c4Ref} className="backend-graph-container"></div> */}
+          <div className="backend-graph-container bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-full overflow-hidden">
+            {/* Header with details */}
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+              <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1">
+                Seasonal Crop Trends 📊
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                This graph shows the crop yield and weather trends over
+                different seasons. Use this to plan sowing, irrigation, and
+                harvesting efficiently.
+              </p>
+            </div>
+
+            {/* Image at top */}
+            <div className="w-full">
+              <img
+                src={cardcontainerimage3} // Replace with your seasonal image
+                alt="Seasonal Graph"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+            {/* Graph container */}
+            <div
+              ref={seasonRef}
+              className="overflow-x-scroll p-4"
+              style={{ height: "600px" }} // adjust height as needed
+            ></div>
+          </div>
+        </motion.section>
+      )}
+
+      {/* Loading State */}
+      {loading && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-8 shadow-2xl">
+            <div className="flex items-center space-x-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              <p className="text-lg font-semibold text-gray-800">
+                Loading weather data...
+              </p>
+            </div>
           </div>
         </div>
+      )}
 
-        {/* Footer */}
-        <footer className="mt-12 text-center text-gray-500 text-sm">
-          <p>
-            Data provided by various weather APIs. Icons by Bootstrap Icons.
-          </p>
-          <p className="mt-1">
-            Agricultural weather dashboard designed for farmers and growers.
-          </p>
-        </footer>
-      </div>
-
-      {/* Tooltip */}
-      <ReactTooltip id="tooltip" place="top" effect="solid" />
+      <ReactTooltip place="top" type="dark" effect="solid" />
     </div>
   );
 }

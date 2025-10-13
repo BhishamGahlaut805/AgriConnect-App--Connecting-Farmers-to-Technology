@@ -4,6 +4,8 @@ import axios from "axios";
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 const BASE_URL_FLASK = import.meta.env.VITE_BACKEND_FLASK_URL;
 const TIMEOUT = 5000;
+import { getToken, onMessage } from "firebase/messaging";
+import { messaging } from "../Firebase/firebase-config";
 
 class AgriService {
   // Fetch all farms for a user
@@ -22,6 +24,8 @@ class AgriService {
   //Fetch user's farm data
   static async getFarmData(userId) {
     try {
+      // console.log("Fetching farm data for userId:", userId);
+      console.log(`${BASE_URL}/api/farms/${userId}`);
       const res = await fetch(`${BASE_URL}/api/farms/${userId}`);
       if (!res.ok) throw new Error("Farm data not found");
       const data = await res.json();
@@ -623,6 +627,180 @@ class AgriService {
       throw err;
     }
   }
+  static async registerDeviceToken(userId, token) {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/users/register-device-token`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId, deviceToken: token }),
+        }
+      );
+      return await response.json();
+    } catch (error) {
+      console.error("Error registering device token:", error);
+      throw error;
+    }
+  }
+  static async getLatestNotifications(userId) {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/api/notifications/latest/${userId}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch notifications");
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      return []; // Return empty array instead of throwing
+    }
+  }
+
+  static async sendTestNotification(userId) {
+    try {
+      const response = await fetch(`${BASE_URL}/notifications/test`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("Error sending test notification:", error);
+      throw error;
+    }
+  }
+
+  static showLocalNotification(notification, setNotifications, setUnreadNotifications) {
+    setNotifications((prev) => [notification, ...prev]);
+    setUnreadNotifications((prev) => prev + 1);
+
+    // Play notification sound
+    try {
+      const audio = new Audio("/bell.mp3");
+      audio.play().catch((e) => console.log("Audio play failed:", e));
+    } catch (error) {
+      console.log("Audio error:", error);
+    }
+
+    // Show system notification if app is in background
+    if (document.visibilityState !== "visible") {
+      new Notification(notification.title, {
+        body: notification.message,
+        icon: "/logo192.png",
+      });
+    }
+  }
+
+  // -------------------------------
+  // Notify high-risk farms
+  // -------------------------------
+  static async notifyHighRiskFarms(userId, riskThreshold = 50, setNotifications, setUnreadNotifications) {
+    try {
+      const farms = await this.getAllData(); // fetch all farms for the user
+      if (!Array.isArray(farms)) return;
+
+      // get registered FCM token from backend (if stored)
+      const tokenRes = await fetch(`${BASE_URL}/api/users/get-device-token/${userId}`);
+      const { deviceToken } = await tokenRes.json();
+      if (!deviceToken) {
+        console.warn("No device token registered for user");
+        return;
+      }
+
+      for (const farm of farms) {
+        if (!farm.lstm_prediction || farm.lstm_prediction.length === 0) continue;
+
+        // check latest predicted risk
+        const latestPrediction = farm.lstm_prediction[farm.lstm_prediction.length - 1];
+        if (latestPrediction["predicted_risk%"] >= riskThreshold) {
+          const notificationPayload = {
+            title: "⚠️ High Crop Disease Risk",
+            body: `Your farm "${farm.farm_name}" has a predicted risk of ${latestPrediction["predicted_risk%"]}% for ${latestPrediction.date}.`,
+            data: {
+              type: "high-risk",
+              severity: latestPrediction["predicted_risk%"],
+              farmId: farm.farm_id,
+            },
+          };
+
+          // 1️⃣ Send Firebase notification using FCM REST API
+          try {
+            await fetch("https://fcm.googleapis.com/fcm/send", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `key=${import.meta.env.VITE_FIREBASE_SERVER_KEY}`, // server key
+              },
+              body: JSON.stringify({
+                to: deviceToken,
+                notification: {
+                  title: notificationPayload.title,
+                  body: notificationPayload.body,
+                  click_action: window.location.origin,
+                },
+                data: notificationPayload.data,
+              }),
+            });
+          } catch (fcmError) {
+            console.error("FCM send error:", fcmError);
+          }
+
+          // 2️⃣ Also show local notification in the frontend
+          if (setNotifications && setUnreadNotifications) {
+            this.showLocalNotification(
+              {
+                _id: Date.now().toString(),
+                title: notificationPayload.title,
+                message: notificationPayload.body,
+                type: "warning",
+                timestamp: new Date().toISOString(),
+                read: false,
+                ...notificationPayload.data,
+              },
+              setNotifications,
+              setUnreadNotifications
+            );
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Error in notifyHighRiskFarms:", err);
+    }
+  }
+
+  // -------------------------------
+  // Schedule daily high-risk notifications
+  // -------------------------------
+ static startDailyRiskNotifications = async (userId, riskThreshold, addNotification) => {
+  try {
+    const response = await axios.get(`/api/farms/high-risk?userId=${userId}&threshold=${riskThreshold}`);
+    const highRiskFarms = Array.isArray(response.data) ? response.data : [];
+
+    highRiskFarms.forEach(farmAlert => {
+      const notification = {
+        _id: Date.now().toString() + "-" + Math.random(),
+        title: `⚠️ High Risk Alert: ${farmAlert.farm_name}`,
+        message: `Disease ${farmAlert.disease} detected! Severity: ${farmAlert.severity}`,
+        type: "warning",
+        timestamp: new Date().toISOString(),
+        read: false,
+        farmId: farmAlert.farm_id,
+        disease: farmAlert.disease,
+        severity: farmAlert.severity,
+      };
+      addNotification(notification);
+    });
+  } catch (error) {
+    console.error("Error fetching high-risk farms:", error);
+  }
 }
+}
+
 
 export default AgriService;

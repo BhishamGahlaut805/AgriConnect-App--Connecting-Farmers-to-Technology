@@ -2,8 +2,8 @@ import os
 import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.models import Sequential  #type: ignore
+from tensorflow.keras.layers import LSTM, Dense #type: ignore
 from sklearn.preprocessing import StandardScaler
 import joblib
 from pymongo import MongoClient
@@ -107,6 +107,31 @@ class LSTMOutbreakPredictor:
             recent_seq = np.append(recent_seq[:, 1:, :], [[X_scaled[-1]]], axis=1)
 
         future_preds = scaler_y.inverse_transform(future_preds_scaled)
+
+        # --- Robust normalization of risk% values between 5% and 95% ---
+        risk_vals = future_preds[:, 0]
+        radius_vals = future_preds[:, 1]
+
+        max_risk = np.max(risk_vals)
+        min_risk = np.min(risk_vals)
+
+        # Avoid division by zero and handle negative/overshooting values
+        if max_risk != min_risk:
+            # Normalize to 0–1 range, then scale to 5–95%
+            norm_risk = (risk_vals - min_risk) / (max_risk - min_risk)
+            risk_scaled = 5 + norm_risk * 90
+        else:
+            # If all risks are same, keep them at a stable mid value
+            risk_scaled = np.full_like(risk_vals, 50.0)
+
+        # Optional: slight smoothing to reduce sensitivity to small input noise
+        risk_scaled = np.round(risk_scaled * 0.9 + 5, 2)
+        risk_scaled = np.clip(risk_scaled, 5, 95)
+
+        # Recombine with radius values
+        future_preds[:, 0] = risk_scaled
+        future_preds[:, 1] = radius_vals
+
 
         today = datetime.utcnow()
         result = [{

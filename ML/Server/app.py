@@ -9,7 +9,7 @@ load_dotenv()
 # from ..LLM.Routes.llmRoutes import llm_bp
 app = Flask(__name__)
 CORS(app, supports_credentials=True,
-     resources={r"/*": {"origins": ["http://localhost:5173"]}})
+     resources={r"/*": {"origins": ["http://localhost:5173","https://j2rgc684-5173.inc1.devtunnels.ms","https://j2rgc684-5000.inc1.devtunnels.ms"]}})
 # Set a secret key for sessions
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "supersecretkey123")
 
@@ -197,7 +197,8 @@ def predict_disease():
 
                 filename = os.path.basename(image_path)
                 result["image"] = filename
-                result["image_url"] = f"{request.host_url.rstrip('/')}/static/uploads/{farm_id}/{filename}"
+                host_url=os.getenv("HOST_URL","http://localhost:5000")
+                result["image_url"] = f"{host_url}/static/uploads/{farm_id}/{filename}"
 
                 coord = coordinates[i] if i < len(coordinates) else {}
                 result["latitude"] = coord.get("lat")

@@ -6,6 +6,7 @@ const ModelOption = ({
   title, // String: display title of the model
   description, // String: brief description of the model
   tooltip, // String: tooltip content for more info
+  children, // ReactNode: optional content like images or icons
 }) => (
   <div
     onClick={onClick}
@@ -15,20 +16,25 @@ const ModelOption = ({
       p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ease-in-out transform
       ${
         selected
-          ? "border-green-500 bg-green-50 dark:bg-green-900/30 dark:border-green-700 shadow-md scale-[1.02]" // Selected state: vibrant green, slight scale
-          : "border-gray-300 hover:border-green-300 dark:border-gray-600 dark:hover:border-green-600 shadow-sm hover:scale-[1.01] bg-white dark:bg-gray-700/50" // Inactive state: subtle grey, hover effects
+          ? "border-green-500 bg-green-50 dark:bg-green-900/30 dark:border-green-700 shadow-md scale-[1.02]"
+          : "border-gray-300 hover:border-green-300 dark:border-gray-600 dark:hover:border-green-600 shadow-sm hover:scale-[1.01] bg-white dark:bg-gray-700/50"
       }
-      flex flex-col justify-between
+      flex flex-col justify-between items-center
     `}
   >
-    <div className="flex items-center mb-2">
+    {/* Render children (like image) at the top */}
+    {children && <div className="mb-3">{children}</div>}
+
+    {/* Header with radio-like circle */}
+    <div className="flex items-center mb-1 w-full justify-center">
       <div
         className={`h-5 w-5 rounded-full border flex items-center justify-center mr-3 flex-shrink-0
           ${
             selected
               ? "border-green-500 bg-green-500"
               : "border-gray-400 dark:border-gray-500"
-          }`}
+          }
+        `}
       >
         {selected && (
           <svg
@@ -46,11 +52,13 @@ const ModelOption = ({
           </svg>
         )}
       </div>
-      <h3 className="font-medium text-gray-800 dark:text-white text-lg">
+      <h3 className="font-medium text-gray-800 dark:text-white text-lg text-center">
         {title}
       </h3>
     </div>
-    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 ml-8">
+
+    {/* Description */}
+    <p className="mt-1 text-sm text-gray-600 dark:text-gray-400 text-center">
       {description}
     </p>
   </div>

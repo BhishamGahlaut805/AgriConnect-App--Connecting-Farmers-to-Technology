@@ -1,5 +1,6 @@
 // src/pages/FarmerDashboard.jsx
 import { useEffect, useState, useCallback } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import {
@@ -47,6 +48,11 @@ import AllReportsSection from "../Components/AllReports";
 import PastSearches from "../Components/PastSearches";
 import CropRecommendation from "../SubComponents/CropRecommendation";
 import RainfallCard from "../SubComponents/RainfallCard";
+import NotificationView from "../SubComponents/NotificationsView";
+import WelcomeBanner from "../SubComponents/WelcomeBanner";
+import AgriConnectBenefits from "../SubComponents/AgriConnectBenefits";
+import MobileSidebarOpen from "../NewComponents/MobileSidebarOpen";
+
 const AlertMessage = ({ isOpen, title, message, type, onClose }) => {
   useEffect(() => {
     if (isOpen) {
@@ -141,97 +147,206 @@ const FarmerDashboard = () => {
         throw new Error("Invalid user role or ID");
       }
       setUser({ ...parsed, _id: parsed.id });
+      console.log("Authenticated user:", parsed);
     } catch (err) {
-      localStorage.removeItem("userDetails");
+      // localStorage.removeItem("userDetails");
       navigate("/unauthorized");
     }
   }, [navigate]);
 
-  // Initialize Firebase messaging and notifications
+  const [canPlayAudio, setCanPlayAudio] = useState(false);
+
+  // Track user interaction for autoplay
+  useEffect(() => {
+    const handleInteraction = () => setCanPlayAudio(true);
+
+    window.addEventListener("click", handleInteraction, { once: true });
+    window.addEventListener("keydown", handleInteraction, { once: true });
+
+    return () => {
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("keydown", handleInteraction);
+    };
+  }, []);
+
+  // track first user interaction for audio
+  // Track if user has interacted with the page
+  const userInteracted = useRef(false);
+  useEffect(() => {
+    const handleInteraction = () => {
+      userInteracted.current = true;
+      window.removeEventListener("click", handleInteraction);
+      window.removeEventListener("keydown", handleInteraction);
+    };
+    window.addEventListener("click", handleInteraction);
+    window.addEventListener("keydown", handleInteraction);
+  }, []);
+
+  // Unified addNotification function
+  const addNotification = (notification) => {
+    setNotifications((prev) => [notification, ...prev]);
+    setUnreadNotifications((prev) => prev + 1);
+
+    // Play bell sound if user interacted
+    if (userInteracted.current) {
+      const audio = new Audio("/bell.mp3");
+      audio.play().catch((e) => console.log("Audio play failed:", e));
+    }
+
+    // Always show system notification
+    if ("Notification" in window) {
+      try {
+        new Notification(notification.title, {
+          body: notification.message,
+          icon: "/logo192.png",
+        });
+      } catch (err) {
+        console.log("System notification error:", err);
+      }
+    }
+  };
+
+  // Ref to ensure demo notifications are only added once
+  const demoAdded = useRef(false);
+
+  // Function to send top 3 risk summary notification per farm
+  const sendTopRiskSummary = (farm) => {
+    const predictions = farm.lstm_prediction || [];
+    if (!predictions.length) return;
+
+    const top3 = [...predictions]
+      .sort((a, b) => b["predicted_risk%"] - a["predicted_risk%"])
+      .slice(0, 3);
+
+    const message = top3
+      .map(
+        (p, idx) =>
+          `${idx + 1}. ${p.date}: ${p["predicted_risk%"].toFixed(
+            2
+          )}% risk, Radius: ${p.predicted_radius_Km.toFixed(2)} km`
+      )
+      .join("\n");
+
+    addNotification({
+      _id: `risk-summary-${farm.farm_id}-${Date.now()}`,
+      title: `📊 10-Day Risk Summary: ${farm.farm_name}`,
+      message,
+      type: "warning",
+      timestamp: new Date().toISOString(),
+      read: false,
+      farmId: farm.farm_id,
+    });
+  };
+
+  // Fetch user farms and send notifications (only once)
   useEffect(() => {
     if (!user?._id) return;
 
-    const setupFirebaseMessaging = async () => {
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-          const token = await getToken(messaging, {
-            vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
-          });
-
-          if (token) {
-            await AgriService.registerDeviceToken(user._id, token);
-          }
-
-          onMessage(messaging, (payload) => {
-            const notification = {
-              _id: Date.now().toString(),
-              title: payload.notification?.title || "New Alert",
-              message:
-                payload.notification?.body || "You have a new notification",
-              type: payload.data?.type || "info",
-              timestamp: new Date().toISOString(),
-              read: false,
-              disease: payload.data?.disease,
-              severity: payload.data?.severity,
-              farmId: payload.data?.farmId,
-            };
-
-            setNotifications((prev) => [notification, ...prev]);
-            setUnreadNotifications((prev) => prev + 1);
-
-            // Play notification sound
-            const audio = new Audio("/notification-sound.mp3");
-            audio.play().catch((e) => console.log("Audio play failed:", e));
-
-            // Show desktop notification if not focused
-            if (!document.hasFocus()) {
-              new Notification(notification.title, {
-                body: notification.message,
-                icon: "/logo192.png",
-              });
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Error setting up Firebase messaging:", error);
-      }
-    };
-
-    setupFirebaseMessaging();
-  }, [user]);
-
-useEffect(() => {
-  if (user?._id) {
     const fetchFarms = async () => {
       try {
-        const response = await AgriService.getAllData(); // Call function and await response
-        console.log("Fetched farms:", response);
-
+        const response = await AgriService.getAllData();
         const farms = Array.isArray(response.farms) ? response.farms : [];
-
-        // Filter farms for current user
         const userFarms = farms.filter((farm) => farm.user_id === user._id);
-        console.log("User farms:", userFarms);
 
-        if (userFarms.length > 0) {
-          setFarms(userFarms);
-          setSelectedFarm(userFarms[0]);
-        } else {
-          setFarms([]);
-          setSelectedFarm(null);
+        setFarms(userFarms);
+        setSelectedFarm(userFarms[0] || null);
+
+        // Add demo notifications once
+        if (!demoAdded.current && userFarms.length > 0 && userFarms[0]) {
+          demoAdded.current = true;
+
+          const selectedFarm = userFarms[0];
+          const demoNotifications = [
+            {
+              _id: `demo-${Date.now()}-1`,
+              title: "🌾 Crop Health Update",
+              message: `Your ${selectedFarm.farm_name} crops are 85% healthy`,
+              type: "success",
+              timestamp: new Date().toISOString(),
+              read: false,
+              farmId: selectedFarm.farm_id,
+            },
+            {
+              _id: `demo-${Date.now()}-2`,
+              title: "⚠️ Disease Alert",
+              message: "Low risk of Leaf Rust detected in nearby farms",
+              type: "warning",
+              timestamp: new Date().toISOString(),
+              read: false,
+              farmId: selectedFarm.farm_id,
+              disease: "Leaf Rust",
+              severity: "Low",
+            },
+            {
+              _id: `demo-${Date.now()}-3`,
+              title: "📈 Yield Prediction",
+              message: "Expected yield increase of 12% this season",
+              type: "info",
+              timestamp: new Date().toISOString(),
+              read: true,
+              farmId: selectedFarm.farm_id,
+            },
+          ];
+
+          demoNotifications.forEach(addNotification);
         }
-      } catch (error) {
-        console.error("Error fetching farms:", error);
+
+        // Send top 3 risk summary notification for each farm
+        userFarms.forEach((farm) => sendTopRiskSummary(farm));
+      } catch (err) {
+        console.error("Error fetching farms:", err);
         setFarms([]);
         setSelectedFarm(null);
       }
     };
 
     fetchFarms();
-  }
-}, [user]);
+  }, [user]);
 
+  // Firebase messaging setup for live alerts
+  useEffect(() => {
+    if (!user?._id) return;
+
+    AgriService.startDailyRiskNotifications(user._id, 50, addNotification);
+
+    const setupFirebaseMessaging = async () => {
+      if (!messaging) return console.warn("Firebase messaging not available");
+
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission !== "granted")
+          return console.warn("Notifications not granted");
+
+        const token = await getToken(messaging, {
+          vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
+        });
+
+        if (token && AgriService.registerDeviceToken) {
+          await AgriService.registerDeviceToken(user._id, token);
+        }
+
+        onMessage(messaging, (payload) => {
+          const notification = {
+            _id: Date.now().toString(),
+            title: payload.notification?.title || "New Alert",
+            message:
+              payload.notification?.body || "You have a new notification",
+            type: payload.data?.type || "info",
+            timestamp: new Date().toISOString(),
+            read: false,
+            disease: payload.data?.disease,
+            severity: payload.data?.severity,
+            farmId: payload.data?.farmId,
+          };
+          addNotification(notification);
+        });
+      } catch (err) {
+        console.error("Firebase messaging setup error:", err);
+      }
+    };
+
+    setupFirebaseMessaging();
+  }, [user]);
 
   // Fetch all data when selected farm changes
   const fetchData = useCallback(async () => {
@@ -339,6 +454,31 @@ useEffect(() => {
     setAlert({ ...alert, isOpen: false });
   };
 
+  const testNotification = async () => {
+    try {
+      // Test local notification first
+      const testNotif = {
+        _id: Date.now().toString(),
+        title: "Test Notification",
+        message: "This is a test notification from Firebase",
+        type: "info",
+        timestamp: new Date().toISOString(),
+        read: false,
+      };
+
+      setNotifications((prev) => [testNotif, ...prev]);
+      setUnreadNotifications((prev) => prev + 1);
+
+      // Try to trigger a Firebase notification
+      if (user?._id) {
+        await AgriService.sendTestNotification(user._id);
+      }
+    } catch (error) {
+      console.error("Test notification failed:", error);
+    }
+  };
+  // testNotification();
+
   const handleFarmCreated = async (newFarm) => {
     setIsCreating(false);
     const updatedFarms = [...farms, newFarm];
@@ -445,138 +585,14 @@ useEffect(() => {
     );
   }
 
-  // Notification view component
-  const NotificationView = () => (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100">
-          Notifications
-        </h2>
-        <div className="flex items-center space-x-4">
-          <button
-            onClick={markNotificationsAsRead}
-            className="text-sm text-blue-600 dark:text-violet-400 hover:underline"
-            data-tooltip-id="mark-read-tooltip"
-            data-tooltip-content="Mark all notifications as read"
-          >
-            Mark all as read
-          </button>
-          <button
-            onClick={fetchData}
-            className="text-sm text-blue-600 dark:text-violet-400 hover:underline"
-            data-tooltip-id="refresh-tooltip"
-            data-tooltip-content="Refresh notifications"
-          >
-            <ArrowPathIcon className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {notifications.length === 0 ? (
-        <StyledCard color="indigo">
-          <div className="text-center py-6">
-            <BellIcon className="mx-auto h-12 w-12 text-gray-400 dark:text-violet-300" />
-            <h3 className="mt-2 text-lg font-medium text-gray-900 dark:text-violet-100">
-              No notifications yet
-            </h3>
-            <p className="mt-1 text-sm text-gray-500 dark:text-violet-200">
-              We'll notify you when there's something new
-            </p>
-          </div>
-        </StyledCard>
-      ) : (
-        <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
-          {notifications.map((notification) => {
-            const farmName =
-              farms.find((f) => f.farm_id === notification.farmId)?.farm_name ||
-              "Your Farm";
-
-            return (
-              <StyledCard
-                key={notification._id || notification.id}
-                color={
-                  notification.type === "warning"
-                    ? "red"
-                    : notification.type === "info"
-                    ? "blue"
-                    : "emerald"
-                }
-                className={`transition-all duration-200 ${
-                  !notification.read
-                    ? "ring-2 ring-opacity-50 ring-violet-500 dark:ring-violet-300"
-                    : ""
-                }`}
-              >
-                <div className="flex items-start">
-                  <div className="flex-shrink-0 pt-1">
-                    {notification.type === "warning" ? (
-                      <ShieldExclamationIcon className="h-5 w-5 text-red-500" />
-                    ) : notification.type === "info" ? (
-                      <BellIcon className="h-5 w-5 text-blue-500" />
-                    ) : (
-                      <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
-                    )}
-                  </div>
-                  <div className="ml-3 flex-1">
-                    <div className="flex justify-between">
-                      <h3 className="text-sm font-medium text-gray-800 dark:text-violet-100">
-                        {notification.title}
-                      </h3>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
-                          {new Date(notification.timestamp).toLocaleTimeString(
-                            [],
-                            {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )}
-                        </span>
-                        {!notification.read && (
-                          <span className="h-2 w-2 rounded-full bg-blue-500 dark:bg-violet-400"></span>
-                        )}
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                      {notification.message}
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-2 items-center">
-                      {notification.farmId && (
-                        <span className="px-2 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs flex items-center">
-                          <MapPinIcon className="h-3 w-3 mr-1" />
-                          {farmName}
-                        </span>
-                      )}
-                      {notification.disease && (
-                        <span className="px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-900 text-amber-800 dark:text-amber-200 text-xs">
-                          {notification.disease}
-                        </span>
-                      )}
-                      {notification.severity && (
-                        <span className="px-2 py-1 rounded-full bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 text-xs">
-                          {notification.severity} risk
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </StyledCard>
-            );
-          })}
-        </div>
-      )}
-      <Tooltip id="mark-read-tooltip" />
-      <Tooltip id="refresh-tooltip" />
-    </div>
-  );
 
   return (
     <div className="flex h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-800 dark:to-gray-900 font-inter">
       {/* Mobile sidebar overlay */}
       {mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-gray-900 bg-opacity-50 z-40 lg:hidden"
-          onClick={() => setMobileSidebarOpen(false)}
+          className="fixed inset-0 bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setMobileSidebarOpen(true)}
         ></div>
       )}
 
@@ -590,7 +606,7 @@ useEffect(() => {
       >
         {/* Sidebar Header */}
         <div className="p-4 flex items-center justify-between border-b border-indigo-700 dark:border-gray-700">
-          {sidebarOpen ? (
+          {sidebarOpen || mobileSidebarOpen ? (
             <h2 className="text-xl font-bold flex items-center">
               <svg
                 className="w-6 h-6 mr-2 text-violet-300"
@@ -640,7 +656,7 @@ useEffect(() => {
               sidebarOpen ? "Collapse sidebar" : "Expand sidebar"
             }
           >
-            {sidebarOpen ? (
+            {sidebarOpen || mobileSidebarOpen ? (
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -701,7 +717,7 @@ useEffect(() => {
                   data-tooltip-content="Go to Dashboard"
                 >
                   <HomeIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Dashboard
                     </span>
@@ -724,7 +740,7 @@ useEffect(() => {
                   data-tooltip-content="View Farm Maps"
                 >
                   <MapIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Farm Maps
                     </span>
@@ -747,16 +763,17 @@ useEffect(() => {
                   data-tooltip-content="View Notifications"
                 >
                   <BellIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Notifications
                     </span>
                   )}
-                  {unreadNotifications > 0 && sidebarOpen && (
-                    <span className="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce">
-                      {unreadNotifications}
-                    </span>
-                  )}
+                  {unreadNotifications > 0 &&
+                    (sidebarOpen || mobileSidebarOpen) && (
+                      <span className="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce">
+                        {unreadNotifications}
+                      </span>
+                    )}
                 </button>
               </li>
               {/* Disease Alerts */}
@@ -775,7 +792,7 @@ useEffect(() => {
                   data-tooltip-content="View Disease Alerts"
                 >
                   <ShieldExclamationIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Disease Alerts
                     </span>
@@ -798,7 +815,7 @@ useEffect(() => {
                   data-tooltip-content="View Farm Reports"
                 >
                   <ClipboardDocumentCheckIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Reports
                     </span>
@@ -821,7 +838,7 @@ useEffect(() => {
                   data-tooltip-content="View Past Analyses"
                 >
                   <ClockIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Past Analyses
                     </span>
@@ -844,7 +861,7 @@ useEffect(() => {
                   data-tooltip-content="View Crop Analytics"
                 >
                   <ChartPieIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Crop Analytics
                     </span>
@@ -867,7 +884,7 @@ useEffect(() => {
                   data-tooltip-content="View My Farms"
                 >
                   <HomeModernIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       My Farms
                     </span>
@@ -890,7 +907,7 @@ useEffect(() => {
                   data-tooltip-content="Manage your Profile"
                 >
                   <UserIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Profile
                     </span>
@@ -913,7 +930,7 @@ useEffect(() => {
                   data-tooltip-content="Adjust Application Settings"
                 >
                   <Cog6ToothIcon className="w-5 h-5 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  {sidebarOpen && (
+                  {(sidebarOpen || mobileSidebarOpen) && (
                     <span className="ml-3 whitespace-nowrap overflow-hidden">
                       Settings
                     </span>
@@ -945,7 +962,7 @@ useEffect(() => {
                 </span>
               )}
             </div>
-            {sidebarOpen && (
+            {(sidebarOpen || mobileSidebarOpen) && (
               <div className="ml-3">
                 <p className="text-sm font-medium text-indigo-50">
                   {user.name}
@@ -956,7 +973,7 @@ useEffect(() => {
               </div>
             )}
           </div>
-          {sidebarOpen && (
+          {(sidebarOpen || mobileSidebarOpen) && (
             <button
               onClick={handleLogout}
               className="mt-4 w-full flex items-center justify-center p-2 text-sm rounded-lg hover:bg-indigo-700 dark:hover:bg-gray-700 transition-colors group"
@@ -1072,41 +1089,12 @@ useEffect(() => {
         <main className="p-4 sm:p-6">
           {activeView === "dashboard" && selectedFarm && (
             <>
-              {/* Welcome Banner */}
-              <StyledCard
-                color="indigo"
-                className="bg-gradient-to-r from-indigo-600 to-violet-500 text-white mb-6 shadow-xl"
-              >
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-                  <div>
-                    <h2 className="text-xl sm:text-2xl font-bold">
-                      Welcome back, {user.name}!
-                    </h2>
-                    <p className="mt-1 opacity-90 text-sm sm:text-base">
-                      {new Date().toLocaleDateString("en-US", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </p>
-                    <p className="mt-2 text-indigo-100 dark:text-violet-200 text-sm">
-                      Viewing: {selectedFarm.farm_name}
-                    </p>
-                  </div>
-                  <div className="mt-4 sm:mt-0">
-                    <StyledCard className="bg-white dark:bg-gray-700 text-gray-800 dark:text-violet-100 p-4 border border-slate-100 dark:border-gray-600">
-                      <WeatherWidget
-                        latitude={selectedFarm.latitude}
-                        longitude={selectedFarm.longitude}
-                      />
-                    </StyledCard>
-                  </div>
-                </div>
-              </StyledCard>
+              <WelcomeBanner user={user.name} selectedFarm={selectedFarm} />
+              {/* Mobile sidebar opener - place this in your top header, above or beside your main content */}
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
 
               {/* Farm Selector for Mobile */}
-              <div className="lg:hidden mb-6">
+              <div className="mb-6">
                 <label
                   htmlFor="farm-select"
                   className="block text-sm font-medium text-gray-700 dark:text-violet-200 mb-2"
@@ -1158,476 +1146,519 @@ useEffect(() => {
                   <RecentActivity reports={diseaseReports} />
                 </div>
               </div>
-              <CropRecommendation farm_name={selectedFarm.farm_name} />
+              <AgriConnectBenefits />
+              <CropRecommendation className="" farm_name={selectedFarm.farm_name} />
             </>
           )}
           {activeView === "farmsMap" && selectedFarm && (
-            <div className="h-[calc(100vh-180px)] rounded-lg shadow-xl overflow-hidden">
-              <FarmsMap
-                farmData={selectedFarm}
-                nearbyFarms={selectedFarm.nearby_farms}
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <div className="h-[calc(100vh-180px)] z--10 rounded-lg shadow-xl overflow-hidden">
+                <FarmsMap
+                  farmData={selectedFarm}
+                  nearbyFarms={selectedFarm.nearby_farms}
+                />
+              </div>
+            </>
+          )}
+          {activeView === "notifications" && (
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <NotificationView
+                notifications={notifications}
+                farms={farms}
+                markNotificationsAsRead={markNotificationsAsRead}
+                fetchData={fetchData}
               />
-            </div>
+            </>
           )}
-          {activeView === "notifications" && <NotificationView />}
           {activeView === "diseaseAlerts" && selectedFarm && (
-            <DiseaseAlert
-              farmData={selectedFarm}
-              alerts={selectedFarm.top_disease_risks}
-              notifications={notifications}
-            />
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <DiseaseAlert
+                farmData={selectedFarm}
+                alerts={selectedFarm.top_disease_risks}
+                notifications={notifications}
+              />
+            </>
           )}
-          {activeView === "reports" && <AllReportsSection />}
+          {activeView === "reports" && (
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <AllReportsSection />
+            </>
+          )}
           {activeView === "past" && (
-            <PastSearches farmData={selectedFarm} userId={user?._id} />
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <PastSearches farmData={selectedFarm} userId={user?._id} />
+            </>
           )}
           {activeView === "myFarms" && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800 dark:text-violet-100">
-                    🌾 My Farms
-                  </h2>
-                  <p className="text-sm text-gray-500 dark:text-violet-300">
-                    Manage your agricultural properties and view their status
-                  </p>
-                </div>
-                <button
-                  onClick={() => setActiveView("createFarm")}
-                  className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg flex items-center shadow-md transition-all hover:shadow-violet-500/20"
-                  data-tooltip-id="add-farm-tooltip"
-                  data-tooltip-content="Add a new farm to your account"
-                >
-                  <PlusCircleIcon className="h-5 w-5 mr-2" />
-                  Add New Farm
-                </button>
-              </div>
-
-              {isLoading ? (
-                <div className="flex justify-center py-12">
-                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500"></div>
-                </div>
-              ) : farms.length === 0 ? (
-                <StyledCard className="text-center py-12 bg-gradient-to-br from-violet-50 to-white dark:from-violet-900/20 dark:to-gray-800">
-                  <HomeModernIcon className="mx-auto h-16 w-16 text-violet-400 dark:text-violet-300" />
-                  <h3 className="mt-4 text-xl font-medium text-gray-900 dark:text-violet-100">
-                    No farms found
-                  </h3>
-                  <p className="mt-2 text-gray-500 dark:text-violet-300 max-w-md mx-auto">
-                    You haven't created any farms yet. Get started by
-                    registering your first agricultural property.
-                  </p>
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-violet-100">
+                      🌾 My Farms
+                    </h2>
+                    <p className="text-sm text-gray-500 dark:text-violet-300">
+                      Manage your agricultural properties and view their status
+                    </p>
+                  </div>
                   <button
                     onClick={() => setActiveView("createFarm")}
-                    className="mt-6 px-6 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg shadow-md transition-all"
-                    data-tooltip-id="create-first-farm-tooltip"
-                    data-tooltip-content="Create your first farm"
+                    className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg flex items-center shadow-md transition-all hover:shadow-violet-500/20"
+                    data-tooltip-id="add-farm-tooltip"
+                    data-tooltip-content="Add a new farm to your account"
                   >
-                    Create Your First Farm
+                    <PlusCircleIcon className="h-5 w-5 mr-2" />
+                    Add New Farm
                   </button>
-                </StyledCard>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {farms.map((farm) => (
-                    <StyledCard
-                      key={farm._id}
-                      className={`hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${
-                        selectedFarm?.farm_id === farm.farm_id
-                          ? "ring-2 ring-violet-500 dark:ring-violet-400 shadow-violet-500/20"
-                          : ""
-                      }`}
+                </div>
+
+                {isLoading ? (
+                  <div className="flex justify-center py-12">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-500"></div>
+                  </div>
+                ) : farms.length === 0 ? (
+                  <StyledCard className="text-center py-12 bg-gradient-to-br from-violet-50 to-white dark:from-violet-900/20 dark:to-gray-800">
+                    <HomeModernIcon className="mx-auto h-16 w-16 text-violet-400 dark:text-violet-300" />
+                    <h3 className="mt-4 text-xl font-medium text-gray-900 dark:text-violet-100">
+                      No farms found
+                    </h3>
+                    <p className="mt-2 text-gray-500 dark:text-violet-300 max-w-md mx-auto">
+                      You haven't created any farms yet. Get started by
+                      registering your first agricultural property.
+                    </p>
+                    <button
+                      onClick={() => setActiveView("createFarm")}
+                      className="mt-6 px-6 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-lg shadow-md transition-all"
+                      data-tooltip-id="create-first-farm-tooltip"
+                      data-tooltip-content="Create your first farm"
                     >
-                      <div className="p-5">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-violet-100 flex items-center">
-                              {farm.farm_name}
-                              <span
-                                className="ml-2 text-xs bg-violet-100 dark:bg-violet-800 text-violet-800 dark:text-violet-200 px-2 py-0.5 rounded-full"
-                                data-tooltip-id="farm-id-tooltip"
-                                data-tooltip-content={`Farm ID: ${farm.farm_id}`}
-                              >
-                                ID
-                              </span>
-                            </h3>
-                            <p className="text-sm text-gray-500 dark:text-violet-300 mt-1">
-                              Created:{" "}
-                              {new Date(farm.createdAt).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              farm.is_active
-                                ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
-                                : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
-                            }`}
-                            data-tooltip-id="farm-status-tooltip"
-                            data-tooltip-content={
-                              farm.is_active
-                                ? "This farm is active"
-                                : "This farm is inactive"
-                            }
-                          >
-                            {farm.is_active ? "Active" : "Inactive"}
-                          </span>
-                        </div>
-
-                        <div className="mt-4 space-y-3">
-                          <div className="flex items-start">
-                            <MapPinIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
+                      Create Your First Farm
+                    </button>
+                  </StyledCard>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {farms.map((farm) => (
+                      <StyledCard
+                        key={farm._id}
+                        className={`hover:shadow-lg transition-all duration-300 hover:-translate-y-1 ${
+                          selectedFarm?.farm_id === farm.farm_id
+                            ? "ring-2 ring-violet-500 dark:ring-violet-400 shadow-violet-500/20"
+                            : ""
+                        }`}
+                      >
+                        <div className="p-5">
+                          <div className="flex justify-between items-start">
                             <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
-                                Location Coordinates
+                              <h3 className="text-xl font-bold text-gray-800 dark:text-violet-100 flex items-center">
+                                {farm.farm_name}
+                                <span
+                                  className="ml-2 text-xs bg-violet-100 dark:bg-violet-800 text-violet-800 dark:text-violet-200 px-2 py-0.5 rounded-full"
+                                  data-tooltip-id="farm-id-tooltip"
+                                  data-tooltip-content={`Farm ID: ${farm.farm_id}`}
+                                >
+                                  ID
+                                </span>
+                              </h3>
+                              <p className="text-sm text-gray-500 dark:text-violet-300 mt-1">
+                                Created:{" "}
+                                {new Date(farm.createdAt).toLocaleDateString()}
                               </p>
-                              <p className="text-sm text-gray-600 dark:text-violet-300">
-                                {farm.latitude?.toFixed(6)},{" "}
-                                {farm.longitude?.toFixed(6)}
-                              </p>
-                              {farm.agro_polygon && (
-                                <p className="text-xs text-gray-500 dark:text-violet-400 mt-1">
-                                  Area: {farm.agro_polygon.area} km²
-                                </p>
-                              )}
                             </div>
+                            <span
+                              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                farm.is_active
+                                  ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
+                                  : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                              }`}
+                              data-tooltip-id="farm-status-tooltip"
+                              data-tooltip-content={
+                                farm.is_active
+                                  ? "This farm is active"
+                                  : "This farm is inactive"
+                              }
+                            >
+                              {farm.is_active ? "Active" : "Inactive"}
+                            </span>
                           </div>
 
-                          <div className="flex items-start">
-                            <ClipboardDocumentCheckIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
-                                Disease Reports
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-violet-300">
-                                {farm.top_disease_risks?.length || 0} active
-                                risks
-                              </p>
-                              {farm.top_disease_risks?.length > 0 && (
-                                <div className="mt-1 flex flex-wrap gap-1">
-                                  {farm.top_disease_risks
-                                    .slice(0, 3)
-                                    .map((risk, i) => (
-                                      <span
-                                        key={i}
-                                        className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                                        data-tooltip-id={`disease-risk-${i}-tooltip`}
-                                        data-tooltip-content={`Risk level: ${risk.risk_level}`}
-                                      >
-                                        {risk.disease.replace(/_/g, " ")}
-                                      </span>
-                                    ))}
-                                  {farm.top_disease_risks.length > 3 && (
-                                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
-                                      +{farm.top_disease_risks.length - 3} more
-                                    </span>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="flex items-start">
-                            <UserGroupIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
-                            <div>
-                              <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
-                                Nearby Farms
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-violet-300">
-                                {farm.nearby_farms?.length || 0} within 5km
-                                radius
-                              </p>
-                              {farm.nearby_farms?.length > 0 && (
-                                <div className="mt-1">
-                                  {farm.nearby_farms
-                                    .slice(0, 2)
-                                    .map((nearby, i) => (
-                                      <p
-                                        key={i}
-                                        className="text-xs text-gray-500 dark:text-violet-400"
-                                      >
-                                        • {nearby.farm_name} (
-                                        {nearby.distance_km.toFixed(2)}km)
-                                      </p>
-                                    ))}
-                                  {farm.nearby_farms.length > 2 && (
-                                    <p className="text-xs text-gray-500 dark:text-violet-400">
-                                      +{farm.nearby_farms.length - 2} more...
-                                    </p>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          </div>
-
-                          {farm.lstm_prediction?.length > 0 && (
+                          <div className="mt-4 space-y-3">
                             <div className="flex items-start">
-                              <ChartBarIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
+                              <MapPinIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
                               <div>
                                 <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
-                                  Disease Forecast
+                                  Location Coordinates
                                 </p>
-                                <div className="flex items-center mt-1">
-                                  <span className="text-sm font-medium text-gray-600 dark:text-violet-300">
-                                    {farm.lstm_prediction[0].predicted_risk}%
-                                    risk
-                                  </span>
-                                  <span className="mx-2 text-gray-400">•</span>
-                                  <span className="text-xs text-gray-500 dark:text-violet-400">
-                                    Next {farm.lstm_prediction.length} days
-                                  </span>
-                                </div>
+                                <p className="text-sm text-gray-600 dark:text-violet-300">
+                                  {farm.latitude?.toFixed(6)},{" "}
+                                  {farm.longitude?.toFixed(6)}
+                                </p>
+                                {farm.agro_polygon && (
+                                  <p className="text-xs text-gray-500 dark:text-violet-400 mt-1">
+                                    Area: {farm.agro_polygon.area} km²
+                                  </p>
+                                )}
                               </div>
                             </div>
-                          )}
-                        </div>
 
-                        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600 flex justify-between">
-                          <button
-                            onClick={() => handleFarmSelect(farm)}
-                            className="text-sm font-medium text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 flex items-center"
-                            data-tooltip-id="view-dashboard-tooltip"
-                            data-tooltip-content="View this farm's dashboard"
-                          >
-                            <ArrowRightIcon className="h-4 w-4 mr-1" />
-                            View Dashboard
-                          </button>
-                          <div className="flex space-x-3">
+                            <div className="flex items-start">
+                              <ClipboardDocumentCheckIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
+                                  Disease Reports
+                                </p>
+                                <p className="text-sm text-gray-600 dark:text-violet-300">
+                                  {farm.top_disease_risks?.length || 0} active
+                                  risks
+                                </p>
+                                {farm.top_disease_risks?.length > 0 && (
+                                  <div className="mt-1 flex flex-wrap gap-1">
+                                    {farm.top_disease_risks
+                                      .slice(0, 3)
+                                      .map((risk, i) => (
+                                        <span
+                                          key={i}
+                                          className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
+                                          data-tooltip-id={`disease-risk-${i}-tooltip`}
+                                          data-tooltip-content={`Risk level: ${risk.risk_level}`}
+                                        >
+                                          {risk.disease.replace(/_/g, " ")}
+                                        </span>
+                                      ))}
+                                    {farm.top_disease_risks.length > 3 && (
+                                      <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                                        +{farm.top_disease_risks.length - 3}{" "}
+                                        more
+                                      </span>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="flex items-start">
+                              <UserGroupIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
+                              <div>
+                                <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
+                                  Nearby Farms
+                                </p>
+                                <p className="text-sm text-gray-600 dark:text-violet-300">
+                                  {farm.nearby_farms?.length || 0} within 5km
+                                  radius
+                                </p>
+                                {farm.nearby_farms?.length > 0 && (
+                                  <div className="mt-1">
+                                    {farm.nearby_farms
+                                      .slice(0, 2)
+                                      .map((nearby, i) => (
+                                        <p
+                                          key={i}
+                                          className="text-xs text-gray-500 dark:text-violet-400"
+                                        >
+                                          • {nearby.farm_name} (
+                                          {nearby.distance_km.toFixed(2)}km)
+                                        </p>
+                                      ))}
+                                    {farm.nearby_farms.length > 2 && (
+                                      <p className="text-xs text-gray-500 dark:text-violet-400">
+                                        +{farm.nearby_farms.length - 2} more...
+                                      </p>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+
+                            {farm.lstm_prediction?.length > 0 && (
+                              <div className="flex items-start">
+                                <ChartBarIcon className="h-5 w-5 text-violet-500 mr-3 mt-0.5 flex-shrink-0 dark:text-violet-400" />
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700 dark:text-violet-200">
+                                    Disease Forecast
+                                  </p>
+                                  <div className="flex items-center mt-1">
+                                    <span className="text-sm font-medium text-gray-600 dark:text-violet-300">
+                                      {farm.lstm_prediction[0].predicted_risk}%
+                                      risk
+                                    </span>
+                                    <span className="mx-2 text-gray-400">
+                                      •
+                                    </span>
+                                    <span className="text-xs text-gray-500 dark:text-violet-400">
+                                      Next {farm.lstm_prediction.length} days
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-600 flex justify-between">
                             <button
-                              onClick={() => {
-                                // Implement farm details modal
-                              }}
-                              className="text-sm text-gray-600 hover:text-gray-800 dark:text-violet-300 dark:hover:text-violet-200"
-                              data-tooltip-id="farm-details-tooltip"
-                              data-tooltip-content="View farm details"
+                              onClick={() => handleFarmSelect(farm)}
+                              className="text-sm font-medium text-violet-600 hover:text-violet-800 dark:text-violet-400 dark:hover:text-violet-300 flex items-center"
+                              data-tooltip-id="view-dashboard-tooltip"
+                              data-tooltip-content="View this farm's dashboard"
                             >
-                              Details
+                              <ArrowRightIcon className="h-4 w-4 mr-1" />
+                              View Dashboard
                             </button>
-                            <button
-                              onClick={() => {
-                                // Implement quick actions menu
-                              }}
-                              className="text-sm text-gray-600 hover:text-gray-800 dark:text-violet-300 dark:hover:text-violet-200"
-                              data-tooltip-id="farm-actions-tooltip"
-                              data-tooltip-content="More actions"
+                            <div className="flex space-x-3">
+                              <button
+                                onClick={() => {
+                                  // Implement farm details modal
+                                }}
+                                className="text-sm text-gray-600 hover:text-gray-800 dark:text-violet-300 dark:hover:text-violet-200"
+                                data-tooltip-id="farm-details-tooltip"
+                                data-tooltip-content="View farm details"
+                              >
+                                Details
+                              </button>
+                              <button
+                                onClick={() => {
+                                  // Implement quick actions menu
+                                }}
+                                className="text-sm text-gray-600 hover:text-gray-800 dark:text-violet-300 dark:hover:text-violet-200"
+                                data-tooltip-id="farm-actions-tooltip"
+                                data-tooltip-content="More actions"
+                              >
+                                <EllipsisHorizontalIcon className="h-5 w-5" />
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </StyledCard>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+          {activeView === "analytics" && (
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <StyledCard color="purple">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100 mb-4">
+                  Crop Analytics
+                </h2>
+                <UserAnalyticsCard summary={userSummary} />
+                <div className="mt-4">
+                  <p className="text-gray-600 dark:text-violet-200">
+                    Detailed analytics on crop health and disease trends will be
+                    available soon.
+                  </p>
+                </div>
+              </StyledCard>
+            </>
+          )}
+          {activeView === "profile" && (
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <StyledCard color="indigo">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100 mb-4">
+                  My Profile
+                </h2>
+                <div className="flex flex-col sm:flex-row items-start gap-6">
+                  <div className="flex-shrink-0">
+                    <img
+                      src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                      alt="User Avatar"
+                      className="w-24 h-24 rounded-full border-4 border-indigo-600 dark:border-violet-400 object-cover shadow-md"
+                      data-tooltip-id="profile-avatar-tooltip"
+                      data-tooltip-content="Your profile picture"
+                    />
+                  </div>
+                  <div className="flex-1">
+                    <div className="space-y-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800 dark:text-violet-100">
+                          {user.name}
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-violet-200">
+                          {user.email}
+                        </p>
+                      </div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-medium text-gray-700 dark:text-violet-300">
+                            Account Type
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-violet-200">
+                            Farmer
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-700 dark:text-violet-300">
+                            Member Since
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-violet-200">
+                            {new Date(
+                              user.createdAt || Date.now()
+                            ).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-700 dark:text-violet-300">
+                            Total Farms
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-violet-200">
+                            {farms.length}
+                          </p>
+                        </div>
+                        <div>
+                          <h4 className="font-medium text-gray-700 dark:text-violet-300">
+                            Active Farm
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-violet-200">
+                            {selectedFarm?.farm_name || "None"}
+                          </p>
+                        </div>
+                      </div>
+                      <div>
+                        <button
+                          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors shadow-md hover:shadow-lg"
+                          data-tooltip-id="edit-profile-tooltip"
+                          data-tooltip-content="Edit your profile details"
+                        >
+                          Edit Profile
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </StyledCard>
+            </>
+          )}
+          {activeView === "settings" && (
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <StyledCard color="gray">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100 mb-4">
+                  Settings
+                </h2>
+                <div className="space-y-6">
+                  <div>
+                    <h3 className="font-medium text-lg mb-2 text-gray-800 dark:text-violet-100">
+                      Notification Preferences
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-violet-200 mb-1">
+                          Notification Methods
+                        </label>
+                        <div className="space-y-2">
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="email-notifications"
+                              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                              defaultChecked
+                              data-tooltip-id="email-notifications-tooltip"
+                              data-tooltip-content="Enable or disable email notifications"
+                            />
+                            <label
+                              htmlFor="email-notifications"
+                              className="ml-2 block text-sm text-gray-700 dark:text-violet-200"
                             >
-                              <EllipsisHorizontalIcon className="h-5 w-5" />
-                            </button>
+                              Email Notifications
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="push-notifications"
+                              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                              defaultChecked
+                              data-tooltip-id="push-notifications-tooltip"
+                              data-tooltip-content="Enable or disable push notifications"
+                            />
+                            <label
+                              htmlFor="push-notifications"
+                              className="ml-2 block text-sm text-gray-700 dark:text-violet-200"
+                            >
+                              Push Notifications
+                            </label>
+                          </div>
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id="sms-notifications"
+                              className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                              defaultChecked={false}
+                              data-tooltip-id="sms-notifications-tooltip"
+                              data-tooltip-content="Enable or disable SMS notifications"
+                            />
+                            <label
+                              htmlFor="sms-notifications"
+                              className="ml-2 block text-sm text-gray-700 dark:text-violet-200"
+                            >
+                              SMS Alerts
+                            </label>
                           </div>
                         </div>
                       </div>
-                    </StyledCard>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          {activeView === "analytics" && (
-            <StyledCard color="purple">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100 mb-4">
-                Crop Analytics
-              </h2>
-              <UserAnalyticsCard summary={userSummary} />
-              <div className="mt-4">
-                <p className="text-gray-600 dark:text-violet-200">
-                  Detailed analytics on crop health and disease trends will be
-                  available soon.
-                </p>
-              </div>
-            </StyledCard>
-          )}
-          {activeView === "profile" && (
-            <StyledCard color="indigo">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100 mb-4">
-                My Profile
-              </h2>
-              <div className="flex flex-col sm:flex-row items-start gap-6">
-                <div className="flex-shrink-0">
-                  <img
-                    src={`https://ui-avatars.com/api/?name=${user.name}&background=random`}
-                    alt="User Avatar"
-                    className="w-24 h-24 rounded-full border-4 border-indigo-600 dark:border-violet-400 object-cover shadow-md"
-                    data-tooltip-id="profile-avatar-tooltip"
-                    data-tooltip-content="Your profile picture"
-                  />
-                </div>
-                <div className="flex-1">
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-violet-100">
-                        {user.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 dark:text-violet-200">
-                        {user.email}
-                      </p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <h4 className="font-medium text-gray-700 dark:text-violet-300">
-                          Account Type
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-violet-200">
-                          Farmer
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-gray-700 dark:text-violet-300">
-                          Member Since
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-violet-200">
-                          {new Date(
-                            user.createdAt || Date.now()
-                          ).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-gray-700 dark:text-violet-300">
-                          Total Farms
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-violet-200">
-                          {farms.length}
-                        </p>
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-gray-700 dark:text-violet-300">
-                          Active Farm
-                        </h4>
-                        <p className="text-sm text-gray-600 dark:text-violet-200">
-                          {selectedFarm?.farm_name || "None"}
-                        </p>
+                        <label
+                          htmlFor="theme-select"
+                          className="block text-sm font-medium text-gray-700 dark:text-violet-200 mb-1"
+                        >
+                          Theme
+                        </label>
+                        <select
+                          id="theme-select"
+                          className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-violet-100"
+                          value={theme}
+                          onChange={(e) => setTheme(e.target.value)}
+                          data-tooltip-id="theme-select-tooltip"
+                          data-tooltip-content="Select your preferred theme"
+                        >
+                          <option value="light">Light</option>
+                          <option value="dark">Dark</option>
+                          <option value="system">System</option>
+                        </select>
                       </div>
                     </div>
-                    <div>
-                      <button
-                        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors shadow-md hover:shadow-lg"
-                        data-tooltip-id="edit-profile-tooltip"
-                        data-tooltip-content="Edit your profile details"
-                      >
-                        Edit Profile
-                      </button>
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-lg mb-2 text-gray-800 dark:text-violet-100">
+                      Danger Zone
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <button
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors shadow-md hover:shadow-lg"
+                          data-tooltip-id="delete-account-tooltip"
+                          data-tooltip-content="Permanently delete your account. This action cannot be undone."
+                        >
+                          Delete Account
+                        </button>
+                        <p className="mt-1 text-xs text-gray-500 dark:text-violet-200">
+                          This action cannot be undone
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </StyledCard>
-          )}
-          {activeView === "settings" && (
-            <StyledCard color="gray">
-              <h2 className="text-xl font-bold text-gray-800 dark:text-violet-100 mb-4">
-                Settings
-              </h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-medium text-lg mb-2 text-gray-800 dark:text-violet-100">
-                    Notification Preferences
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-violet-200 mb-1">
-                        Notification Methods
-                      </label>
-                      <div className="space-y-2">
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="email-notifications"
-                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-                            defaultChecked
-                            data-tooltip-id="email-notifications-tooltip"
-                            data-tooltip-content="Enable or disable email notifications"
-                          />
-                          <label
-                            htmlFor="email-notifications"
-                            className="ml-2 block text-sm text-gray-700 dark:text-violet-200"
-                          >
-                            Email Notifications
-                          </label>
-                        </div>
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="push-notifications"
-                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-                            defaultChecked
-                            data-tooltip-id="push-notifications-tooltip"
-                            data-tooltip-content="Enable or disable push notifications"
-                          />
-                          <label
-                            htmlFor="push-notifications"
-                            className="ml-2 block text-sm text-gray-700 dark:text-violet-200"
-                          >
-                            Push Notifications
-                          </label>
-                        </div>
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="sms-notifications"
-                            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
-                            defaultChecked={false}
-                            data-tooltip-id="sms-notifications-tooltip"
-                            data-tooltip-content="Enable or disable SMS notifications"
-                          />
-                          <label
-                            htmlFor="sms-notifications"
-                            className="ml-2 block text-sm text-gray-700 dark:text-violet-200"
-                          >
-                            SMS Alerts
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <label
-                        htmlFor="theme-select"
-                        className="block text-sm font-medium text-gray-700 dark:text-violet-200 mb-1"
-                      >
-                        Theme
-                      </label>
-                      <select
-                        id="theme-select"
-                        className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-violet-100"
-                        value={theme}
-                        onChange={(e) => setTheme(e.target.value)}
-                        data-tooltip-id="theme-select-tooltip"
-                        data-tooltip-content="Select your preferred theme"
-                      >
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                        <option value="system">System</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="font-medium text-lg mb-2 text-gray-800 dark:text-violet-100">
-                    Danger Zone
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <button
-                        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors shadow-md hover:shadow-lg"
-                        data-tooltip-id="delete-account-tooltip"
-                        data-tooltip-content="Permanently delete your account. This action cannot be undone."
-                      >
-                        Delete Account
-                      </button>
-                      <p className="mt-1 text-xs text-gray-500 dark:text-violet-200">
-                        This action cannot be undone
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </StyledCard>
+              </StyledCard>
+            </>
           )}
           {activeView === "createFarm" && (
-            <CreateFarm
-              userId={user._id}
-              username={user.name}
-              onFarmCreated={handleFarmCreated}
-              onCancel={() =>
-                setActiveView(farms.length > 0 ? "myFarms" : "dashboard")
-              }
-            />
+            <>
+              <MobileSidebarOpen setMobileSidebarOpen={setMobileSidebarOpen} />
+              <CreateFarm
+                userId={user._id}
+                username={user.name}
+                onFarmCreated={handleFarmCreated}
+                onCancel={() =>
+                  setActiveView(farms.length > 0 ? "myFarms" : "dashboard")
+                }
+              />
+            </>
           )}
         </main>
       </div>

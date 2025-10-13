@@ -448,7 +448,7 @@ const FarmMap = ({ farmData }) => {
         <div
           id="farm-map"
           ref={mapContainerRef}
-          className="h-[500px] w-full rounded-b-xl relative"
+          className="h-[500px] z-0 w-full rounded-b-xl relative"
         >
           {!farmData && (
             <div className="absolute inset-0 bg-gray-100 dark:bg-gray-900/50 flex items-center justify-center rounded-b-xl">

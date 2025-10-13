@@ -204,13 +204,19 @@ const RainfallCard = () => {
   }
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-2 w-full max-w-5xl">
-        {/* <h2 className="text-2xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">
+    <div className="flex justify-center items-center p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-4 w-full max-w-5xl">
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-center text-gray-800 dark:text-gray-100">
           Hourly Temperature & Precipitation
-        </h2> */}
-        <div className="h-[500px]">
-          <Line data={buildChartData()} options={chartOptions} />
+        </h2>
+        <div className="w-full h-[400px] sm:h-[500px] md:h-[550px] lg:h-[600px]">
+          <Line
+            data={buildChartData()}
+            options={{
+              ...chartOptions,
+              maintainAspectRatio: false, // makes chart responsive to container
+            }}
+          />
         </div>
       </div>
     </div>

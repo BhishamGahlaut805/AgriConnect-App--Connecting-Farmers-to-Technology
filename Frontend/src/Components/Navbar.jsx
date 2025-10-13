@@ -363,6 +363,77 @@ const Navbar = () => {
                   {language === "en" ? "हिंदी" : "English"}
                 </button>
               </div>
+              {/* Login / Register or User Info / Dashboard / Logout */}
+              <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                {isLoggedIn && user ? (
+                  <div className="space-y-4">
+                    {/* User Info */}
+                    <div className="flex items-center gap-3 bg-white/10 rounded-xl px-4 py-3 border border-white/20">
+                      <img
+                        src={avatar}
+                        alt="Profile"
+                        className="w-10 h-10 rounded-full border border-white/30"
+                      />
+                      <div>
+                        <p className="text-white font-semibold text-sm">
+                          {user.name}
+                        </p>
+                        <p className="text-emerald-200 text-xs font-medium">
+                          Logged in
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Dashboard + Logout */}
+                    <div className="flex flex-col gap-3">
+                      <button
+                        onClick={() => {
+                          navigate(`/dashboard/${user.id}`);
+                          setMobileMenuOpen(false);
+                        }}
+                        className="w-full py-3 rounded-xl bg-yellow-400 text-gray-900 font-bold shadow hover:bg-yellow-500 transition"
+                      >
+                        Dashboard
+                      </button>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="w-full py-3 rounded-xl bg-red-500 text-white font-semibold hover:bg-red-600 transition flex items-center justify-center gap-2"
+                      >
+                        <img
+                          src={logoutimg}
+                          alt="Logout"
+                          className="w-6 h-6 rounded-full"
+                        />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={() => {
+                        handleLogin();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="w-full py-3 rounded-xl bg-white/20 text-white font-semibold hover:bg-white/30 transition"
+                    >
+                      Login
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleRegister();
+                        setMobileMenuOpen(false);
+                      }}
+                      className="w-full py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-bold shadow hover:from-yellow-500 hover:to-orange-600 transition"
+                    >
+                      Register
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         )}

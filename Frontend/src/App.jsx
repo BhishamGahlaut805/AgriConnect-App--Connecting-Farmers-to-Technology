@@ -23,6 +23,8 @@ import AgriConnectFlowchart from "./Pages/flowchart";
 import HomeAgribot from "./Pages/Agribot/Home";
 import ChatPage from "./Pages/Agribot/chatPage";
 import AdminPage from "./Pages/Agribot/AdminPage";
+import AgriConnectHome from "./Pages/AgriConnectHome";
+import ResultPage from "./Pages/CropDiseasePage/ResultPage";
 
 function App() {
   return (
@@ -53,6 +55,8 @@ function App() {
               <Route path="/browse" element={<Browse />} />
               <Route path="/WeedDetection" element={<WeedDetectionPage />} />
               <Route path="/flowchart" element={<AgriConnectFlowchart />} />
+              <Route path="/" element={<AgriConnectHome />} />
+              <Route path="/:farmId/results" element={<ResultPage />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
 
               {/* Protected Routes - Require Authentication */}
