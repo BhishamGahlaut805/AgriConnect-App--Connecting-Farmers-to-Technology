@@ -1,4 +1,4 @@
-// AdminService.js
+// AdminService.js - Updated
 import AgrimarketService from "./AgrimarketService";
 
 export class AdminService {
@@ -115,6 +115,7 @@ export class AdminService {
         page,
         limit
       );
+      // console.log("Response at line 114 AdminService:", response);
       return {
         data: response.data || response.listings || [],
         pagination: response.pagination || {
@@ -213,6 +214,7 @@ export class AdminService {
   static async getUserAnalytics() {
     try {
       const response = await AgrimarketService.AdminService.getUserAnalytics();
+      console.log("User analytics response:", response.data);
       return response.data || response;
     } catch (error) {
       console.error("Error fetching user analytics:", error);
@@ -257,7 +259,6 @@ export class AdminService {
   // Utility methods for admin
   static async exportData(type, filters = {}) {
     try {
-      // This would call a backend endpoint for data export
       const queryParams = new URLSearchParams({ type, ...filters }).toString();
       const response = await fetch(
         `${AgrimarketService.BASE_URL}/admin/export?${queryParams}`,

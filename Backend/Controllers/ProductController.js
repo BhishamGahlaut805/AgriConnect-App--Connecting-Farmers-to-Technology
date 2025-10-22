@@ -3,7 +3,7 @@ const Product = require("../models/Product");
 const OTPVerification = require("../Models/OTPVerification");
 const emailService = require("../Utils/emailService");
 const { validationResult } = require("express-validator");
-
+const Listing = require("../models/Listing");
 class ProductController {
   // Initiate product creation with OTP
   async initiateProductCreation(req, res) {
@@ -76,14 +76,16 @@ class ProductController {
   // Verify OTP and create products
   async verifyAndCreateProducts(req, res) {
     try {
+      console.log("received req body:", req.body);
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          message: "Validation failed",
-          errors: errors.array(),
-        });
-      }
+      // console.log("validation errors:", errors.array());
+      // if (!errors.isEmpty()) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     message: "Validation failed",
+      //     errors: errors.array(),
+      //   });
+      // }
 
       const { verificationId, otp } = req.body;
 
@@ -228,8 +230,35 @@ class ProductController {
       });
     }
   }
+  // Get single product--adminView
+  async getProduct1(req, res) {
+    try {
+      const product = await Product.findById(req.params.id)
+        .populate("seller", "name email phone")
+        .populate("verifiedBy", "name");
 
-  // Get single product
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message: "Product not found",
+        });
+      }
+      // console.log("Product status:", product);
+      res.status(200).json({
+        success: true,
+        data: product,
+      });
+    } catch (error) {
+      console.error("Get product error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch product",
+        error: error.message,
+      });
+    }
+  }
+
+  // Get single product--userView
   async getProduct(req, res) {
     try {
       const product = await Product.findById(req.params.id)
@@ -242,7 +271,7 @@ class ProductController {
           message: "Product not found",
         });
       }
-
+      // console.log("Product status:", product);
       // Check if user can view pending product
       if (product.status === "pending" && req.user) {
         if (
@@ -323,7 +352,7 @@ class ProductController {
   async deleteProduct(req, res) {
     try {
       const product = await Product.findById(req.params.id);
-
+      const listing = await Listing.findOne({ product: product._id });
       if (!product) {
         return res.status(404).json({
           success: false,
@@ -343,6 +372,10 @@ class ProductController {
 
       // Soft delete
       product.isActive = false;
+      product.status = "draft";
+      listing.status = "inactive";
+      listing.isActive = false;
+      await listing.save();
       await product.save();
 
       res.status(200).json({
@@ -361,6 +394,7 @@ class ProductController {
 
   // Get user's products
   async getMyProducts(req, res) {
+    // console.log("getMyProducts called with user:", req);
     try {
       const { status, page = 1, limit = 20 } = req.query;
 

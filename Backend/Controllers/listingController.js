@@ -8,16 +8,17 @@ const { validationResult } = require("express-validator");
 class ListingController {
   // Create listing with OTP verification
   async createListing(req, res) {
+    // console.log("Create listing request body:", req.body);
     try {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).json({
-          success: false,
-          message: "Validation failed",
-          errors: errors.array(),
-        });
-      }
-
+      // if (!errors.isEmpty()) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     message: "Validation failed",
+      //     errors: errors.array(),
+      //   });
+      // }
+      console.log("Errors are : ", errors.array());
       const {
         product,
         pricePerUnit,
@@ -92,6 +93,8 @@ class ListingController {
           errors: errors.array(),
         });
       }
+      console.log("Request body for verifyAndCreateListing:", req.body);
+      console.log("Errors are : ", errors.array());
 
       const { verificationId, otp } = req.body;
 
@@ -239,10 +242,11 @@ class ListingController {
   // Get user's listings
   async getMyListings(req, res) {
     try {
+      console.log("Fetching listings for user:", req.userId);
       const { status, page = 1, limit = 20 } = req.query;
 
       const filter = {
-        farmer: req.user._id,
+        farmer: req.userId,
         isActive: true,
       };
 
@@ -355,7 +359,40 @@ class ListingController {
       });
     }
   }
-
+  async getAllListings(req, res) {
+    try {
+      console.log("MAKING REQUESTS HERE");
+      const { status, page = 1, limit = 20 } = req.query;
+      const filter = { isActive: true };
+      if (status) filter.status = status;
+      const skip = (parseInt(page) - 1) * parseInt(limit);
+      const listings = await Listing.find(filter)
+        .populate("product", "title category images")
+        .populate("farmer", "name email phone rating")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(parseInt(limit))
+        .lean();
+      const total = await Listing.countDocuments(filter);
+      res.status(200).json({
+        success: true,
+        data: listings,
+        pagination: {
+          page: parseInt(page),
+          limit: parseInt(limit),
+          total,
+          totalPages: Math.ceil(total / parseInt(limit)),
+        },
+      });
+    } catch (error) {
+      console.error("Get all listings error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch listings",
+        error: error.message,
+      });
+    }
+  }
   // Toggle listing status
   async toggleListingStatus(req, res) {
     try {
@@ -395,6 +432,252 @@ class ListingController {
       res.status(500).json({
         success: false,
         message: "Failed to update listing status",
+        error: error.message,
+      });
+    }
+  }
+
+  async initiateBulkListingCreation(req, res) {
+    // Implementation for bulk listing creation initiation
+    const { listings } = req.body;
+    console.log("Bulk listings request body:", req.body);
+    try {
+      // Validate listings array
+      if (!Array.isArray(listings) || listings.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Listings array is required and cannot be empty",
+        });
+      }
+      // Generate OTP
+      const otp = emailService.generateOTP();
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+      // Store listings data with OTP
+      const otpRecord = await OTPVerification.create({
+        email: req.body.email,
+        otp,
+        products: listings.map((listing) => ({
+          ...listing,
+          farmer: req.user._id,
+        })),
+        expiresAt,
+      });
+      // Send OTP email
+      await emailService.sendOTP(req.body.email, otp, listings.length);
+      res.status(200).json({
+        success: true,
+        message: "OTP sent to your email for bulk listing verification",
+        verificationId: otpRecord._id,
+        expiresAt: otpRecord.expiresAt,
+      });
+    } catch (error) {
+      console.error("Initiate bulk listing creation error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to initiate bulk listing creation",
+        error: error.message,
+      });
+    }
+  }
+
+  async verifyAndCreateBulkListings(req, res) {
+    // Implementation for bulk listing verification and creation
+    try {
+      const errors = validationResult(req);
+      // if (!errors.isEmpty()) {
+      //   return res.status(400).json({
+      //     success: false,
+      //     message: "Validation failed",
+      //     errors: errors.array(),
+      //   });
+      // }
+      const { verificationId, otp } = req.body;
+      // Find OTP record
+      const otpRecord = await OTPVerification.findOne({
+        _id: verificationId,
+        otp,
+        expiresAt: { $gt: new Date() },
+      });
+
+      if (!otpRecord) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid or expired OTP",
+        });
+      }
+
+      // Create listings
+      const createdListings = await Listing.insertMany(otpRecord.products);
+      // Delete OTP record
+      await OTPVerification.deleteOne({ _id: verificationId });
+
+      res.status(201).json({
+        success: true,
+        message: "Bulk listings created successfully",
+        data: createdListings,
+      });
+    } catch (error) {
+      console.error("Verify and create bulk listings error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to verify and create bulk listings",
+        error: error.message,
+      });
+    }
+  }
+
+  async getBulkCreationStatus(req, res) {
+    // Implementation for fetching bulk creation status
+    const { verificationId } = req.params;
+    try {
+      const otpRecord = await OTPVerification
+        .findById(verificationId)
+        .lean();
+      if (!otpRecord) {
+        return res.status(404).json({
+          success: false,
+          message: "Verification record not found",
+        });
+      }
+      res.status(200).json({
+        success: true,
+        data: {
+          verified: otpRecord.verified,
+          expiresAt: otpRecord.expiresAt,
+        },
+      });
+    } catch (error) {
+      console.error("Get bulk creation status error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch bulk creation status",
+        error: error.message,
+      });
+    }
+
+  }
+  async bulkUpdateListings(req, res) {
+    // Implementation for bulk updating listings
+    try {
+      const { listingIds, updateData } = req.body;
+      if (!Array.isArray(listingIds) || listingIds.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "listingIds array is required and cannot be empty",
+        });
+      }
+      const result = await Listing.updateMany(
+        { _id: { $in: listingIds }, farmer: req.user._id, isActive: true },
+        { $set: updateData }
+      );
+      res.status(200).json({
+        success: true,
+        message: `${result.nModified} listings updated successfully`,
+        data: result,
+      });
+    } catch (error) {
+      console.error("Bulk update listings error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to bulk update listings",
+        error: error.message,
+      });
+    }
+  }
+
+  async bulkDeleteListings(req, res) {
+    // Implementation for bulk deleting listings
+    try {
+      const { listingIds } = req.body;
+      if (!Array.isArray(listingIds) || listingIds.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "listingIds array is required and cannot be empty",
+        });
+      }
+      const result = await Listing.updateMany(
+        { _id: { $in: listingIds }, farmer: req.user._id, isActive: true },
+        { $set: { isActive: false } }
+      );
+      res.status(200).json({
+        success: true,
+        message: `${result.nModified} listings deleted successfully`,
+        data: result,
+      });
+    } catch (error) {
+      console.error("Bulk delete listings error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to bulk delete listings",
+        error: error.message,
+      });
+    }
+  }
+  async bulkToggleListingStatus(req, res) {
+    // Implementation for bulk toggling listing status
+    try {
+      const { listingIds, status } = req.body;
+      const validStatuses = ["active", "inactive", "soldout"];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid status",
+        });
+      }
+      if (!Array.isArray(listingIds) || listingIds.length === 0) {
+        return res.status(400).json({
+          success: false,
+          message: "listingIds array is required and cannot be empty",
+        });
+      }
+      const result = await Listing.updateMany(
+        { _id: { $in: listingIds }, farmer: req.user._id, isActive: true },
+        { $set: { status } }
+      );
+      res.status(200).json({
+        success: true,
+        message: `${result.nModified} listings status updated to ${status} successfully`,
+        data: result,
+      });
+    } catch (error) {
+      console.error("Bulk toggle listing status error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to bulk toggle listing status",
+        error: error.message,
+      });
+    }
+  }
+  async getListing(req, res) {
+    try {
+      // console.log("MAKING REQUESTS FROM HERE ", req.params.id);
+      // if(req.params.id=="all"){
+      //   return getAllListings(req, res);
+      // }
+      const listing = await Listing.findOne({
+        _id: req.params.id,
+        isActive: true,
+      })
+
+        .populate("product", "title category images unit specs description")
+        .populate("farmer", "name email phone rating");
+        console.log("Listing found: ", listing);
+      if (!listing) {
+        return res.status(404).json({
+          success: false,
+          message: "Listing not found",
+        });
+      }
+      console.log("Returning listing: ", listing);
+      res.status(200).json({
+        success: true,
+        data: listing,
+      });
+    } catch (error) {
+      console.error("Get listing error:", error);
+      res.status(500).json({
+        success: false,
+        message: "Failed to fetch listing",
         error: error.message,
       });
     }

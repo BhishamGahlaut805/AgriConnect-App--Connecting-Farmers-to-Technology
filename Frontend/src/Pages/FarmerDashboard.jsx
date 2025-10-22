@@ -136,6 +136,7 @@ const FarmerDashboard = () => {
   // Check user authentication and role
   useEffect(() => {
     const userRaw = localStorage.getItem("userDetails");
+    console.log("User details from localStorage:", userRaw);
     if (!userRaw) {
       navigate("/unauthorized");
       return;

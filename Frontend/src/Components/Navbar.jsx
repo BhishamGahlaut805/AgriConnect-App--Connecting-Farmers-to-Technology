@@ -169,6 +169,17 @@ const Navbar = () => {
     { name: "Community", path: "/community" },
     { name: "Support", path: "/support" },
   ];
+const navigaterolewise=(role,id)=>{
+    if(role==="admin" || role==="Admin"){
+      navigate(`Admin/dashboard/${id}`);
+    }else if(role==="farmer" || role==="Farmer"){
+      navigate(`Farmer/dashboard/${id}`);
+    }else if(role==="trader" || role==="Trader"){
+      navigate(`Trader/dashboard/${id}`);
+    }else{
+      navigate(`/user/dashboard/${id}`);
+    }
+  };
 
   return (
     <nav className="bg-gradient-to-r from-emerald-800 via-green-900 to-teal-900 dark:from-gray-900 dark:via-gray-800 dark:to-gray-950 fixed w-full top-0 z-50 shadow-lg">
@@ -283,7 +294,9 @@ const Navbar = () => {
                   </span>
                 </div>
                 <button
-                  onClick={() => navigate(`/dashboard/${user.id}`)}
+                  onClick={() =>
+                    navigaterolewise(user.role, user.id)
+                  }
                   className="px-5 py-2 rounded-xl bg-yellow-400 text-gray-900 font-bold shadow hover:bg-yellow-500"
                 >
                   Dashboard

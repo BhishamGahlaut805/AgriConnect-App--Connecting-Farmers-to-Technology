@@ -7,6 +7,7 @@ const config = require("../Config/config"); // Must match login JWT secret
 const auth = async (req, res, next) => {
   try {
     // Get token from header or cookie
+    // console.log("Auth middleware invoked", req.headers);
         const token =
           req.header("Authorization")?.replace("Bearer ", "") || req.cookies?.token;
         // console.log("Authorization header:", req.header("Authorization"));

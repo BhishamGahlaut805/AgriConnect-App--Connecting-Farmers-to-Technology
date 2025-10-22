@@ -1,355 +1,1668 @@
-import React, { useState } from 'react';
+import React, { act, useState } from "react";
 import {
-  Box,
-  Paper,
-  Typography,
-  Card,
-  CardContent,
-  Grid,
-  Chip,
-  Zoom,
-  Fade,
-  Container,
-  useTheme,
-  useMediaQuery
-} from '@mui/material';
-import {
-  AccountCircle,
-  Security,
-  ShoppingCart,
-  Analytics,
-  Payment,
-  Storage,
-  Agriculture,
-  Warning,
-  Timeline,
-  Chat,
-  Cloud,
-  BugReport
-} from '@mui/icons-material';
+  ChevronRightIcon,
+  ChevronDownIcon,
+  ServerIcon,
+  CpuChipIcon,
+  ArrowDownOnSquareStackIcon as DatabaseIcon,
+  ChartBarIcon,
+  ChatBubbleLeftRightIcon,
+  CloudIcon,
+  UserGroupIcon,
+  ShieldCheckIcon,
+  MagnifyingGlassIcon,
+  BookOpenIcon,
+  CodeBracketIcon,
+  WrenchScrewdriverIcon,
+  DocumentChartBarIcon,
+  CubeIcon,
+  CommandLineIcon,
+  BeakerIcon,
+  MapIcon,
+  PhotoIcon,
+  CalendarIcon,
+  GlobeAltIcon,
+  ShoppingCartIcon,
+  UserCircleIcon,
+  LockClosedIcon,
+  ExclamationTriangleIcon,
+  BookmarkIcon,
+  PhoneIcon,
 
-const AgriConnectFlowchart = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [activeModule, setActiveModule] = useState(null);
+} from "@heroicons/react/24/outline";
+import RouteMap from "../NewComponents/RouteMap.jsx";
+import ImagesView from "./Arch/Images.jsx";
 
-  const modules = [
-    {
-      id: 'auth',
-      title: 'Authentication System',
-      icon: <Security sx={{ fontSize: 32 }} />,
-      color: '#ff6b6b',
-      description: 'User registration, login, JWT tokens, and role-based access control',
-      features: ['User Registration', 'JWT Authentication', 'Password Reset', 'Google OAuth', 'Address Management'],
-      connections: ['user', 'database']
-    },
-    {
-      id: 'market',
-      title: 'Agrimarket Platform',
-      icon: <ShoppingCart sx={{ fontSize: 32 }} />,
-      color: '#ff9ff3',
-      description: 'Complete marketplace for agricultural products and crop trading',
-      features: ['Product Management', 'Real-time Auctions', 'Shopping Cart', 'Order Processing', 'Inventory System'],
-      connections: ['payment', 'database', 'analytics']
-    },
-    {
-      id: 'analytics',
-      title: 'Agri Analytics',
-      icon: <Analytics sx={{ fontSize: 32 }} />,
-      color: '#5f27cd',
-      description: 'Advanced analytics and prediction systems for farm management',
-      features: ['Crop Disease Detection', 'Yield Prediction', 'Farm Statistics', 'Market Analysis', 'What-If Simulations'],
-      connections: ['database', 'weather', 'disease-prediction']
-    },
-    {
-      id: 'payment',
-      title: 'Payment System',
-      icon: <Payment sx={{ fontSize: 32 }} />,
-      color: '#54a0ff',
-      description: 'Secure payment processing and transaction management',
-      features: ['Payment Processing', 'Webhook Handling', 'Transaction Records', 'Multi-provider Support'],
-      connections: ['market', 'database']
-    },
-    {
-      id: 'database',
-      title: 'MongoDB Database',
-      icon: <Storage sx={{ fontSize: 32 }} />,
-      color: '#8395a7',
-      description: 'Central data storage with multiple schemas and collections',
-      features: ['User Data', 'Product Catalog', 'Transaction Records', 'Analytics Data', 'Farm Information'],
-      connections: ['all']
-    },
-    {
-      id: 'disease-detection',
-      title: 'CNN Disease Detection',
-      icon: <BugReport sx={{ fontSize: 32 }} />,
-      color: '#e74c3c',
-      description: 'Convolutional Neural Network for real-time crop disease identification',
-      features: ['Image Upload', 'Real-time Analysis', 'Disease Classification', 'Confidence Scoring', 'Treatment Suggestions'],
-      connections: ['analytics', 'reports']
-    },
-    {
-      id: 'disease-prediction',
-      title: 'LSTM Disease Prediction',
-      icon: <Timeline sx={{ fontSize: 32 }} />,
-      color: '#9b59b6',
-      description: 'Long Short-Term Memory networks for outbreak forecasting',
-      features: ['Temporal Analysis', 'Risk Assessment', 'Early Warnings', 'Spatial Propagation'],
-      connections: ['analytics', 'weather']
-    },
-    {
-      id: 'yield-prediction',
-      title: 'LSTM Yield Prediction',
-      icon: <Agriculture sx={{ fontSize: 32 }} />,
-      color: '#27ae60',
-      description: 'Yield forecasting using historical data and environmental factors',
-      features: ['Multi-factor Analysis', 'Seasonal Trends', 'Market Impact', 'Optimization Suggestions'],
-      connections: ['analytics', 'weather']
-    },
-    {
-      id: 'weed-detection',
-      title: 'YOLOv8 Weed Detection',
-      icon: <Warning sx={{ fontSize: 32 }} />,
-      color: '#f39c12',
-      description: 'Real-time weed identification for cotton crops',
-      features: ['Live Monitoring', 'Image/Video Upload', 'Cotton-specific Detection', 'Treatment Guidance'],
-      connections: ['analytics']
-    },
-    {
-      id: 'weather',
-      title: 'Weather Insights',
-      icon: <Cloud sx={{ fontSize: 32 }} />,
-      color: '#3498db',
-      description: 'Real-time weather data with TTS and farmer-friendly interface',
-      features: ['Live Forecasts', 'TTS Alerts', 'Crop-specific Advisories', 'Historical Analysis'],
-      connections: ['analytics', 'dashboard']
-    },
-    {
-      id: 'ai-assistant',
-      title: 'AI Chat Assistant',
-      icon: <Chat sx={{ fontSize: 32 }} />,
-      color: '#1abc9c',
-      description: 'Langchain & Pinecone powered AI for agricultural queries',
-      features: ['Natural Language Processing', 'Context Awareness', 'Multi-format Responses', 'Learning Capabilities'],
-      connections: ['all']
-    }
-  ];
+const AgriConnectAdvancedProjectReport = () => {
+  const [activeTab, setActiveTab] = useState("overview");
+  const [expandedSections, setExpandedSections] = useState({});
+  const [selectedModule, setSelectedModule] = useState(null);
 
-  const userRoles = [
-    { role: 'Farmer', color: '#2ecc71', permissions: ['Create Products', 'Manage Crops', 'View Analytics'] },
-    { role: 'Trader', color: '#e67e22', permissions: ['Buy Products', 'List Items', 'Participate in Auctions'] },
-    { role: 'Buyer', color: '#3498db', permissions: ['Purchase Products', 'View Listings', 'Track Orders'] },
-    { role: 'Admin', color: '#e74c3c', permissions: ['System Management', 'User Management', 'Analytics Access'] }
-  ];
+  const toggleSection = (sectionId) => {
+    setExpandedSections((prev) => ({
+      ...prev,
+      [sectionId]: !prev[sectionId],
+    }));
+  };
 
-  const ModuleCard = ({ module }) => (
-    <Zoom in={true} style={{ transitionDelay: activeModule === module.id ? '0ms' : '200ms' }}>
-      <Card
-        sx={{
-          height: '100%',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          border: activeModule === module.id ? `3px solid ${module.color}` : '2px solid #e0e0e0',
-          transform: activeModule === module.id ? 'scale(1.05)' : 'scale(1)',
-          '&:hover': {
-            transform: 'translateY(-4px)',
-            boxShadow: 4
-          }
-        }}
-        onClick={() => setActiveModule(activeModule === module.id ? null : module.id)}
-      >
-        <CardContent sx={{ textAlign: 'center', p: 3 }}>
-          <Box
-            sx={{
-              backgroundColor: module.color,
-              borderRadius: '50%',
-              width: 80,
-              height: 80,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              margin: '0 auto 16px',
-              color: 'white'
-            }}
-          >
-            {module.icon}
-          </Box>
+  // Comprehensive Project Data from PDF Report
+  const projectData = {
+    // Basic Project Information
+    projectInfo: {
+      title: "AgriConnect - AI Powered Agricultural Assistance Platform",
+    },
 
-          <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: module.color }}>
-            {module.title}
-          </Typography>
+    // Complete Problem Statement
+    problemStatement: {
+      title: "Agricultural Challenges in India",
+      challenges: [
+        "Crop diseases and pest infestations causing significant yield losses",
+        "Unpredictable weather patterns affecting crop planning",
+        "Fluctuating market prices impacting farmer income",
+        "Lack of access to timely information and expert advice",
+        "Manual monitoring of crops being inefficient and error-prone",
+        "Dependency on local advisories with limited scope",
+        "Reduced productivity and income due to information gaps",
+      ],
+      solution:
+        "AgriConnect provides AI-driven insights, automated disease detection, yield forecasting, and real-time interactive platform for farmers",
+    },
 
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2, minHeight: 40 }}>
-            {module.description}
-          </Typography>
+    // Detailed Objectives
+    objectives: [
+      {
+        id: "obj1",
+        title: "AI-Powered Disease Detection",
+        description:
+          "Develop CNN-based system for crop disease detection and prediction",
+        technologies: ["TensorFlow", "CNN", "Computer Vision"],
+        status: "Completed",
+      },
+      {
+        id: "obj2",
+        title: "Yield Prediction System",
+        description:
+          "Predict crop yield using LSTM models with historical and real-time environmental data",
+        technologies: ["PyTorch", "LSTM", "Time-series Analysis"],
+        status: "Completed",
+      },
+      {
+        id: "obj3",
+        title: "Weed Detection",
+        description:
+          "Real-time weed detection using YOLOv8 computer vision models",
+        technologies: ["YOLOv8", "OpenCV", "Object Detection"],
+        status: "Completed",
+      },
+      {
+        id: "obj4",
+        title: "Weather Analytics",
+        description:
+          "Provide farmer-friendly weather insights and crop advisory with TTS",
+        technologies: ["Multiple APIs", "Data Visualization", "TTS"],
+        status: "Completed",
+      },
+      {
+        id: "obj5",
+        title: "Interactive Dashboard",
+        description:
+          "Implement secure, interactive dashboard for farm management",
+        technologies: ["React", "Node.js", "MongoDB"],
+        status: "Completed",
+      },
+      {
+        id: "obj6",
+        title: "E-commerce Integration",
+        description:
+          "Integrate online marketplace (HarvestLink) for crop trading",
+        technologies: ["Full-stack", "Payment Gateway", "Inventory Management"],
+        status: "Completed",
+      },
+      {
+        id: "obj7",
+        title: "AI Chatbot",
+        description:
+          "Develop multilingual chatbot for farmer queries using AI and NLP",
+        technologies: ["LangChain", "Gemini API", "Pinecone"],
+        status: "Completed",
+      },
+    ],
 
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, justifyContent: 'center' }}>
-            {module.features.slice(0, 3).map((feature, index) => (
-              <Chip
-                key={index}
-                label={feature}
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: '0.7rem' }}
-              />
-            ))}
-            {module.features.length > 3 && (
-              <Chip
-                label={`+${module.features.length - 3} more`}
-                size="small"
-                variant="outlined"
-                sx={{ fontSize: '0.7rem' }}
-              />
-            )}
-          </Box>
-        </CardContent>
-      </Card>
-    </Zoom>
+    // Comprehensive System Architecture
+    architecture: {
+      overview:
+        "AgriConnect features a modular microservices architecture with separate frontend, backend, and ML servers",
+      components: {
+        frontend: {
+          technology: "React with Redux Toolkit",
+          port: 3000,
+          features: [
+            "Farmer Dashboard",
+            "AI Chatbot Interface",
+            "Weather Insights Visualization",
+            "Crop/Weed Alerts Display",
+            "Real-time Analytics",
+            "Interactive Maps",
+          ],
+        },
+        backend: {
+          technology: "Node.js + Express",
+          port: 5000,
+          features: [
+            "Authentication & Authorization",
+            "Database Operations",
+            "ML Server Communication",
+            "Weather Data Aggregation",
+            "Farm Management Logic",
+            "API Endpoints Management",
+          ],
+        },
+        mlServer: {
+          technology: "Python (PyTorch/TensorFlow/Flask)",
+          port: 5500,
+          features: [
+            "LSTM Crop Yield Predictions",
+            "YOLOv8 Weed Detection",
+            "CNN Disease Classification",
+            "Data Preprocessing",
+            "Model Inference",
+            "Real-time Processing",
+          ],
+        },
+        database: {
+          technology: "MongoDB + Pinecone",
+          port: 27017,
+          features: [
+            "User & Farm Data Storage",
+            "Weather & Prediction Records",
+            "Vector Storage for AI Chatbot",
+            "Model Results Storage",
+            "Historical Data Archive",
+          ],
+        },
+      },
+      dataFlow: [
+        "Frontend captures user input and sends to Backend",
+        "Backend processes requests and communicates with ML Server",
+        "ML Server runs AI models and returns predictions",
+        "Results stored in MongoDB and sent back to Frontend",
+        "Real-time updates via Socket.io connections",
+      ],
+    },
+
+    // Detailed Module Specifications
+    modules: {
+      // CNN Disease Detection Module
+      cnnDiseaseDetection: {
+        title: "CNN-based Crop Disease Detection",
+        status: "Production Ready",
+        description:
+          "Real-time crop leaf disease classification using convolutional neural networks with multi-crop support",
+        technicalSpecs: {
+          framework: "TensorFlow with Keras",
+          models: [
+            "Potato Model – specialized for potato leaf diseases",
+            "General Model – covers 20+ crop types (tomato, rice, wheat, etc.)",
+            "Cotton Model – specialized for cotton leaf diseases",
+          ],
+          training:
+            "Transfer learning with fine-tuned pre-trained convolutional layers",
+          input: "Crop leaf images (JPG, PNG, WEBP) with metadata",
+          output: "Disease class prediction with confidence scores",
+        },
+        architecture: {
+          inputLayer:
+            "Farmers upload crop leaf images via React frontend with metadata (farm name, location, crop type)",
+          processingLayer:
+            "Flask API serving TensorFlow CNN models for inference",
+          outputLayer:
+            "Predictions stored in MongoDB with automated report generation",
+        },
+        integration: {
+          frontend: "React dashboard for image upload and result display",
+          backend: "Node.js handles API calls and database operations",
+          storage: "MongoDB for prediction records and farm data",
+          reporting:
+            "LLM-based processing (Gemini API) for natural-language summaries",
+        },
+        performance: {
+          accuracy: "70-80% for beginner non-GPU setup",
+          processingTime: "2-3 seconds per image",
+          supportedCrops:
+            "20+ crops including tomato, potato, rice, wheat, cotton",
+        },
+      },
+
+      // LSTM Disease Prediction
+      lstmDiseasePrediction: {
+        title: "LSTM-based Disease Prediction System",
+        status: "Production Ready",
+        description:
+          "10-day disease risk prediction using historical farm data and LSTM networks",
+        technicalSpecs: {
+          framework: "PyTorch",
+          architecture:
+            "LSTM with forget/input/output gates and cell state memory",
+          features: "Multiple LSTM layers for complex pattern learning",
+          output: "Risk percentage and affected radius predictions",
+        },
+        lstmArchitecture: {
+          inputLayer: "Feature vector for each time step",
+          lstmCells: [
+            "Forget Gate: Decides which past information to discard",
+            "Input Gate: Determines what new information to store",
+            "Output Gate: Controls information to pass to next hidden state",
+          ],
+          hiddenLayers: "Stacked LSTM layers for complex patterns",
+          outputLayer: "Fully connected layer mapping to predictions",
+        },
+        workflow: [
+          "Preprocessing: Convert farm data into normalized sequences",
+          "Forward Pass: Input sequence through LSTM with hidden/cell state updates",
+          "Output Generation: Last hidden state through dense layer for predictions",
+          "Loss Calculation: MSE comparison with actual values",
+          "Backpropagation: Adam optimizer for weight updates",
+          "Inference: Future predictions from recent sequences",
+        ],
+        integration: {
+          backend: "Flask/PyTorch API for LSTM predictions",
+          storage: "MongoDB for input sequences and predictions",
+          frontend: "React visualization of risk trends and alerts",
+          llm: "Gemini API for natural-language advisories",
+        },
+      },
+
+      // Crop Recommendation System
+      cropRecommendation: {
+        title: "Crop Recommendation System",
+        status: "Production Ready",
+        description:
+          "Intelligent crop type recommendation using Random Forest classifier",
+        technicalSpecs: {
+          algorithm: "Random Forest Classifier",
+          features: "Environmental variables, farm data, historical yield",
+          output: "Optimal crop recommendations for given conditions",
+        },
+        architecture: {
+          inputLayer:
+            "CSV dataset with historical crop, yield, and weather data",
+          preprocessing:
+            "LabelEncoder for categorical features (Crop, State, Season)",
+          featureLayer: "Combined environmental and farm data",
+          modelLayer: "Random Forest Classifier with ensemble decision trees",
+          outputLayer: "Predicted crop recommendation",
+          storage: "Joblib for model persistence",
+        },
+        rationale:
+          "Random Forest chosen for handling categorical/numerical features, robustness to overfitting, and capturing non-linear relationships effectively compared to Decision Trees or Logistic Regression",
+      },
+
+      // LSTM Yield Prediction
+      lstmYieldPrediction: {
+        title: "LSTM-based Crop Yield Prediction",
+        status: "Production Ready",
+        description:
+          "All-India, state-wise, season and crop-wise yield forecasting system",
+        technicalSpecs: {
+          scope: "Pan-India coverage for all states and crops",
+          model: "PyTorch LSTM with 2 layers, 50 hidden units",
+          sequence: "3-year rolling sequences for temporal patterns",
+          features:
+            "Area, yield, temperature, humidity, wind, solar radiation, pressure, cloud cover",
+        },
+        dataPipeline: {
+          collection: [
+            "Weather data from NASA POWER, OpenMeteo (last 5 years)",
+            "Crop yield and production data from UPaj portal",
+          ],
+          preprocessing: [
+            "Season filtering and categorical encoding",
+            "MinMaxScaler for data normalization",
+            "Feature selection for model training",
+          ],
+          training: [
+            "PyTorch LSTM with Adam optimizer and MSE loss",
+            "Early stopping with patience=10 to prevent overfitting",
+            "Model versioning per crop, state, and season",
+          ],
+          prediction: [
+            "Last 3-year sequence for next year prediction",
+            "Input gradients for feature importance analysis",
+            "Top 5 weather factors identification",
+          ],
+        },
+        storage: "MongoDB with versioning and historical 5-year data",
+      },
+
+      // YOLOv8 Weed Detection
+      yoloWeedDetection: {
+        title: "YOLOv8 Weed Detection Module",
+        status: "Development Complete",
+        description:
+          "Real-time detection of weeds in cotton and wheat fields using advanced object detection",
+        technicalSpecs: {
+          model: "YOLOv8 (Evolution of YOLOv5/YOLOv7)",
+          purpose: "Precision agriculture interventions",
+          capabilities:
+            "Weed species classification, location, size, and density estimation",
+        },
+        architecture: {
+          backbone:
+            "CSPDarknet-like structure for multi-scale feature extraction",
+          neck: "PANet or FPN for combining features from different layers",
+          head: "Bounding boxes, objectness score, and class probabilities",
+        },
+        advantages: [
+          "Real-time detection capability (high FPS)",
+          "Handles small objects in dense crop images",
+          "Lightweight architecture for edge deployment",
+          "Multi-class weed species detection",
+        ],
+        dataProcessing: {
+          labeling: "LabelMe tool for image annotation in YOLO format",
+          dataset: "Drone-captured RGB images (1024x1024 or 2048x2048)",
+          augmentation: "Rotation, flipping, scaling, color jitter",
+          sources: "Drone imagery and public weed datasets",
+        },
+        features: [
+          "Real-time video stream processing",
+          "Bounding box predictions with confidence scores",
+          "Integration with farm management systems",
+          "Edge deployment on drones/mobile devices",
+          "Visualization with prediction overlays",
+        ],
+      },
+
+      // Weather Insights Module
+      weatherInsights: {
+        title: "Weather Insights Module",
+        status: "Production Ready",
+        description:
+          "Multi-source weather data aggregation with advanced analytics and TTS capabilities",
+        technicalSpecs: {
+          dataSources: [
+            "OpenMeteo API",
+            "OpenWeatherMap API",
+            "NASA POWER API",
+          ],
+          parameters: [
+            "Temperature",
+            "Humidity",
+            "Precipitation",
+            "Wind Speed",
+            "Solar Radiation",
+            "Surface Pressure",
+          ],
+          output: [
+            "Visualizations",
+            "TTS Alerts",
+            "Forecasts",
+            "Historical Trends",
+          ],
+        },
+        keyFeatures: [
+          "Multi-source Data Aggregation for reliability",
+          "Interactive Data Visualization with graphs and heatmaps",
+          "Text-to-Speech for field accessibility",
+          "Short-term Forecasting & Extreme Weather Alerts",
+          "User-Friendly Interface with tooltips",
+        ],
+        workflow: [
+          "Fetch data from APIs using farm coordinates",
+          "Clean and merge datasets for consistency",
+          "Aggregate into daily/weekly/monthly averages",
+          "Visualize using interactive graphs",
+          "Convert insights to audio via TTS",
+          "Send alerts and update farm dashboard",
+        ],
+      },
+
+      // Farmer Dashboard
+      farmerDashboard: {
+        title: "Farmer Dashboard",
+        status: "Production Ready",
+        description:
+          "Centralized farm management interface with comprehensive analytics and monitoring",
+        features: {
+          farmManagement: [
+            "Farm creation with name, location, polygon boundaries",
+            "Report folders and training CSVs management",
+            "Farm-specific data tracking",
+          ],
+          cropHealth: [
+            "Top disease risks with confidence scores",
+            "LSTM-predicted risk percentages (10-day forecast)",
+            "Affected radius visualization",
+          ],
+          analytics: [
+            "Nearby farms display with distances",
+            "Disease risk trend graphs",
+            "Crop yield prediction visualizations",
+            "Weather correlation analysis",
+          ],
+          reporting: [
+            "Training CSVs and analysis folders",
+            "Image analysis statistics",
+            "Total images analyzed and diseased images found",
+            "Last update timestamps",
+          ],
+          visualization: [
+            "Interactive map with agro-polygons",
+            "Nearby farm coordinates plotting",
+            "Disease hotspots overlay",
+            "Predicted risk radii visualization",
+          ],
+        },
+      },
+
+      // AI Chatbot System
+      aiChatbot: {
+        title: "AI Chatbot (LangChain + Pinecone + Gemini API)",
+        status: "Beta Testing",
+        description:
+          "Multilingual contextual agricultural assistant with memory and semantic search",
+        architecture: {
+          langchain: {
+            role: "Framework orchestration",
+            functions: [
+              "Prompt management and dynamic construction",
+              "Chain execution for sequential reasoning",
+              "External tools/APIs integration",
+            ],
+          },
+          pinecone: {
+            role: "Vector database for contextual memory",
+            functions: [
+              "Embedding storage for semantic search",
+              "Context retrieval from historical interactions",
+              "Similarity search for relevant knowledge",
+            ],
+          },
+          gemini: {
+            role: "LLM fine-tuning and response generation",
+            functions: [
+              "Domain-specific response optimization",
+              "Multilingual support (Hindi, English, regional)",
+              "Custom instruction handling",
+            ],
+          },
+        },
+        capabilities: [
+          "Multilingual query understanding and response",
+          "Conversation history maintenance",
+          "Context-aware responses using semantic search",
+          "Personalized farming advice",
+          "Domain knowledge fine-tuning",
+        ],
+        workflow: [
+          "User query input (text/voice)",
+          "LangChain preprocessing and prompt construction",
+          "Pinecone context retrieval via semantic search",
+          "Gemini API response generation with fine-tuning",
+          "Contextual multilingual response delivery",
+          "History update in Pinecone for future retrieval",
+        ],
+      },
+    },
+
+    // Comprehensive Dataset Information
+    datasets: {
+      cropDisease: {
+        structure: [
+          { field: "_id", type: "ObjectId", example: "686dd7931c7b" },
+          { field: "farm_name", type: "String", example: "New Farm 2" },
+          {
+            field: "farm_id",
+            type: "String",
+            example: "FARM_17520_28581_8242FE",
+          },
+          { field: "latitude", type: "Number", example: "28.6139" },
+          { field: "longitude", type: "Number", example: "77.209" },
+          { field: "crop", type: "String", example: "Tomato" },
+          { field: "disease", type: "String", example: "healthy" },
+          { field: "confidence", type: "Number", example: "0.4017" },
+          {
+            field: "image_path",
+            type: "String",
+            example: "C:\\Users\\bhish...\\CNN_MODEL_Train...",
+          },
+          {
+            field: "timestamp",
+            type: "Date",
+            example: "2025-07-09T02:44:35.420+00:00",
+          },
+        ],
+      },
+      farmData: {
+        example: {
+          farmName: "SampleFarm",
+          coordinates: "28.87, 78.9",
+          farmId: "FARM_1752027512_E3574F",
+          reportFolder: "C:\\Users\\bhish...",
+          lastTrained: "2025-10-20 06:20:09",
+          lstmUpdated: "2025-10-20 06:20:35",
+          diseaseRisks: [
+            "Healthy (91.3%)",
+            "Aphids (99.2%)",
+            "Aphids (99.4%)",
+            "Healthy (58.9%)",
+            "Aphids (99.3%)",
+          ],
+          totalImages: 577,
+          diseasedImages: 503,
+          nearbyFarms: ["BhishamFarm4 (2.5 km)", "New Farm2 (1.67 km)"],
+          agroPolygon: "2.1471 hectares",
+        },
+      },
+      cropRecommendation: {
+        sample: [
+          { field: "Crop", value: "Rice" },
+          { field: "State", value: "Andaman And Nicobar Islands" },
+          { field: "Season", value: "Kharif" },
+          { field: "Year", value: "2020" },
+          { field: "Area", value: "0.06" },
+          { field: "Production", value: "0.13" },
+          { field: "Yield", value: "2133.0" },
+          { field: "Avg Temp 2m Mean", value: "28.32" },
+          { field: "Avg Temp 2m Max", value: "28.92" },
+        ],
+      },
+      lstmDiseaseData: {
+        structure: [
+          { field: "Date", value: "2025-06-30" },
+          { field: "Latitude", value: "28.9222" },
+          { field: "Longitude", value: "78.8888" },
+          { field: "Soil Temp 0cm", value: "28.8" },
+          { field: "Soil Temp 18cm", value: "30.7" },
+          { field: "Soil Moisture 1-3cm", value: "0.341" },
+          { field: "Risk %", value: "7" },
+          { field: "Radius km", value: "0.9" },
+        ],
+      },
+    },
+
+    // Tools and Technologies Matrix
+    technologies: {
+      lstmYield: [
+        "Python",
+        "PyTorch",
+        "Pandas",
+        "NumPy",
+        "scikit-learn",
+        "MongoDB",
+      ],
+      yoloWeed: ["Python", "YOLOv8", "OpenCV", "LabelMe"],
+      weather: [
+        "OpenMeteo API",
+        "OpenWeatherMap API",
+        "NASA POWER API",
+        "Plotly/Matplotlib",
+        "Text-to-Speech",
+      ],
+      dashboard: ["React", "MongoDB", "Leaflet.js"],
+      chatbot: ["LangChain", "Pinecone", "Gemini API"],
+    },
+
+    // Algorithms and Techniques
+    algorithms: {
+      lstmYield: [
+        "LSTM (Long Short-Term Memory)",
+        "MinMax Scaling",
+        "Sliding Window",
+      ],
+      yoloWeed: ["YOLOv8 Object Detection", "Image Annotation (LabelMe)"],
+      weather: ["API Aggregation", "Data Visualization", "Text-to-Speech"],
+      dashboard: ["Geospatial Analysis", "Analytics", "Alerts"],
+      chatbot: [
+        "LangChain",
+        "Vector Database (Pinecone)",
+        "Fine-tuning (Gemini API)",
+      ],
+    },
+
+    // Experimental Setup Details
+    experimentalSetup: {
+      servers: [
+        { name: "Frontend", technology: "React", port: 3000 },
+        { name: "Backend", technology: "Node.js/Express", port: 5000 },
+        { name: "ML Server", technology: "PyTorch/TensorFlow", port: 5500 },
+        { name: "Database", technology: "MongoDB", port: 27017 },
+      ],
+      hardware: "GPU-enabled ML server for LSTM and YOLOv8 training",
+      dataSources: [
+        "Historical yield data from UPaj portal",
+        "Weather data from NASA POWER, OpenMeteo, OpenWeatherMap",
+        "Crop images labeled using LabelMe for disease/weed detection",
+      ],
+      softwareStack: [
+        "Python (PyTorch, Scikit-learn, Pandas)",
+        "Node.js",
+        "React",
+        "Redux Toolkit",
+        "Mermaid for diagrams",
+      ],
+      modelTraining: [
+        "LSTM for crop yield prediction using 5-year weather sequences",
+        "YOLOv8 for weed and disease detection with annotated datasets",
+      ],
+    },
+
+    // Comprehensive Evaluation Metrics
+    evaluationMetrics: {
+      lstmYield: [
+        {
+          metric: "Mean Squared Error (MSE)",
+          value: "0.015 - 0.03",
+          description:
+            "Average of squared differences between predicted and actual values",
+        },
+        {
+          metric: "Root Mean Squared Error (RMSE)",
+          value: "0.12 - 0.17",
+          description: "Square root of MSE, easier to interpret",
+        },
+        {
+          metric: "R² Score",
+          value: "0.65 - 0.75",
+          description: "How well model explains data variance (1 = perfect)",
+        },
+        {
+          metric: "Feature Importance",
+          value: "Temperature, Precipitation, Humidity",
+          description: "~70% combined contribution to yield predictions",
+        },
+      ],
+      yoloDetection: [
+        {
+          metric: "Precision",
+          value: "0.65 - 0.75",
+          description:
+            "% of correct positive predictions out of all positive predictions",
+        },
+        {
+          metric: "Recall",
+          value: "0.60 - 0.70",
+          description: "% of actual positives correctly identified",
+        },
+        {
+          metric: "F1-Score",
+          value: "0.62 - 0.72",
+          description: "Harmonic mean of Precision and Recall",
+        },
+        {
+          metric: "Mean Average Precision (mAP)",
+          value: "0.60 - 0.70",
+          description: "Overall detection accuracy across classes",
+        },
+        {
+          metric: "Confidence Scores",
+          value: "0.60 - 0.75",
+          description: "Model confidence in detection predictions",
+        },
+      ],
+      systemPerformance: [
+        {
+          metric: "Frontend-Backend Response Time",
+          value: "500 – 800 ms",
+          description: "API response latency for user interactions",
+        },
+        {
+          metric: "ML Model Prediction Latency",
+          value: "5-15s (LSTM), 0.3-1s (YOLOv8)",
+          description: "Inference time for different model types",
+        },
+        {
+          metric: "Real-time Alert Accuracy",
+          value: "~70%",
+          description: "Correct alerts for crop health and disease risks",
+        },
+      ],
+    },
+
+    // Results Analysis
+    resultsAnalysis: {
+      dataCollection:
+        "2 months of data from NASA POWER, OpenMeteo, OpenWeatherMap, and farm-level crop images",
+      lstmPerformance: {
+        accuracy: "~70% for beginner setups without GPU",
+        coverage: "Multiple crops with 5-year historical data",
+        factors:
+          "Temperature, precipitation, humidity identified as top contributors",
+      },
+      yoloPerformance: {
+        detection: "Real-time weed and disease detection in cotton and wheat",
+        scores: "Precision, recall, F1-scores around 70% for non-GPU setup",
+        confidence: "Recorded confidence scores for each detection",
+      },
+      systemPerformance: {
+        response: "Frontend-backend response time ~1-2 seconds",
+        latency: "ML model prediction latency ~2-3 seconds per image/sequence",
+        scalability: "Suitable for small-scale deployments",
+      },
+    },
+
+    // Conclusion and Future Work
+    conclusion: {
+      summary:
+        "System successfully integrates LSTM-based crop yield prediction, YOLOv8 weed/disease detection, and real-time weather insights to assist farmers with actionable predictions and alerts",
+      limitations: [
+        "Accuracy limited to ~70% for non-GPU beginner setups",
+        "Predictions rely on historical data with reduced reliability in unusual conditions",
+        "Real-time detection slower without GPU acceleration",
+        "Limited coverage for all crop types and regions",
+      ],
+      futureScope: [
+        "GPU integration for improved accuracy and reduced latency",
+        "Dataset expansion for more crops and regions",
+        "Advanced ML models (Transformers, attention-based models)",
+        "Mobile app development with offline support",
+        "IoT sensor integration for real-time soil and microclimate data",
+      ],
+    },
+
+    // References
+    references: [
+      { id: 1, title: "React Documentation", url: "https://react.dev" },
+      {
+        id: 2,
+        title: "FreeCodeCamp ML Tutorials",
+        description: "TensorFlow, PyTorch, and API usage",
+      },
+      {
+        id: 3,
+        title: "Hugging Face Documentation",
+        url: "https://huggingface.co/docs",
+      },
+      {
+        id: 4,
+        title: "UPaj Portal - Government Agriculture Data",
+        url: "https://upag.gov.in",
+      },
+      {
+        id: 5,
+        title: "India Meteorological Department",
+        url: "https://mausam.imd.gov.in",
+      },
+      {
+        id: 6,
+        title: "YOLOv8 Documentation",
+        url: "https://docs.ultralytics.com",
+      },
+      {
+        id: 7,
+        title: "Scikit-learn Documentation",
+        url: "https://scikit-learn.org",
+      },
+      { id: 8, title: "OpenMeteo API", url: "https://open-meteo.com" },
+      {
+        id: 9,
+        title: "NASA POWER Project",
+        url: "https://power.larc.nasa.gov",
+      },
+      {
+        id: 10,
+        title: "OpenWeatherMap API",
+        url: "https://openweathermap.org/api",
+      },
+      {
+        id: 11,
+        title: "LangChain Documentation",
+        url: "https://docs.langchain.com",
+      },
+      {
+        id: 12,
+        title: "Pinecone Vector Database",
+        url: "https://www.pinecone.io",
+      },
+      {
+        id: 13,
+        title: "Gemini API Documentation",
+        url: "https://ai.google.dev",
+      },
+      {
+        id: 14,
+        title: "Kaggle Datasets",
+        url: "https://www.kaggle.com/datasets",
+      },
+      {
+        id: 15,
+        title: "Stack Overflow Developer Discussions",
+        description: "Debugging and optimization resources",
+      },
+    ],
+  };
+
+  // Component for displaying technical specifications
+  const TechnicalSpecsCard = ({ title, specs }) => (
+    <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mb-4">
+      <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+        {title}
+      </h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {Object.entries(specs).map(([key, value]) => (
+          <div key={key} className="flex flex-col">
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-400 capitalize">
+              {key.replace(/([A-Z])/g, " $1").trim()}:
+            </span>
+            <span className="text-sm text-gray-800 dark:text-gray-200 mt-1">
+              {Array.isArray(value) ? value.join(", ") : value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 
+  // Component for displaying data tables
+  const DataTable = ({ title, data, columns }) => (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 mb-6">
+      <h4 className="font-semibold text-gray-900 dark:text-white mb-4">
+        {title}
+      </h4>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+          <thead className="bg-gray-50 dark:bg-gray-700">
+            <tr>
+              {columns.map((column, index) => (
+                <th
+                  key={index}
+                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+            {data.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className="hover:bg-gray-50 dark:hover:bg-gray-700"
+              >
+                {columns.map((column, colIndex) => (
+                  <td
+                    key={colIndex}
+                    className="px-4 py-3 text-sm text-gray-900 dark:text-gray-300"
+                  >
+                    {row[column.toLowerCase()] || row[column] || row.value}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+
+  // Main render function
   return (
-    <Container className="mt-16" maxWidth="xl" sx={{ py: 4 }}>
+    <div className="mt-16 min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900">
       {/* Header */}
-      <Box textAlign="center" mb={6}>
-        <Typography
-          variant="h3"
-          component="h1"
-          gutterBottom
-          sx={{
-            fontWeight: 'bold',
-            background: 'linear-gradient(45deg, #2e7d32, #4caf50)',
-            backgroundClip: 'text',
-            WebkitBackgroundClip: 'text',
-            color: 'transparent'
-          }}
-        >
-          AgriConnect+ System Architecture
-        </Typography>
-        <Typography variant="h6" color="text.secondary" sx={{ maxWidth: 800, mx: 'auto' }}>
-          Comprehensive Agricultural Intelligence Platform with Multi-Modal AI Integration
-        </Typography>
-      </Box>
+      <header className="bg-white dark:bg-gray-800 shadow-2xl">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              {projectData.projectInfo.title}
+            </h1>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 text-sm text-gray-600 dark:text-gray-400"></div>
+          </div>
+        </div>
+      </header>
 
-      {/* User Roles Section */}
-      <Paper sx={{ p: 3, mb: 4, background: 'linear-gradient(135deg, #f5f5f5 0%, #e8f5e8 100%)' }}>
-        <Typography variant="h5" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <AccountCircle color="primary" />
-          User Roles & Permissions
-        </Typography>
-        <Grid container spacing={2}>
-          {userRoles.map((role, index) => (
-            <Grid item xs={12} sm={6} md={3} key={role.role}>
-              <Fade in={true} style={{ transitionDelay: `${index * 100}ms` }}>
-                <Card sx={{ borderLeft: `4px solid ${role.color}` }}>
-                  <CardContent>
-                    <Typography variant="h6" sx={{ color: role.color }}>
-                      {role.role}
-                    </Typography>
-                    <Box sx={{ mt: 1 }}>
-                      {role.permissions.map((permission, idx) => (
-                        <Chip
-                          key={idx}
-                          label={permission}
-                          size="small"
-                          sx={{ m: 0.5, fontSize: '0.7rem' }}
-                        />
-                      ))}
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Fade>
-            </Grid>
-          ))}
-        </Grid>
-      </Paper>
+      {/* Enhanced Navigation Tabs */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 top-0 z-50 shadow-lg">
+        <div className="max-w-8xl mx-auto">
+          <nav className="flex space-x-1 px-4 sm:px-6 lg:px-8 overflow-x-auto">
+            {[
+              { id: "overview", name: "Project Overview", icon: BookOpenIcon },
+              {
+                id: "architecture",
+                name: "System Architecture",
+                icon: CpuChipIcon,
+              },
+              { id: "modules", name: "AI Modules", icon: CubeIcon },
+              { id: "datasets", name: "Data & Datasets", icon: DatabaseIcon },
+              { id: "technologies", name: "Tech Stack", icon: CommandLineIcon },
+              { id: "evaluation", name: "Evaluation", icon: ChartBarIcon },
+              { id: "results", name: "Results", icon: BeakerIcon },
+              { id: "viewImages", name: "View Images", icon: PhotoIcon },
+              { id: "conclusion", name: "Conclusion", icon: ShieldCheckIcon },
+              { id: "references", name: "References", icon: BookmarkIcon },
+              { id: "routeMap", name: "Route Map", icon: MapIcon },
+              { id: "contact", name: "Contact", icon: PhoneIcon },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`whitespace-nowrap py-4 px-3 border-b-2 font-medium text-sm flex items-center transition-colors ${
+                  activeTab === tab.id
+                    ? "border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                }`}
+              >
+                <tab.icon className="w-5 h-5 mr-2" />
+                {tab.name}
+              </button>
+            ))}
+          </nav>
+        </div>
+      </div>
 
-      {/* Main Modules Grid */}
-      <Box>
-        <Typography variant="h5" gutterBottom sx={{ mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Storage color="primary" />
-          System Modules & Components
-        </Typography>
-
-        <Grid container spacing={3}>
-          {modules.map((module, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={module.id}>
-              <ModuleCard module={module} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-
-      {/* Active Module Details */}
-      {activeModule && (
-        <Fade in={true}>
-          <Paper sx={{ p: 3, mt: 4, border: `2px solid ${modules.find(m => m.id === activeModule)?.color}` }}>
-            <Typography variant="h5" gutterBottom sx={{ color: modules.find(m => m.id === activeModule)?.color }}>
-              {modules.find(m => m.id === activeModule)?.title} - Detailed View
-            </Typography>
-            <Typography variant="body1" paragraph>
-              {modules.find(m => m.id === activeModule)?.description}
-            </Typography>
-
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <Typography variant="h6" gutterBottom>Key Features</Typography>
-                <ul>
-                  {modules.find(m => m.id === activeModule)?.features.map((feature, index) => (
-                    <li key={index}>
-                      <Typography variant="body2">{feature}</Typography>
-                    </li>
-                  ))}
-                </ul>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Typography variant="h6" gutterBottom>System Connections</Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {modules.find(m => m.id === activeModule)?.connections.map((connection, index) => (
-                    <Chip
+      {/* Main Content Area */}
+      <main className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Project Overview Tab */}
+        {activeTab === "overview" && (
+          <div className="space-y-8">
+            {/* Problem Statement */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <ExclamationTriangleIcon className="w-8 h-8 mr-3 text-red-500" />
+                Problem Statement & Challenges
+              </h2>
+              <div className="bg-red-50 dark:bg-red-900/20 border-l-4 border-red-500 rounded-r-lg p-6 mb-6">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
+                  {projectData.problemStatement.solution}
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {projectData.problemStatement.challenges.map(
+                  (challenge, index) => (
+                    <div
                       key={index}
-                      label={connection === 'all' ? 'All Systems' : connection}
-                      color="primary"
-                      variant="outlined"
-                    />
-                  ))}
-                </Box>
-              </Grid>
-            </Grid>
-          </Paper>
-        </Fade>
-      )}
+                      className="flex items-start bg-gray-50 dark:bg-gray-700 p-4 rounded-lg"
+                    >
+                      <div className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0 mt-1">
+                        !
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {challenge}
+                      </p>
+                    </div>
+                  )
+                )}
+              </div>
+            </div>
 
-      {/* System Overview */}
-      <Paper sx={{ p: 3, mt: 4, background: 'linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%)' }}>
-        <Typography variant="h5" gutterBottom>
-          System Architecture Overview
-        </Typography>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" gutterBottom color="primary">
-              🎯 Core Technologies
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {['React.js', 'Node.js', 'Express.js', 'MongoDB', 'TensorFlow', 'Python', 'Material-UI', 'JWT Auth'].map((tech) => (
-                <Chip key={tech} label={tech} variant="filled" color="primary" />
-              ))}
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" gutterBottom color="secondary">
-              🤖 AI/ML Integration
-            </Typography>
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {['CNN Models', 'LSTM Networks', 'YOLOv8', 'Langchain', 'Pinecone', 'Computer Vision', 'NLP'].map((ai) => (
-                <Chip key={ai} label={ai} variant="filled" color="secondary" />
-              ))}
-            </Box>
-          </Grid>
-        </Grid>
-      </Paper>
-    </Container>
+            {/* Project Objectives */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <TargetIcon className="w-8 h-8 mr-3 text-blue-500" />
+                Project Objectives & Goals
+              </h2>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {projectData.objectives.map((objective) => (
+                  <div
+                    key={objective.id}
+                    className="bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                        {objective.title}
+                      </h3>
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          objective.status === "Completed"
+                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                            : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                        }`}
+                      >
+                        {objective.status}
+                      </span>
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      {objective.description}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {objective.technologies.map((tech, index) => (
+                        <span
+                          key={index}
+                          className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Datasets View */}
+        {activeTab === "datasets" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <DatabaseIcon className="w-8 h-8 mr-3 text-blue-500" />
+                Data & Datasets
+              </h2>
+
+              {/* Crop Disease Dataset */}
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  Crop Disease Dataset Structure
+                </h3>
+                <DataTable
+                  title="Crop Disease Dataset"
+                  data={projectData.datasets.cropDisease.structure}
+                  columns={["Field", "Type", "Example"]}
+                />
+              </div>
+
+              {/* Farm Data Example */}
+              <div className="mb-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  Farm Data Example
+                </h3>
+                <pre className="bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg text-sm overflow-x-auto">
+                  {JSON.stringify(
+                    projectData.datasets.farmData.example,
+                    null,
+                    2
+                  )}
+                </pre>
+              </div>
+
+              {/* Crop Recommendation Sample */}
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  Crop Recommendation Sample
+                </h3>
+                <DataTable
+                  title="Crop Recommendation Dataset"
+                  data={projectData.datasets.cropRecommendation.sample}
+                  columns={["Field", "Value"]}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Results View */}
+        {activeTab === "results" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <BeakerIcon className="w-8 h-8 mr-3 text-purple-500" />
+                Results Analysis
+              </h2>
+
+              <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+                <p>
+                  Data was collected over{" "}
+                  {projectData.resultsAnalysis.dataCollection}.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <h4 className="font-semibold text-blue-600 dark:text-blue-300 mb-2">
+                      LSTM Performance
+                    </h4>
+                    <p>
+                      Accuracy:{" "}
+                      {projectData.resultsAnalysis.lstmPerformance.accuracy}
+                    </p>
+                    <p>
+                      Coverage:{" "}
+                      {projectData.resultsAnalysis.lstmPerformance.coverage}
+                    </p>
+                  </div>
+
+                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <h4 className="font-semibold text-green-600 dark:text-green-300 mb-2">
+                      YOLOv8 Detection
+                    </h4>
+                    <p>
+                      {projectData.resultsAnalysis.yoloPerformance.detection}
+                    </p>
+                    <p>
+                      Scores:{" "}
+                      {projectData.resultsAnalysis.yoloPerformance.scores}
+                    </p>
+                  </div>
+
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg">
+                    <h4 className="font-semibold text-yellow-600 dark:text-yellow-300 mb-2">
+                      System Performance
+                    </h4>
+                    <p>
+                      Response:{" "}
+                      {projectData.resultsAnalysis.systemPerformance.response}
+                    </p>
+                    <p>
+                      Latency:{" "}
+                      {projectData.resultsAnalysis.systemPerformance.latency}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Conclusion View */}
+        {activeTab === "conclusion" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <ShieldCheckIcon className="w-8 h-8 mr-3 text-green-500" />
+                Conclusion & Future Scope
+              </h2>
+
+              <div className="bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 rounded-r-lg p-6 mb-8">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
+                  {projectData.conclusion.summary}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-3">
+                    Limitations
+                  </h3>
+                  <ul className="space-y-2">
+                    {projectData.conclusion.limitations.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center text-gray-700 dark:text-gray-300"
+                      >
+                        <ChevronRightIcon className="w-4 h-4 mr-2 text-red-500" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold text-green-600 dark:text-green-400 mb-3">
+                    Future Scope
+                  </h3>
+                  <ul className="space-y-2">
+                    {projectData.conclusion.futureScope.map((item, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center text-gray-700 dark:text-gray-300"
+                      >
+                        <ChevronRightIcon className="w-4 h-4 mr-2 text-green-500" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        {/* Route Map Tab */}
+        {activeTab === "routeMap" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <RouteMap />
+            </div>
+          </div>
+        )}
+        {/* Contact Tab */}
+        {activeTab === "contact" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <div className="max-w-2xl mx-auto">
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                  Contact Information
+                </h2>
+                <div className="space-y-4 text-gray-700 dark:text-gray-300">
+                  <p>
+                    For further information or inquiries about the project,
+                    please reach out to:
+                  </p>
+                  <p>
+                    <span className="font-semibold">Email:</span>{" "}
+                    <a
+                      href="mailto:info@agrisupport.com"
+                      className="text-blue-500 hover:underline"
+                    >
+                      info@agrisupport.com
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/*References Tab */}
+        {activeTab === "references" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <BookmarkIcon className="w-8 h-8 mr-3 text-yellow-500" />
+                References
+              </h2>
+              <ul className="list-disc list-inside space-y-3 text-gray-700 dark:text-gray-300">
+                {projectData.references.map((ref) => (
+                  <li key={ref.id}>
+                    {ref.url ? (
+                      <a
+                        href={ref.url}
+                        className="text-blue-500 hover:underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {ref.title}
+                      </a>
+                    ) : (
+                      <span>{ref.title}</span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+        {activeTab === "viewImages" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+                <PhotoIcon className="w-8 h-8 mr-3 text-indigo-500" />
+                View Images
+              </h2>
+              <ImagesView />
+            </div>
+          </div>
+        )}
+
+        {/* System Architecture Tab */}
+        {activeTab === "architecture" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                System Architecture Overview
+              </h2>
+
+              {/* Architecture Components */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+                {Object.entries(projectData.architecture.components).map(
+                  ([key, component]) => (
+                    <div
+                      key={key}
+                      className="bg-gradient-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 border border-purple-200 dark:border-purple-800 rounded-xl p-6"
+                    >
+                      <div className="flex items-center mb-4">
+                        <ServerIcon className="w-8 h-8 text-purple-600 dark:text-purple-400 mr-3" />
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white capitalize">
+                            {key}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Port: {component.port} | {component.technology}
+                          </p>
+                        </div>
+                      </div>
+                      <ul className="space-y-2">
+                        {component.features.map((feature, index) => (
+                          <li
+                            key={index}
+                            className="flex items-center text-sm text-gray-700 dark:text-gray-300"
+                          >
+                            <ChevronRightIcon className="w-4 h-4 mr-2 text-green-500" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )
+                )}
+              </div>
+
+              {/* Data Flow */}
+              <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
+                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                  Data Flow Architecture
+                </h3>
+                <div className="space-y-3">
+                  {projectData.architecture.dataFlow.map((step, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center bg-white dark:bg-gray-600 p-4 rounded-lg shadow"
+                    >
+                      <div className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold mr-4">
+                        {index + 1}
+                      </div>
+                      <p className="text-gray-700 dark:text-gray-300">{step}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* AI Modules Tab - Enhanced with all technical details */}
+        {activeTab === "modules" && (
+          <div className="space-y-8">
+            {Object.entries(projectData.modules).map(([moduleKey, module]) => (
+              <div
+                key={moduleKey}
+                className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden"
+              >
+                <div className="p-8 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                        {module.title}
+                      </h3>
+                      <div className="flex items-center space-x-4">
+                        <span
+                          className={`px-3 py-1 rounded-full text-sm font-medium ${
+                            module.status === "Production Ready"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                              : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                          }`}
+                        >
+                          {module.status}
+                        </span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {moduleKey.replace(/([A-Z])/g, " $1").trim()}
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => toggleSection(moduleKey)}
+                      className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                    >
+                      <ChevronDownIcon
+                        className={`w-6 h-6 text-gray-500 transition-transform ${
+                          expandedSections[moduleKey] ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-400 mt-4 text-lg">
+                    {module.description}
+                  </p>
+                </div>
+
+                {expandedSections[moduleKey] && (
+                  <div className="p-8 bg-gray-50 dark:bg-gray-700/50 space-y-8">
+                    {/* Technical Specifications */}
+                    {module.technicalSpecs && (
+                      <TechnicalSpecsCard
+                        title="Technical Specifications"
+                        specs={module.technicalSpecs}
+                      />
+                    )}
+
+                    {/* Architecture Details */}
+                    {module.architecture && (
+                      <div>
+                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                          Architecture Details
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {Object.entries(module.architecture).map(
+                            ([archKey, archValue]) => (
+                              <div
+                                key={archKey}
+                                className="bg-white dark:bg-gray-600 p-4 rounded-lg shadow"
+                              >
+                                <h5 className="font-semibold text-blue-600 dark:text-blue-400 mb-2 capitalize">
+                                  {archKey.replace(/([A-Z])/g, " $1").trim()}
+                                </h5>
+                                {Array.isArray(archValue) ? (
+                                  <ul className="space-y-1">
+                                    {archValue.map((item, idx) => (
+                                      <li
+                                        key={idx}
+                                        className="text-sm text-gray-700 dark:text-gray-300"
+                                      >
+                                        • {item}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : (
+                                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                                    {archValue}
+                                  </p>
+                                )}
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Integration Details */}
+                    {module.integration && (
+                      <div>
+                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                          Integration Details
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          {Object.entries(module.integration).map(
+                            ([intKey, intValue]) => (
+                              <div
+                                key={intKey}
+                                className="bg-white dark:bg-gray-600 p-4 rounded-lg shadow"
+                              >
+                                <h5 className="font-semibold text-green-600 dark:text-green-400 mb-2 capitalize">
+                                  {intKey}
+                                </h5>
+                                {Array.isArray(intValue) ? (
+                                  <ul className="space-y-1">
+                                    {intValue.map((item, idx) => (
+                                      <li
+                                        key={idx}
+                                        className="text-sm text-gray-700 dark:text-gray-300"
+                                      >
+                                        • {item}
+                                      </li>
+                                    ))}
+                                  </ul>
+                                ) : (
+                                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                                    {intValue}
+                                  </p>
+                                )}
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Performance Metrics */}
+                    {module.performance && (
+                      <div>
+                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                          Performance Metrics
+                        </h4>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          {Object.entries(module.performance).map(
+                            ([perfKey, perfValue]) => (
+                              <div
+                                key={perfKey}
+                                className="bg-white dark:bg-gray-600 p-4 rounded-lg text-center shadow"
+                              >
+                                <div className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize mb-2">
+                                  {perfKey.replace(/([A-Z])/g, " $1").trim()}
+                                </div>
+                                <div className="text-lg font-bold text-gray-900 dark:text-white">
+                                  {perfValue}
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Technologies Tab */}
+        {activeTab === "technologies" && (
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">
+                Technology Stack
+              </h2>
+
+              {/* Tools and Technologies */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {Object.entries(projectData.technologies).map(
+                  ([category, techs]) => (
+                    <div
+                      key={category}
+                      className="bg-gray-50 dark:bg-gray-700 rounded-xl p-6"
+                    >
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 capitalize">
+                        {category.replace(/([A-Z])/g, " $1").trim()}
+                      </h3>
+                      <div className="flex flex-wrap gap-3">
+                        {techs.map((tech, index) => (
+                          <span
+                            key={index}
+                            className="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-lg text-sm font-medium"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )
+                )}
+              </div>
+
+              {/* Algorithms */}
+              <div className="mt-8">
+                <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                  Algorithms & Techniques
+                </h3>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  {Object.entries(projectData.algorithms).map(
+                    ([category, algorithms]) => (
+                      <div
+                        key={category}
+                        className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6"
+                      >
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 capitalize">
+                          {category.replace(/([A-Z])/g, " $1").trim()}
+                        </h4>
+                        <ul className="space-y-2">
+                          {algorithms.map((algo, index) => (
+                            <li
+                              key={index}
+                              className="flex items-center text-gray-700 dark:text-gray-300"
+                            >
+                              <ChevronRightIcon className="w-4 h-4 mr-2 text-green-500" />
+                              {algo}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Evaluation Tab */}
+        {activeTab === "evaluation" && (
+          <div className="space-y-8">
+            {Object.entries(projectData.evaluationMetrics).map(
+              ([category, metrics]) => (
+                <div
+                  key={category}
+                  className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8"
+                >
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 capitalize">
+                    {category.replace(/([A-Z])/g, " $1").trim()} Metrics
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {metrics.map((metric, index) => (
+                      <div
+                        key={index}
+                        className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-6"
+                      >
+                        <div className="text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">
+                          {metric.metric}
+                        </div>
+                        <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-3">
+                          {metric.value}
+                        </div>
+                        <div className="text-xs text-blue-700 dark:text-blue-500">
+                          {metric.description}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )
+            )}
+          </div>
+        )}
+
+        {/* Add remaining tabs with similar comprehensive structure */}
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="text-center md:text-left">
+              <p className="text-gray-600 dark:text-gray-400 font-semibold">
+                AgriConnect - Advanced Agricultural AI Platform
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500 mt-1">
+                Comprehensive Project Report v2.0 | All Rights Reserved
+              </p>
+            </div>
+            <div className="mt-4 md:mt-0">
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Generated on:{" "}
+                {new Date().toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };
 
-export default AgriConnectFlowchart;
+// Custom Target Icon component
+const TargetIcon = (props) => (
+  <svg {...props} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 18a6 6 0 100-12 6 6 0 000 12z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M12 14a2 2 0 100-4 2 2 0 000 4z"
+    />
+  </svg>
+);
+
+export default AgriConnectAdvancedProjectReport;

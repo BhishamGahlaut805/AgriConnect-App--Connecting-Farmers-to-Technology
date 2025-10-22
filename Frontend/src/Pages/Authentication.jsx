@@ -74,10 +74,22 @@ const AuthPage = () => {
       (result) => {
         setGoogleLoading(false);
         showAlert("Welcome!", "You've successfully logged in", "success");
-        localStorage.setItem("token", result.token); // use "token"
+        // console.log(result);
+        // console.log("Google login successful:", result.token);
+        // console.log("Google login successful:", result.contact);
+        // localStorage.setItem("token", result.user.token); // use "token"
         localStorage.setItem("userDetails", JSON.stringify(result.user));
         window.dispatchEvent(new Event("authChange"));
-        setTimeout(() => navigate(`/dashboard/${result.user.id}`), 1500);
+        //Role Wise navigation for 4 people- farmer, trader, admin, other
+        if(result.user.role==="admin" || result.user.role==="Admin"){
+          setTimeout(() => navigate(`/Admin/dashboard/${result.user.id}`), 1500);
+        }else if(result.user.role==="farmer" || result.user.role==="Farmer"){
+          setTimeout(() => navigate(`/Farmer/dashboard/${result.user.id}`), 1500);
+        }else if(result.user.role==="trader" || result.user.role==="Trader"){
+          setTimeout(() => navigate(`/harvestLink/seller-dashboard`), 1500);
+        }else{
+          setTimeout(() => navigate(`/user/dashboard/${result.user.id}`), 1500);
+        }
       },
       (error) => {
         setGoogleLoading(false);
@@ -142,7 +154,22 @@ const AuthPage = () => {
       localStorage.setItem("userDetails", JSON.stringify(user));
       window.dispatchEvent(new Event("authChange")); //  notify Navbar
       console.log("Login successful:", user);
-      setTimeout(() => navigate(`/dashboard/${user.id}`), 1500);
+      if (user.role === "admin" || user.role === "Admin") {
+        setTimeout(() => navigate(`/Admin/dashboard/${user.id}`), 1500);
+      } else if (
+        user.role === "farmer" ||
+        user.role === "Farmer"
+      ) {
+        setTimeout(() => navigate(`/Farmer/dashboard/${user.id}`), 1500);
+      } else if (
+        user.role === "trader" ||
+        user.role === "Trader"
+      ) {
+        setTimeout(() => navigate(`/harvestLink/seller-dashboard`), 1500);
+      } else {
+        setTimeout(() => navigate(`/user/dashboard/${user.id}`), 1500);
+      }
+      // setTimeout(() => navigate(`/dashboard/${user.id}`), 1500);
     } catch (err) {
       showAlert("Login Failed", err.message, "error");
     } finally {
@@ -606,7 +633,7 @@ const AuthPage = () => {
                   <option value="farmer">Farmer</option>
                   <option value="trader">Trader</option>
                   <option value="other">Other</option>
-                  <option value="admin">Admin</option>
+                  {/* <option value="admin">Admin</option> */}
                 </select>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

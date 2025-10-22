@@ -1,5 +1,5 @@
 // CreateProduct.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AgrimarketService from "../../API/AgrimarketService";
 import {
@@ -13,13 +13,204 @@ import {
   FaTag,
   FaMapMarkerAlt,
   FaExclamationTriangle,
+  FaRedoAlt,
 } from "react-icons/fa";
+
+/**
+ * CreateProduct - full page with step validation, image handling and inline OTP verification.
+ *
+ * Notes:
+ * - This file contains the inline OtpVerification component for simplicity.
+ * - AgrimarketService.ProductService should expose:
+ *    - initiateProductCreation(productArray, contact) => { verificationId }
+ *    - verifyProductOTP(verificationId, otp, productData, imagesFormData) => { success, message }
+ *    - resendProductOTP(verificationId) => { success, verificationId? }
+ *
+ * Adjust method names/shape to match your backend.
+ */
+
+const OtpVerification = ({
+  verificationId,
+  email,
+  productData,
+  images,
+  onSuccess,
+  onCancel,
+}) => {
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState({ text: "", type: "" });
+  const [verId, setVerId] = useState(verificationId);
+  const resendTimeout = useRef(null);
+  const [canResend, setCanResend] = useState(true);
+
+  useEffect(() => {
+    setVerId(verificationId);
+    return () => {
+      if (resendTimeout.current) clearTimeout(resendTimeout.current);
+    };
+  }, [verificationId]);
+
+  const handleVerify = async (e) => {
+    e?.preventDefault();
+    setMsg({ text: "", type: "" });
+
+    if (!otp || otp.trim().length < 4) {
+      setMsg({ text: "Enter the correct OTP.", type: "error" });
+      return;
+    }
+
+    setLoading(true);
+    setMsg({ text: "Verifying OTP...", type: "info" });
+
+    try {
+      // Build a FormData to send images if your backend expects multipart
+      const formData = new FormData();
+      formData.append("title", productData.title);
+      formData.append("description", productData.description);
+      formData.append("category", productData.category);
+      formData.append("price", productData.price);
+      formData.append("unit", productData.unit);
+      formData.append("stock", productData.stock);
+      formData.append("minOrderQuantity", productData.minOrderQuantity);
+      formData.append("specs", JSON.stringify(productData.specs));
+      formData.append("location", JSON.stringify(productData.location));
+      formData.append("otp", otp);
+      formData.append("verificationId", verId);
+
+      images.forEach((file, idx) => {
+        formData.append("images", file, file.name || `image-${idx}`);
+      });
+
+      console.log("Submitting FormData as in CreateProduct: ", formData.get("verificationId"), formData.get("otp"), formData.getAll("images"));
+      // call backend verify endpoint
+      const res =
+        await AgrimarketService.ProductService.verifyAndCreateProducts(
+          verId,
+          otp,
+          images
+        );
+        console.log("OTP verify response:", res);
+      // Expected: res = { success: true/false, message, productId? }
+      if (res?.success) {
+        setMsg({
+          text: res.message || "Product created successfully.",
+          type: "success",
+        });
+        onSuccess && onSuccess(res);
+      } else {
+        throw new Error(res?.message || "OTP verification failed.");
+      }
+    } catch (err) {
+      console.error("OTP verify error:", err);
+      setMsg({ text: err.message || "Failed to verify OTP", type: "error" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!canResend) return;
+    setMsg({ text: "Resending OTP...", type: "info" });
+    setCanResend(false);
+    try {
+      const res = await AgrimarketService.ProductService.resendProductOTP(
+        verId
+      );
+      if (res?.success) {
+        setMsg({ text: "OTP resent. Check your email.", type: "success" });
+        // optionally update verificationId if backend returns a new one
+        if (res.verificationId) setVerId(res.verificationId);
+      } else {
+        throw new Error(res?.message || "Failed to resend OTP");
+      }
+    } catch (err) {
+      setMsg({ text: err.message || "Resend failed", type: "error" });
+    } finally {
+      // allow resend after 30s
+      resendTimeout.current = setTimeout(() => setCanResend(true), 30000);
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-6 mt-6 border border-gray-200 max-w-2xl mx-auto">
+      <div className="flex items-start justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-gray-900">Verify OTP</h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Enter the code sent to <span className="font-medium">{email}</span>
+          </p>
+        </div>
+        <button
+          onClick={() => onCancel && onCancel()}
+          className="text-sm text-gray-500 hover:text-gray-700"
+          title="Cancel verification"
+        >
+          Cancel
+        </button>
+      </div>
+
+      {msg.text && (
+        <div
+          className={`mt-4 p-3 rounded-md text-sm ${
+            msg.type === "error"
+              ? "bg-red-50 text-red-700 border border-red-100"
+              : msg.type === "success"
+              ? "bg-green-50 text-green-700 border border-green-100"
+              : "bg-blue-50 text-blue-700 border border-blue-100"
+          }`}
+        >
+          {msg.text}
+        </div>
+      )}
+
+      <form onSubmit={handleVerify} className="mt-4 space-y-3">
+        <input
+          value={otp}
+          onChange={(e) =>
+            setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))
+          }
+          maxLength={6}
+          inputMode="numeric"
+          className="w-full text-center p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+          placeholder="Enter 4-6 digit OTP"
+        />
+
+        <div className="flex gap-3">
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-60"
+          >
+            {loading ? (
+              "Verifying..."
+            ) : (
+              <>
+                <FaCheck /> Verify
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={handleResend}
+            disabled={!canResend}
+            className="px-4 py-2 inline-flex items-center gap-2 border rounded-lg text-sm hover:bg-gray-100 disabled:opacity-50"
+          >
+            <FaRedoAlt /> Resend
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};
 
 const CreateProduct = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState({ text: "", type: "" });
+  const [globalMsg, setGlobalMsg] = useState({ text: "", type: "" });
   const [currentStep, setCurrentStep] = useState(1);
+  const [otpState, setOtpState] = useState(null); // { verificationId, email, productData, images }
 
   const [formData, setFormData] = useState({
     title: "",
@@ -43,8 +234,8 @@ const CreateProduct = () => {
     },
   });
 
-  const [images, setImages] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
+  const [images, setImages] = useState([]); // File[]
+  const [imagePreviews, setImagePreviews] = useState([]); // object URLs
 
   const categories = [
     "VEGETABLE",
@@ -61,67 +252,73 @@ const CreateProduct = () => {
 
   const units = ["kg", "g", "ton", "L", "mL", "acre", "piece", "pack", "UNIT"];
 
+  // cleanup object URLs on unmount
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((url) => URL.revokeObjectURL(url));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const setMessage = (text, type = "error") => {
+    setGlobalMsg({ text, type });
+    // clear after 6 seconds for non-error messages
+    if (type !== "error") {
+      setTimeout(() => setGlobalMsg({ text: "", type: "" }), 5000);
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
     if (name.startsWith("specs.")) {
-      const specField = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        specs: { ...prev.specs, [specField]: value },
-      }));
+      const key = name.split(".")[1];
+      setFormData((p) => ({ ...p, specs: { ...p.specs, [key]: value } }));
     } else if (name.startsWith("location.")) {
-      const locationField = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        location: { ...prev.location, [locationField]: value },
-      }));
+      const key = name.split(".")[1];
+      setFormData((p) => ({ ...p, location: { ...p.location, [key]: value } }));
     } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((p) => ({ ...p, [name]: value }));
     }
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+    setGlobalMsg({ text: "", type: "" });
+    const files = Array.from(e.target.files || []);
+
+    if (!files.length) return;
 
     if (files.length + images.length > 5) {
-      setMessage({
-        text: "Maximum 5 images allowed",
-        type: "error",
-      });
+      setMessage("Maximum 5 images allowed", "error");
       return;
     }
 
-    const validFiles = files.filter((file) => {
-      if (file.size > 5 * 1024 * 1024) {
-        setMessage({
-          text: `File ${file.name} exceeds 5MB limit`,
-          type: "error",
-        });
-        return false;
-      }
+    const validFiles = [];
+    const newPreviews = [];
+
+    for (const file of files) {
       if (!file.type.startsWith("image/")) {
-        setMessage({
-          text: `File ${file.name} is not an image`,
-          type: "error",
-        });
-        return false;
+        setMessage(`File ${file.name} is not an image`, "error");
+        continue;
       }
-      return true;
-    });
+      if (file.size > 5 * 1024 * 1024) {
+        setMessage(`File ${file.name} exceeds 5MB limit`, "error");
+        continue;
+      }
+      validFiles.push(file);
+      newPreviews.push(URL.createObjectURL(file));
+    }
 
-    setImages((prev) => [...prev, ...validFiles]);
-
-    // Create previews
-    const newPreviews = validFiles.map((file) => URL.createObjectURL(file));
-    setImagePreviews((prev) => [...prev, ...newPreviews]);
+    setImages((p) => [...p, ...validFiles]);
+    setImagePreviews((p) => [...p, ...newPreviews]);
+    e.target.value = null;
   };
 
   const removeImage = (index) => {
     const newImages = [...images];
     const newPreviews = [...imagePreviews];
 
-    URL.revokeObjectURL(newPreviews[index]);
+    if (newPreviews[index]) URL.revokeObjectURL(newPreviews[index]);
+
     newImages.splice(index, 1);
     newPreviews.splice(index, 1);
 
@@ -129,93 +326,159 @@ const CreateProduct = () => {
     setImagePreviews(newPreviews);
   };
 
-  const validateForm = () => {
-    if (!formData.title.trim()) {
-      setMessage({ text: "Product title is required", type: "error" });
-      return false;
+  // Per-step validation
+  const validateStep = (step = currentStep) => {
+    // Clear previous errors
+    setGlobalMsg({ text: "", type: "" });
+
+    if (step === 1) {
+      if (!formData.title.trim()) {
+        setMessage("Product title is required", "error");
+        return false;
+      }
+      if (
+        !formData.description.trim() ||
+        formData.description.trim().length < 10
+      ) {
+        setMessage("Description must be at least 10 characters", "error");
+        return false;
+      }
+      if (!formData.category) {
+        setMessage("Category is required", "error");
+        return false;
+      }
     }
-    if (!formData.description.trim() || formData.description.length < 10) {
-      setMessage({
-        text: "Description must be at least 10 characters",
-        type: "error",
-      });
-      return false;
+
+    if (step === 2) {
+      if (!formData.unit) {
+        setMessage("Unit of measure is required", "error");
+        return false;
+      }
+      // other spec-level validations can go here
     }
-    if (!formData.category) {
-      setMessage({ text: "Category is required", type: "error" });
-      return false;
+
+    if (step === 3) {
+      if (!formData.price || parseFloat(formData.price) <= 0) {
+        setMessage("Valid price is required", "error");
+        return false;
+      }
+      if (formData.stock === "" || Number(formData.stock) < 0) {
+        setMessage("Valid stock quantity is required", "error");
+        return false;
+      }
+      if (!formData.minOrderQuantity || Number(formData.minOrderQuantity) < 1) {
+        setMessage("Minimum order quantity must be at least 1", "error");
+        return false;
+      }
     }
-    if (!formData.price || parseFloat(formData.price) <= 0) {
-      setMessage({ text: "Valid price is required", type: "error" });
-      return false;
+
+    if (step === 4) {
+      if (
+        !formData.location.pincode ||
+        formData.location.pincode.trim().length < 3
+      ) {
+        setMessage("Enter a valid pincode", "error");
+        return false;
+      }
     }
-    if (!formData.stock || parseInt(formData.stock) < 0) {
-      setMessage({ text: "Valid stock quantity is required", type: "error" });
-      return false;
+
+    if (step === 5) {
+      if (images.length === 0) {
+        setMessage("At least one product image is required", "error");
+        return false;
+      }
     }
+
     return true;
   };
 
+  const goNext = () => {
+    if (!validateStep(currentStep)) return;
+    setCurrentStep((s) => Math.min(s + 1, 5));
+  };
+
+  const goPrev = () => {
+    setGlobalMsg({ text: "", type: "" });
+    setCurrentStep((s) => Math.max(s - 1, 1));
+  };
+
+  // Final submit initiates OTP flow, but does not finalize product until OTP verified
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    // Validate all steps before initiating
+    for (let s = 1; s <= 5; s++) {
+      if (!validateStep(s)) {
+        setCurrentStep(s);
+        return;
+      }
+    }
 
     setLoading(true);
-    setMessage({ text: "Creating product...", type: "info" });
+    setMessage("Initiating product creation and sending OTP...", "info");
 
     try {
-      const user = JSON.parse(localStorage.getItem("userDetails"));
-      if (!user?.email) {
-        throw new Error("User authentication required");
+      const user = JSON.parse(localStorage.getItem("userDetails") || "{}");
+      if (!user?.contact) {
+        throw new Error("User contact missing. Please login again.");
       }
 
-      // Prepare product data
-      const productData = {
+      const payload = {
         title: formData.title,
         description: formData.description,
         category: formData.category,
         price: parseFloat(formData.price),
         unit: formData.unit,
-        stock: parseInt(formData.stock),
-        minOrderQuantity: parseInt(formData.minOrderQuantity),
+        stock: parseInt(formData.stock, 10),
+        minOrderQuantity: parseInt(formData.minOrderQuantity, 10),
         specs: formData.specs,
         location: formData.location,
       };
 
-      // Use OTP verification flow
       const initiation =
         await AgrimarketService.ProductService.initiateProductCreation(
-          [productData],
-          user.email
+          [payload],
+          user.contact
         );
 
-      setMessage({
-        text: "OTP sent to your email. Please verify to complete product creation.",
-        type: "success",
-      });
+      if (!initiation?.verificationId) {
+        throw new Error(initiation?.message || "Failed to start verification.");
+      }
 
-      // Redirect to OTP verification page
-      navigate("/verify-product", {
-        state: {
-          verificationId: initiation.verificationId,
-          email: user.email,
-          productData: productData,
-          images: images,
-        },
+      setMessage(
+        "OTP sent. Enter the OTP below to complete creation.",
+        "success"
+      );
+
+      // Show OTP component inline
+      setOtpState({
+        verificationId: initiation.verificationId,
+        email: user.contact,
+        productData: payload,
+        images,
       });
-    } catch (error) {
-      console.error("Product creation error:", error);
-      setMessage({
-        text: error.message || "Failed to create product",
-        type: "error",
-      });
+      // keep current form visible; OTP is shown below
+    } catch (err) {
+      console.error("init error:", err);
+      setMessage(err.message || "Failed to initiate product creation", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const steps = [
+  // Called when OTP verification completed successfully
+  const handleOtpSuccess = (res) => {
+    // Show success and optionally redirect to my-products after short delay
+    setMessage(res.message || "Product created successfully.", "success");
+    // clear form/state
+    setOtpState(null);
+    // optionally navigate
+    setTimeout(() => {
+      navigate("/harvestLink/my-products");
+    }, 1200);
+  };
+
+  const stepItems = [
     { number: 1, title: "Basic Info", icon: <FaInfoCircle /> },
     { number: 2, title: "Details", icon: <FaSeedling /> },
     { number: 3, title: "Pricing", icon: <FaTag /> },
@@ -224,56 +487,55 @@ const CreateProduct = () => {
   ];
 
   return (
-    <div className="mt-16 min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-10">
       <div className="max-w-4xl mx-auto px-4">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <button
-              onClick={() => navigate("/my-products")}
+              onClick={() => navigate("/harvestLink/my-products")}
               className="flex items-center text-indigo-600 hover:text-indigo-800 mb-2"
             >
-              <FaArrowLeft className="mr-2" />
-              Back to Products
+              <FaArrowLeft className="mr-2" /> Back to Products
             </button>
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-semibold text-gray-900">
               Create New Product
             </h1>
-            <p className="text-gray-600 mt-2">
-              List your agricultural products for sale
+            <p className="text-gray-600 mt-1">
+              List your agricultural product for buyers to discover.
             </p>
           </div>
         </div>
 
-        {/* Progress Steps */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <div className="flex justify-between items-center">
-            {steps.map((step, index) => (
-              <React.Fragment key={step.number}>
-                <div className="flex flex-col items-center">
-                  <div
-                    className={`w-10 h-10 rounded-full flex items-center justify-center border-2 ${
-                      currentStep >= step.number
-                        ? "bg-indigo-600 border-indigo-600 text-white"
-                        : "border-gray-300 text-gray-500"
-                    }`}
-                  >
-                    {currentStep > step.number ? (
-                      <FaCheck size={14} />
-                    ) : (
-                      step.icon
-                    )}
+        {/* Steps */}
+        <div className="bg-white p-6 rounded-xl shadow-sm mb-6 border">
+          <div className="flex items-center gap-3">
+            {stepItems.map((s, idx) => (
+              <React.Fragment key={s.number}>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={`w-11 h-11 flex items-center justify-center rounded-full border-2 ${
+                        currentStep > s.number
+                          ? "bg-green-600 border-green-600 text-white"
+                          : currentStep === s.number
+                          ? "bg-indigo-600 border-indigo-600 text-white"
+                          : "border-gray-300 text-gray-500"
+                      }`}
+                    >
+                      {currentStep > s.number ? <FaCheck /> : s.icon}
+                    </div>
+                    <div>
+                      <div className="text-sm font-medium">{s.title}</div>
+                      <div className="text-xs text-gray-500">
+                        Step {s.number}
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-xs mt-2 text-gray-600">
-                    {step.title}
-                  </span>
                 </div>
-                {index < steps.length - 1 && (
+                {idx < stepItems.length - 1 && (
                   <div
-                    className={`flex-1 h-1 mx-2 ${
-                      currentStep > step.number
-                        ? "bg-indigo-600"
-                        : "bg-gray-200"
+                    className={`w-10 h-px ${
+                      currentStep > s.number ? "bg-indigo-600" : "bg-gray-200"
                     }`}
                   />
                 )}
@@ -282,50 +544,45 @@ const CreateProduct = () => {
           </div>
         </div>
 
-        {/* Message Alert */}
-        {message.text && (
+        {/* Global message */}
+        {globalMsg.text && (
           <div
-            className={`p-4 rounded-lg mb-6 ${
-              message.type === "error"
-                ? "bg-red-100 text-red-800 border border-red-200"
-                : message.type === "success"
-                ? "bg-green-100 text-green-800 border border-green-200"
-                : "bg-blue-100 text-blue-800 border border-blue-200"
+            className={`p-4 rounded-md mb-6 ${
+              globalMsg.type === "error"
+                ? "bg-red-50 text-red-700 border border-red-100"
+                : globalMsg.type === "success"
+                ? "bg-green-50 text-green-700 border border-green-100"
+                : "bg-blue-50 text-blue-700 border border-blue-100"
             }`}
           >
-            <div className="flex items-center">
-              {message.type === "error" && (
-                <FaExclamationTriangle className="mr-2" />
-              )}
-              {message.text}
+            <div className="flex items-center gap-2">
+              {globalMsg.type === "error" && <FaExclamationTriangle />}
+              <div>{globalMsg.text}</div>
             </div>
           </div>
         )}
 
-        {/* Product Form */}
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-lg shadow-sm p-6"
+          className="bg-white p-6 rounded-xl shadow-sm border"
         >
-          {/* Step 1: Basic Information */}
+          {/* Step 1 */}
           {currentStep === 1 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900">
+            <section className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900">
                 Basic Information
-              </h3>
+              </h2>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Product Title *
                 </label>
                 <input
-                  type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                   placeholder="e.g., Organic Wheat Seeds"
-                  required
                 />
               </div>
 
@@ -338,9 +595,8 @@ const CreateProduct = () => {
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  placeholder="Describe your product in detail..."
-                  required
+                  className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Describe the product..."
                 />
               </div>
 
@@ -352,28 +608,27 @@ const CreateProduct = () => {
                   name="category"
                   value={formData.category}
                   onChange={handleInputChange}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  required
+                  className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
+                  {categories.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
                     </option>
                   ))}
                 </select>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Step 2: Product Details */}
+          {/* Step 2 */}
           {currentStep === 2 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900">
+            <section className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900">
                 Product Specifications
-              </h3>
+              </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Certification
@@ -382,7 +637,7 @@ const CreateProduct = () => {
                     name="specs.certification"
                     value={formData.specs.certification}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                   >
                     <option value="">Select Certification</option>
                     <option value="Organic Certified">Organic Certified</option>
@@ -400,38 +655,37 @@ const CreateProduct = () => {
                     name="specs.harvestDate"
                     value={formData.specs.harvestDate}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Shelf Life (Days)
+                    Shelf Life (days)
                   </label>
                   <input
                     type="number"
                     name="specs.shelfLife"
                     value={formData.specs.shelfLife}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                     placeholder="e.g., 90"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Unit of Measure *
+                    Unit *
                   </label>
                   <select
                     name="unit"
                     value={formData.unit}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    required
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                   >
-                    {units.map((unit) => (
-                      <option key={unit} value={unit}>
-                        {unit}
+                    {units.map((u) => (
+                      <option key={u} value={u}>
+                        {u}
                       </option>
                     ))}
                   </select>
@@ -446,36 +700,35 @@ const CreateProduct = () => {
                   name="specs.usageInstructions"
                   value={formData.specs.usageInstructions}
                   onChange={handleInputChange}
+                  className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                   rows={3}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                  placeholder="Provide usage instructions or key features..."
+                  placeholder="Instructions or key features..."
                 />
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Step 3: Pricing & Stock */}
+          {/* Step 3 */}
           {currentStep === 3 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900">
+            <section className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900">
                 Pricing & Inventory
-              </h3>
+              </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Price per Unit (₹) *
                   </label>
                   <input
-                    type="number"
                     name="price"
-                    value={formData.price}
-                    onChange={handleInputChange}
+                    type="number"
                     step="0.01"
                     min="0.01"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    value={formData.price}
+                    onChange={handleInputChange}
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                     placeholder="0.00"
-                    required
                   />
                 </div>
 
@@ -484,14 +737,13 @@ const CreateProduct = () => {
                     Available Stock *
                   </label>
                   <input
-                    type="number"
                     name="stock"
+                    type="number"
+                    min="0"
                     value={formData.stock}
                     onChange={handleInputChange}
-                    min="0"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                     placeholder="0"
-                    required
                   />
                 </div>
 
@@ -500,163 +752,169 @@ const CreateProduct = () => {
                     Min Order Qty *
                   </label>
                   <input
-                    type="number"
                     name="minOrderQuantity"
+                    type="number"
+                    min="1"
                     value={formData.minOrderQuantity}
                     onChange={handleInputChange}
-                    min="1"
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                    required
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                   />
                 </div>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Step 4: Location */}
+          {/* Step 4 */}
           {currentStep === 4 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900">
-                Location Details
-              </h3>
+            <section className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900">Location</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Pincode *
                   </label>
                   <input
-                    type="text"
                     name="location.pincode"
                     value={formData.location.pincode}
                     onChange={handleInputChange}
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                     maxLength={6}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="6-digit pincode"
-                    required
                   />
                 </div>
-
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     District
                   </label>
                   <input
-                    type="text"
                     name="location.district"
                     value={formData.location.district}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                     placeholder="District"
                   />
                 </div>
-
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     State
                   </label>
                   <input
-                    type="text"
                     name="location.state"
                     value={formData.location.state}
                     onChange={handleInputChange}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    className="w-full p-3 border rounded-md focus:ring-2 focus:ring-indigo-500"
                     placeholder="State"
                   />
                 </div>
               </div>
-            </div>
+            </section>
           )}
 
-          {/* Step 5: Images */}
+          {/* Step 5 */}
           {currentStep === 5 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900">
+            <section className="space-y-4">
+              <h2 className="text-lg font-semibold text-gray-900">
                 Product Images
-              </h3>
+              </h2>
 
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                <FaUpload className="mx-auto text-gray-400 text-3xl mb-4" />
-                <p className="text-gray-600 mb-2">Upload product images</p>
-                <p className="text-sm text-gray-500 mb-4">
-                  Maximum 5 images, 5MB each. PNG, JPG, JPEG supported.
+              <div className="border-2 border-dashed rounded-lg p-6 text-center">
+                <FaUpload className="mx-auto text-3xl text-gray-400 mb-3" />
+                <p className="text-gray-700 mb-2">
+                  Upload product images (1-5)
                 </p>
+                <p className="text-sm text-gray-500 mb-4">
+                  PNG/JPG/JPEG. Max 5MB each.
+                </p>
+
                 <input
+                  id="image-upload"
                   type="file"
-                  multiple
                   accept="image/*"
+                  multiple
                   onChange={handleImageChange}
                   className="hidden"
-                  id="image-upload"
                 />
                 <label
                   htmlFor="image-upload"
-                  className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-indigo-700"
+                  className="inline-flex items-center gap-2 bg-indigo-600 text-white px-4 py-2 rounded-md cursor-pointer hover:bg-indigo-700"
                 >
                   Choose Files
                 </label>
-              </div>
 
-              {imagePreviews.length > 0 && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                  {imagePreviews.map((preview, index) => (
-                    <div key={index} className="relative">
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  {imagePreviews.map((src, i) => (
+                    <div
+                      key={i}
+                      className="relative rounded-md overflow-hidden border"
+                    >
                       <img
-                        src={preview}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
+                        src={src}
+                        alt={`Preview ${i + 1}`}
+                        className="w-full h-28 object-cover"
                       />
                       <button
                         type="button"
-                        onClick={() => removeImage(index)}
-                        className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
+                        onClick={() => removeImage(i)}
+                        className="absolute top-2 right-2 bg-red-600 text-white rounded-full p-1 hover:bg-red-700"
                       >
                         <FaTimes size={12} />
                       </button>
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            </section>
           )}
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
-            <button
-              type="button"
-              onClick={() => setCurrentStep((prev) => prev - 1)}
-              disabled={currentStep === 1}
-              className="px-6 py-2 text-gray-700 bg-gray-200 rounded-lg disabled:opacity-50 hover:bg-gray-300"
-            >
-              Previous
-            </button>
-
-            {currentStep < steps.length ? (
+          {/* Navigation */}
+          <div className="flex justify-between items-center mt-6">
+            <div>
               <button
                 type="button"
-                onClick={() => setCurrentStep((prev) => prev + 1)}
-                className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                onClick={goPrev}
+                disabled={currentStep === 1}
+                className="px-4 py-2 rounded-md bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
               >
-                Next
+                Previous
               </button>
-            ) : (
-              <button
-                type="submit"
-                disabled={loading}
-                className="px-6 py-2 bg-green-600 text-white rounded-lg disabled:opacity-50 hover:bg-green-700 flex items-center"
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Creating...
-                  </>
-                ) : (
-                  "Create Product"
-                )}
-              </button>
-            )}
+            </div>
+
+            <div className="flex items-center gap-3">
+              {currentStep < 5 ? (
+                <button
+                  type="button"
+                  onClick={goNext}
+                  className="px-5 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-5 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 inline-flex items-center"
+                >
+                  {loading ? "Processing..." : "Create Product"}
+                </button>
+              )}
+            </div>
           </div>
         </form>
+
+        {/* Inline OTP verification when initiated */}
+        {otpState && (
+          <div className="mt-6">
+            <OtpVerification
+              verificationId={otpState.verificationId}
+              email={otpState.email}
+              productData={otpState.productData}
+              images={otpState.images}
+              onSuccess={handleOtpSuccess}
+              onCancel={() => setOtpState(null)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ router.get("/", listingController.listListings);
 router.post(
   "/",
   auth,
-  requireRole("Farmer", "Trader", "Admin"),
+  requireRole("farmer", "trader", "admin"),
   createListingValidation,
   listingController.createListing
 );
@@ -46,14 +46,17 @@ router.post(
 router.post(
   "/verify",
   auth,
-  requireRole("Farmer", "Trader", "Admin"),
+  requireRole("farmer", "trader", "admin"),
   otpValidation,
   listingController.verifyAndCreateListing
 );
+// Get listing details
+router.get("/:id", auth, requireRole("farmer", "trader", "admin","other"), listingController.getListing);
 
 // User's listings
-router.get("/my-listings", auth, listingController.getMyListings);
+router.get("/my-listings/:userId", auth, listingController.getMyListings);
 
+router.get("/all", auth, requireRole("admin"), listingController.getAllListings);
 // Listing management
 router.patch("/:id", auth, listingController.updateListing);
 router.delete("/:id", auth, listingController.deleteListing);
@@ -64,6 +67,49 @@ router.patch(
     .isIn(["active", "inactive", "soldout"])
     .withMessage("Invalid status"),
   listingController.toggleListingStatus
+);
+
+// Bulk OTP-based listing creation initiation
+router.post(
+  "/bulk/initiate",
+  auth,
+  requireRole("farmer", "trader", "admin"),
+  listingController.initiateBulkListingCreation
+);
+
+// Bulk OTP-based listing verification
+router.post(
+  "/bulk/verify",
+  auth,
+  requireRole("farmer", "trader", "admin"),
+  otpValidation,
+  listingController.verifyAndCreateBulkListings
+);
+
+// Get bulk creation status
+router.get("/bulk/status/:verificationId", auth, listingController.getBulkCreationStatus);
+
+// Bulk update listings
+router.patch(
+  "/bulk/update",
+  auth,
+  requireRole("admin", "trader", "farmer"),
+  listingController.bulkUpdateListings
+);
+// Bulk delete listings
+router.delete(
+  "/bulk/delete",
+  auth,
+  requireRole("admin", "trader", "farmer"),
+  listingController.bulkDeleteListings
+);
+
+// Bulk toggle listing status
+router.patch(
+  "/bulk/toggle-status",
+  auth,
+  requireRole("admin","trader","farmer"),
+  listingController.bulkToggleListingStatus
 );
 
 module.exports = router;

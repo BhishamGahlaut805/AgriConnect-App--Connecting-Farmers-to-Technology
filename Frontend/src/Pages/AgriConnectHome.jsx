@@ -56,7 +56,7 @@ const AgriConnectHome = () => {
       title: "Weed Spotter",
       description: "Identify weeds in your fields and get removal strategies",
       icon: "🌿",
-      path: "/WeedDetection",
+      path: "/weed-detection",
       tutorial:
         "Upload field images to automatically detect weed types and receive targeted removal recommendations.",
       color: "from-lime-500 to-green-600",
@@ -78,11 +78,45 @@ const AgriConnectHome = () => {
       title: "Farmer Circle",
       description: "Connect with fellow farmers and share knowledge",
       icon: "👥",
-      path: "/chat",
+      path: "/agribot/chat",
       tutorial:
         "Join community discussions, share experiences, and learn from other farmers in your region.",
       color: "from-teal-500 to-blue-600",
       image: communityimg,
+    },
+
+    {
+      id: "community",
+      title: "HarvestLink",
+      description: "Connect with fellow farmers and share knowledge",
+      icon: "👥",
+      path: "/harvestLink/v1/AgriConnect",
+      tutorial:
+        "Sell and Buy your agricultural produce directly within the community using HarvestLink.",
+      color: "from-teal-500 to-blue-600",
+      image: harvestimg,
+    },
+    {
+      id: "community",
+      title: "Browse Marketplace",
+      description: "Find the Best Deals on Agricultural Products",
+      icon: "👥",
+      path: "/harvestLink/browse",
+      tutorial:
+        "Sell and Buy your agricultural produce directly within the community using HarvestLink.",
+      color: "from-teal-500 to-blue-600",
+      image: campingimg,
+    },
+    {
+      id: "community",
+      title: "Sell With Us at HarvestLink",
+      description: "Sell Your Agricultural Products Easily" ,
+      icon: "👥",
+      path: "/harvestLink/Seller-Dashboard",
+      tutorial:
+        "Sell and Buy your agricultural produce directly within the community using HarvestLink.",
+      color: "from-teal-500 to-blue-600",
+      image: newimg,
     },
   ];
 
@@ -471,7 +505,6 @@ const AgriConnectHome = () => {
                     />
                   </div>
 
-
                   {/* Content Area */}
                   <div className="flex flex-col flex-1 space-y-3 md:space-y-4">
                     {/* Header with Icon */}
@@ -520,6 +553,25 @@ const AgriConnectHome = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+        <section className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
+          {/* Left Image */}
+          <div className="w-full md:w-1/2 flex justify-center">
+            <img
+              src="/src/assets/images/Tagimage2.png"
+              alt="Left Divider"
+              className="w-full h-auto object-contain transform scale-70 origin-center"
+            />
+          </div>
+
+          {/* Right Image */}
+          <div className="w-full md:w-1/2 flex justify-center">
+            <img
+              src="/src/assets/images/Tagimage.png"
+              alt="Right Divider"
+              className="w-full h-auto object-contain transform scale-90 origin-center"
+            />
           </div>
         </section>
 
@@ -658,56 +710,163 @@ const AgriConnectHome = () => {
             </div>
           </div>
         </section>
+        <section className="w-full flex flex-col md:flex-row justify-center items-center gap-4">
+          {/* Left Image */}
+          <div className="w-full md:w-1/2 flex justify-center">
+            <img
+              src="/src/assets/images/Tagimage2.png"
+              alt="Left Divider"
+              className="w-full h-auto object-contain transform scale-70 origin-center"
+            />
+          </div>
+
+          {/* Right Image */}
+          <div className="w-full md:w-1/2 flex justify-center">
+            <img
+              src="/src/assets/images/Tagimage4.png"
+              alt="Right Divider"
+              className="w-full h-auto object-contain transform scale-80 origin-center"
+            />
+          </div>
+        </section>
+
         <div className="max-w-7xl mx-auto">
           <AgriConnectBenefits />
         </div>
-        {/* Educational Purpose Section - Mobile Optimized */}
+        {/* Educational Purpose Section - Enhanced with Developer Info & Links */}
         <section className="py-12 bg-gradient-to-br from-green-200 via-emerald-300/40 to-lime-200 md:py-20 px-4 md:px-6">
-          <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-5xl mx-auto text-center">
             <div
-              className={`rounded-2xl md:rounded-3xl p-6 md:p-12 ${
+              className={`rounded-2xl md:rounded-3xl p-6 md:p-12 flex flex-col items-center space-y-8 shadow-2xl border transition-all duration-300 ${
                 darkMode
-                  ? "bg-gradient-to-br from-gray-800 to-gray-900"
-                  : "bg-gradient-to-br from-white to-green-50"
-              } shadow-2xl border ${
-                darkMode ? "border-gray-700" : "border-green-200"
+                  ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700"
+                  : "bg-gradient-to-br from-white to-green-50 border-green-200"
               }`}
             >
-              <div className="flex flex-col items-center space-y-6 md:space-y-8">
-                <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl md:rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-2xl">
-                  <span className="text-2xl md:text-3xl text-white">🎓</span>
-                </div>
-                <div className="space-y-3 md:space-y-4">
-                  <h3
-                    className={`text-2xl md:text-3xl font-bold ${
-                      darkMode ? "text-white" : "text-gray-800"
-                    }`}
-                  >
-                    Educational Demonstration
-                  </h3>
-                  <p
-                    className={`text-lg md:text-xl leading-relaxed max-w-2xl ${
-                      darkMode ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    This platform showcases how modern technology can transform
-                    traditional farming practices. Created to demonstrate the
-                    potential of AI and data analytics in agriculture.
-                  </p>
-                </div>
-                <div
-                  className={`px-4 md:px-6 py-2 md:py-3 rounded-xl md:rounded-2xl ${
-                    darkMode
-                      ? "bg-gray-700/50 text-green-400"
-                      : "bg-green-100/80 text-green-700"
-                  } backdrop-blur-sm border ${
-                    darkMode ? "border-gray-600" : "border-green-300"
+              {/* Icon or Badge */}
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center shadow-xl">
+                <span className="text-3xl md:text-4xl text-white">🎓</span>
+              </div>
+
+              {/* Title and Description */}
+              <div className="space-y-4 max-w-2xl">
+                <h3
+                  className={`text-3xl md:text-4xl font-bold ${
+                    darkMode ? "text-white" : "text-gray-800"
                   }`}
                 >
-                  <span className="font-semibold text-sm md:text-base">
-                    For Educational Purposes Only
-                  </span>
+                  Educational Demonstration
+                </h3>
+                <p
+                  className={`text-lg md:text-xl leading-relaxed ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}
+                >
+                  This platform demonstrates how Artificial Intelligence and
+                  Data Analytics can empower modern agriculture. It’s built to
+                  showcase innovation, research, and smart farming integration.
+                </p>
+              </div>
+
+              {/* Developer Info */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <img
+                  src="/src/assets/images/BhishamImg.jpg" // Replace with your actual image path
+                  alt="Developer"
+                  className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover shadow-lg border-4 border-green-400"
+                />
+                <div className="text-center sm:text-left">
+                  <h4
+                    className={`text-xl font-semibold ${
+                      darkMode ? "text-green-400" : "text-green-700"
+                    }`}
+                  >
+                    Developed by Bhisham Gahlaut
+                  </h4>
+                  <p
+                    className={`text-sm ${
+                      darkMode ? "text-gray-400" : "text-gray-600"
+                    }`}
+                  >
+                    Full Stack & AI Developer | B.Tech (IT)
+                  </p>
+
+                  {/* Social Links */}
+                  <div className="flex justify-center sm:justify-start gap-4 mt-3">
+                    <a
+                      href="https://www.linkedin.com/in/bhisham-gahlaut" // your LinkedIn profile
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`p-2 rounded-lg transition-all duration-300 ${
+                        darkMode
+                          ? "bg-gray-700 hover:bg-green-600"
+                          : "bg-green-100 hover:bg-green-500"
+                      }`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className={`w-6 h-6 ${
+                          darkMode
+                            ? "text-green-400 hover:text-white"
+                            : "text-green-700 hover:text-white"
+                        }`}
+                      >
+                        <path d="M19 0h-14c-2.8 0-5 2.2-5 5v14c0 2.8 2.2 5 5 5h14c2.8 0 5-2.2 5-5v-14c0-2.8-2.2-5-5-5zM8.3 19h-3v-9h3v9zm-1.5-10.3c-1 0-1.8-.8-1.8-1.8S5.8 5 6.8 5s1.8.8 1.8 1.8-.8 1.9-1.8 1.9zm13.2 10.3h-3v-4.6c0-1.1-.4-1.9-1.3-1.9-.7 0-1.1.5-1.3 1-.1.2-.1.6-.1.9v4.6h-3v-9h3v1.2c.4-.6 1.1-1.4 2.6-1.4 1.9 0 3.4 1.2 3.4 3.8v5.4z" />
+                      </svg>
+                    </a>
+
+                    <a
+                      href="https://github.com/BhishamGahlaut805" // your GitHub profile
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`p-2 rounded-lg transition-all duration-300 ${
+                        darkMode
+                          ? "bg-gray-700 hover:bg-green-600"
+                          : "bg-green-100 hover:bg-green-500"
+                      }`}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className={`w-6 h-6 ${
+                          darkMode
+                            ? "text-green-400 hover:text-white"
+                            : "text-green-700 hover:text-white"
+                        }`}
+                      >
+                        <path d="M12 .5C5.4.5 0 5.9 0 12.6c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.5-1.3-1.2-1.7-1.2-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.7.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-6 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.6.1-3.4 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0c2.3-1.5 3.3-1.2 3.3-1.2.6 1.8.2 3.1.1 3.4.7.8 1.2 1.9 1.2 3.2 0 4.7-2.7 5.7-5.3 6 .4.3.8 1 .8 2v3c0 .3.2.7.8.6A12.1 12.1 0 0 0 24 12.6C24 5.9 18.6.5 12 .5z" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
+              </div>
+
+              {/* Button to Flowchart */}
+              <a
+                href="/flowchart"
+                className={`inline-block mt-6 px-8 py-3 rounded-xl text-lg font-semibold transition-all duration-300 shadow-lg ${
+                  darkMode
+                    ? "bg-green-600 hover:bg-green-700 text-white"
+                    : "bg-green-500 hover:bg-green-600 text-white"
+                }`}
+              >
+                View Project Flowchart →
+              </a>
+
+              {/* Note */}
+              <div
+                className={`px-4 py-2 rounded-xl backdrop-blur-sm border ${
+                  darkMode
+                    ? "bg-gray-700/40 text-green-400 border-gray-600"
+                    : "bg-green-100/70 text-green-700 border-green-300"
+                }`}
+              >
+                <span className="font-semibold text-sm md:text-base">
+                  For Educational Purposes Only
+                </span>
               </div>
             </div>
           </div>

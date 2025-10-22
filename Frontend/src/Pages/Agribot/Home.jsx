@@ -89,7 +89,7 @@ const HomePage = () => {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            to="/chat"
+            to="/agribot/chat"
             className="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <MessageCircle className="h-6 w-6" />
@@ -98,7 +98,7 @@ const HomePage = () => {
           </Link>
 
           <Link
-            to="/admin"
+            to="/agribot/admin"
             className="inline-flex items-center space-x-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-2xl font-semibold text-lg border border-green-200 dark:border-green-800 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <Shield className="h-6 w-6" />
@@ -177,7 +177,7 @@ const HomePage = () => {
           better decisions and grow smarter.
         </p>
         <Link
-          to="/chat"
+          to="/agribot/chat"
           className="inline-flex items-center space-x-2 bg-white text-green-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:bg-green-50 transition-all duration-300 shadow-lg hover:shadow-xl"
         >
           <MessageCircle className="h-6 w-6" />

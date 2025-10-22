@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { check } = require("express-validator");
 const validate = require("../middlewares/validate");
-const { auth, protect } = require("../Middlewares/auth");
-const upload = require("../Utils/Upload");
+const { auth } = require("../Middlewares/auth");
 const controller = require("../controllers/CartController");
 
 router.get("/", auth, controller.getCart);
@@ -12,8 +11,8 @@ router.post(
   "/add",
   [
     auth,
-    check("listingId").isMongoId(),
-    check("qty").isInt({ gt: 0 }),
+    check("listingId", "Valid product ID required").isMongoId(),
+    check("qty", "Quantity must be greater than 0").isInt({ gt: 0 }),
     validate,
   ],
   controller.addItem
@@ -23,8 +22,8 @@ router.put(
   "/update",
   [
     auth,
-    check("listingId").isMongoId(),
-    check("qty").isInt({ gt: 0 }),
+    check("listingId", "Valid product ID required").isMongoId(),
+    check("qty", "Quantity must be greater than 0").isInt({ gt: 0 }),
     validate,
   ],
   controller.updateItem
@@ -32,7 +31,7 @@ router.put(
 
 router.delete(
   "/remove",
-  [auth, check("listingId").isMongoId(), validate],
+  [auth, check("listingId", "Valid product ID required").isMongoId(), validate],
   controller.removeItem
 );
 

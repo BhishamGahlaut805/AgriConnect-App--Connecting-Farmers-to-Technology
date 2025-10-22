@@ -8,7 +8,7 @@ const requireRole  = require("../middlewares/requireRole");
 
 // Admin middleware
 router.use(auth);
-router.use(requireRole("Admin"));
+router.use(requireRole("admin"));
 
 // Dashboard
 router.get("/metrics", adminController.getMetrics);
@@ -38,11 +38,32 @@ router.post(
 );
 router.get("/products/stats", adminController.getProductStats);
 
+//listing management
+router.get("/listings/pending", adminController.getPendingListings);
+router.patch("/listings/:id/approve", adminController.approveListing);
+router.patch("/listings/:id/reject", adminController.rejectListing);
+router.post(
+  "/listings/bulk-approve",
+  body("listingIds")
+    .isArray({ min: 1 })
+    .withMessage("Listing IDs array is required"),
+  adminController.bulkApproveListings
+);
+router.post(
+  "/listings/bulk-reject",
+  body("listingIds")
+    .isArray({ min: 1 })
+    .withMessage("Listing IDs array is required"),
+  body("reason").notEmpty().withMessage("Rejection reason is required"),
+  adminController.bulkRejectListings
+);
+router.get("/listings/stats", adminController.getListingStats);
+
 // User management
 router.patch(
   "/users/:id/role",
   body("role")
-    .isIn(["Farmer", "Trader", "Admin", "Buyer"])
+    .isIn(["Farmer", "Trader", "admin", "Buyer"])
     .withMessage("Invalid role"),
   adminController.updateUserRole
 );

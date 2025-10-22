@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children, requiredRole }) => {
   }
 
   // Role-based protection
-  if (requiredRole && user.role !== requiredRole) {
+  if (requiredRole && user.role !== requiredRole.tolowerCase()) {
     return <Navigate to="/unauthorized" replace />;
   }
 

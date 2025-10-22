@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AgrimarketService from "../../API/AgrimarketService";
-const cartService = AgrimarketService.CartService;
 import Loader from "../../Components/LoadingSkeleton";
+import CartNav from "./CartNav";
+import CartHero from "./CartHero";
 import {
   FaTrash,
   FaPlus,
@@ -13,10 +14,12 @@ import {
   FaExclamationTriangle,
 } from "react-icons/fa";
 
+const cartService = AgrimarketService.CartService;
+
 export default function Cart() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [updatingItemId, setUpdatingItemId] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -27,8 +30,8 @@ export default function Cart() {
     try {
       setLoading(true);
       setError(null);
-      const response = await cartService.get();
-      setCart(response);
+      const response = await cartService.getCart();
+      setCart(response.cart);
     } catch (err) {
       console.error("Failed to fetch cart:", err);
       setError(err.message || "Failed to fetch cart");
@@ -39,246 +42,314 @@ export default function Cart() {
 
   const updateQuantity = async (listingId, newQuantity) => {
     if (newQuantity < 1) return;
-
     try {
-      setUpdating(true);
+      setUpdatingItemId(listingId);
       await cartService.updateItem(listingId, newQuantity);
-      await fetchCart(); // Refresh cart data
+      await fetchCart();
     } catch (err) {
       console.error("Failed to update quantity:", err);
       setError(err.message || "Failed to update quantity");
     } finally {
-      setUpdating(false);
+      setUpdatingItemId(null);
     }
   };
 
   const removeItem = async (listingId) => {
     try {
-      setUpdating(true);
+      setUpdatingItemId(listingId);
       await cartService.removeItem(listingId);
-      await fetchCart(); // Refresh cart data
+      await fetchCart();
     } catch (err) {
       console.error("Failed to remove item:", err);
       setError(err.message || "Failed to remove item");
     } finally {
-      setUpdating(false);
-    }
-  };
-
-  const clearCart = async () => {
-    if (!window.confirm("Are you sure you want to clear your cart?")) return;
-
-    try {
-      setUpdating(true);
-      // Remove all items individually since there's no clear endpoint
-      if (cart?.items) {
-        for (const item of cart.items) {
-          await cartService.removeItem(item.listingId || item._id);
-        }
-      }
-      setCart(null);
-    } catch (err) {
-      console.error("Failed to clear cart:", err);
-      setError(err.message || "Failed to clear cart");
-    } finally {
-      setUpdating(false);
+      setUpdatingItemId(null);
     }
   };
 
   if (loading) return <Loader />;
 
   return (
-    <div className="mt-12 container mx-auto px-4 py-8">
-      <div className="flex items-center mb-6">
-        <Link
-          to="/browse"
-          className="flex items-center text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 mr-4 transition-colors"
-        >
-          <FaArrowLeft className="mr-2" /> Continue Shopping
-        </Link>
-        <h1 className="text-3xl font-bold text-indigo-900 dark:text-indigo-100">
-          Your Cart
-        </h1>
+    <div className="mt-4 min-h-screen bg-gradient-to-br from-yellow-100 via-green-100 to-yellow-200 dark:from-gray-900 dark:via-slate-900 dark:to-black pt-20 pb-16">
+      {/* Header */}
+      <div className="flex justify-end mr-12">
+        <CartNav />
       </div>
-
-      {error && (
-        <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded flex items-center">
-          <FaExclamationTriangle className="mr-2" />
-          <p>{error}</p>
-        </div>
-      )}
-
-      {!cart || !cart.items || cart.items.length === 0 ? (
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-8 text-center shadow-md">
-          <div className="text-indigo-400 text-6xl mb-4">
-            <FaShoppingBag />
-          </div>
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">
-            Your cart is empty
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">
-            Looks like you haven't added any items to your cart yet.
-          </p>
-          <Link
-            to="/browse"
-            className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors"
+      <CartHero />
+      <div className="container mx-auto px-6">
+        <div className="flex items-center mb-10">
+          {/* <Link
+            to="/harvestLink/browse"
+            className="flex items-center text-yellow-700 dark:text-yellow-400 hover:underline font-medium transition-all"
           >
-            Browse Products
-          </Link>
+            <FaArrowLeft className="mr-2" /> Continue Shopping
+          </Link> */}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md overflow-hidden">
-              <div className="divide-y divide-gray-200 dark:divide-slate-700">
-                {cart.items.map((item) => (
-                  <div key={item._id} className="p-6 flex flex-col sm:flex-row">
-                    <div className="w-full sm:w-24 h-24 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 mb-4 sm:mb-0 flex items-center justify-center">
-                      {item.listing?.product?.images?.[0] ? (
-                        <img
-                          src={item.listing.product.images[0]}
-                          alt={item.listing.product.name}
-                          className="w-full h-full object-cover rounded-lg"
-                          onError={(e) => {
-                            e.target.style.display = "none";
-                          }}
-                        />
-                      ) : null}
-                      <span className="text-2xl text-gray-400">🌾</span>
+        <div className="max-w-7xl mx-auto my-6">
+          <div className="relative flex items-center justify-center bg-gradient-to-r from-yellow-400 via-orange-500 to-pink-500 rounded-2xl shadow-lg overflow-hidden py-6 px-8">
+            {/* Subtle glowing animation */}
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-400 opacity-30 blur-3xl animate-pulse"></div>
+
+            <h2 className="relative text-3xl sm:text-4xl font-extrabold text-white drop-shadow-md tracking-wide text-center">
+              🛍️ Thank You for Shopping With Us!
+            </h2>
+          </div>
+
+          <p className="text-center text-gray-600 dark:text-gray-300 mt-4 text-lg">
+            We appreciate your trust in us — your satisfaction means everything.
+          </p>
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 dark:bg-red-900/40 border-l-4 border-red-500 text-red-700 dark:text-red-300 p-4 mb-6 rounded flex items-center shadow-md">
+            <FaExclamationTriangle className="mr-2" />
+            <p>{error}</p>
+          </div>
+        )}
+
+        {/* Empty Cart */}
+        {!cart?.items?.length ? (
+          <div className="bg-white/80 dark:bg-slate-800/60 backdrop-blur-md rounded-2xl p-12 text-center shadow-2xl">
+            <div className="text-yellow-400 text-6xl mb-4">
+              <FaShoppingBag />
+            </div>
+            <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-2">
+              Your cart is empty
+            </h3>
+            <p className="text-gray-500 dark:text-gray-400 mb-6">
+              Looks like you haven’t added any items yet.
+            </p>
+            <Link
+              to="/harvestLink/browse"
+              className="px-6 py-3 bg-gradient-to-r from-yellow-500 to-green-500 hover:from-yellow-600 hover:to-green-600 text-white rounded-lg font-medium transition-all shadow-md"
+            >
+              Browse Products
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Cart Items */}
+            <div className="lg:col-span-2 space-y-6">
+              {cart.items.map((item) => (
+                <div
+                  key={item._id}
+                  className="bg-white/90 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl shadow-lg p-6 flex flex-col sm:flex-row items-start sm:items-center hover:scale-[1.01] transition-all"
+                >
+                  {/* Product Image */}
+                  <div className="w-full sm:w-32 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg overflow-hidden flex items-center justify-center mb-4 sm:mb-0">
+                    {item.product?.images?.[0] ? (
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-3xl">🌿</span>
+                    )}
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="sm:ml-6 flex-1 w-full">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900 dark:text-white">
+                          {item.product?.title}
+                        </h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                          ₹{item.listing?.pricePerUnit} per {item.product?.unit}
+                        </p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          Added: {new Date(item.addedAt).toLocaleString()}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
+                          {item.listing?.description ||
+                            item.product?.description}
+                        </p>
+                        <Link
+                          to={`/harvestLink/product/${item.product?._id}`}
+                          className="inline-block mt-2 text-yellow-600 dark:text-yellow-400 text-sm font-medium hover:underline"
+                        >
+                          View Product Details →
+                        </Link>
+                      </div>
+
+                      <button
+                        onClick={() => removeItem(item.listing?._id)}
+                        className="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-all"
+                        disabled={updatingItemId === item.listing?._id}
+                      >
+                        {updatingItemId === item.listing?._id ? (
+                          <FaSpinner className="animate-spin" />
+                        ) : (
+                          <FaTrash />
+                        )}
+                      </button>
                     </div>
 
-                    <div className="sm:ml-6 flex-1">
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold text-lg text-gray-800 dark:text-white">
-                            {item.listing?.product?.name || "Unknown Product"}
-                          </h3>
-                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                            ₹{item.pricePerUnit || 0} per{" "}
-                            {item.listing?.product?.baseUnit || "unit"}
-                          </p>
-                          {item.listing?.description && (
-                            <p className="text-sm text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
-                              {item.listing.description}
-                            </p>
-                          )}
-                        </div>
+                    {/* Quantity and Price */}
+                    <div className="mt-4 flex items-center justify-between">
+                      <div className="flex items-center bg-gray-50 dark:bg-slate-700 rounded-lg shadow-inner">
                         <button
-                          onClick={() => removeItem(item.listingId || item._id)}
-                          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-2 transition-colors disabled:opacity-50"
-                          disabled={updating}
+                          onClick={() =>
+                            updateQuantity(item.listing?._id, item.qty - 1)
+                          }
+                          className="w-10 h-10 text-lg font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-l-lg transition"
+                          disabled={
+                            updatingItemId === item.listing?._id ||
+                            item.qty <= 1
+                          }
                         >
-                          {updating ? (
-                            <FaSpinner className="animate-spin" />
-                          ) : (
-                            <FaTrash />
-                          )}
+                          <FaMinus />
+                        </button>
+                        <span className="px-4 py-2 font-semibold text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-800">
+                          {item.qty}
+                        </span>
+                        <button
+                          onClick={() =>
+                            updateQuantity(item.listing?._id, item.qty + 1)
+                          }
+                          className="w-10 h-10 text-lg font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-600 rounded-r-lg transition"
+                          disabled={updatingItemId === item.listing?._id}
+                        >
+                          <FaPlus />
                         </button>
                       </div>
 
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="flex items-center">
-                          <button
-                            onClick={() =>
-                              updateQuantity(
-                                item.listingId || item._id,
-                                item.quantity - 1
-                              )
-                            }
-                            className="w-10 h-10 border border-gray-300 dark:border-slate-600 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
-                            disabled={updating || item.quantity <= 1}
-                          >
-                            <FaMinus className="text-sm" />
-                          </button>
-                          <span className="mx-4 font-medium text-gray-700 dark:text-gray-300">
-                            {item.quantity}
-                          </span>
-                          <button
-                            onClick={() =>
-                              updateQuantity(
-                                item.listingId || item._id,
-                                item.quantity + 1
-                              )
-                            }
-                            className="w-10 h-10 border border-gray-300 dark:border-slate-600 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
-                            disabled={updating}
-                          >
-                            <FaPlus className="text-sm" />
-                          </button>
-                        </div>
-
-                        <div className="text-lg font-semibold text-indigo-600 dark:text-indigo-400">
-                          ₹{(item.pricePerUnit || 0) * (item.quantity || 0)}
-                        </div>
+                      <div className="text-lg font-bold text-green-600 dark:text-green-400">
+                        ₹{(item.listing?.pricePerUnit || 0) * (item.qty || 0)}
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
 
-            <div className="mt-4">
-              <button
-                onClick={clearCart}
-                className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 flex items-center transition-colors disabled:opacity-50"
-                disabled={updating}
-              >
-                {updating ? (
-                  <FaSpinner className="animate-spin mr-2" />
-                ) : (
-                  <FaTrash className="mr-2" />
-                )}
-                Clear Cart
-              </button>
-            </div>
+           {/* Order Summary */}
+<div className="bg-white/90 dark:bg-slate-800/70 backdrop-blur-xl rounded-2xl shadow-xl p-6 sticky top-6">
+  <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-5 border-b pb-2">
+    Order Summary
+  </h2>
+
+  {/* Itemized Breakdown */}
+  <div className="space-y-4 mb-6">
+    {cart.items.map((item) => {
+      const price = item.listing?.pricePerUnit || 0;
+      const qty = item.qty || 0;
+      const subtotal = price * qty;
+      return (
+        <div
+          key={item._id}
+          className="flex justify-between text-gray-700 dark:text-gray-300 text-sm border-b border-gray-200 dark:border-gray-600 pb-2"
+        >
+          <div className="flex flex-col">
+            <span className="font-semibold text-gray-800 dark:text-gray-100">
+              {item.product?.title || item.listing?.product?.title || "Item"}
+            </span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {qty} × ₹{price.toLocaleString()} = ₹{subtotal.toLocaleString()}
+            </span>
           </div>
-
-          <div>
-            <div className="bg-white dark:bg-slate-800 rounded-xl shadow-md p-6 sticky top-6">
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-                Order Summary
-              </h2>
-
-              <div className="space-y-4">
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Subtotal
-                  </span>
-                  <span className="font-medium">₹{cart.subtotal || 0}</span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Shipping
-                  </span>
-                  <span className="font-medium">₹{cart.shipping || 0}</span>
-                </div>
-
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Tax</span>
-                  <span className="font-medium">₹{cart.tax || 0}</span>
-                </div>
-
-                <div className="border-t border-gray-200 dark:border-slate-700 pt-4 flex justify-between text-lg font-semibold">
-                  <span>Total</span>
-                  <span className="text-indigo-600 dark:text-indigo-400">
-                    ₹{cart.total || 0}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-6">
-                <Link
-                  to="/checkout"
-                  className="block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-3 rounded-lg font-medium transition-colors"
-                >
-                  Proceed to Checkout
-                </Link>
-              </div>
-            </div>
-          </div>
+          <span className="font-semibold text-gray-800 dark:text-gray-100">
+            ₹{subtotal.toLocaleString()}
+          </span>
         </div>
-      )}
+      );
+    })}
+  </div>
+
+  {/* Summary of Costs */}
+  <div className="space-y-3 text-gray-700 dark:text-gray-300 text-sm">
+    {/* Subtotal */}
+    <div className="flex justify-between">
+      <span>Subtotal</span>
+      <span className="font-semibold">
+        ₹
+        {cart.items
+          .reduce(
+            (sum, i) =>
+              sum + (i.listing?.pricePerUnit || 0) * (i.qty || 0),
+            0
+          )
+          .toLocaleString()}
+      </span>
+    </div>
+
+    {/* Shipping */}
+    <div className="flex justify-between">
+      <span>Shipping</span>
+      <span className="font-semibold text-green-600">Free</span>
+    </div>
+
+    {/* Taxes */}
+    <div className="flex justify-between">
+      <span>Estimated Tax (5%)</span>
+      <span className="font-semibold">
+        ₹
+        {(
+          0.05 *
+          cart.items.reduce(
+            (sum, i) =>
+              sum + (i.listing?.pricePerUnit || 0) * (i.qty || 0),
+            0
+          )
+        ).toFixed(2)}
+      </span>
+    </div>
+
+    {/* Discount */}
+    <div className="flex justify-between">
+      <span>Seasonal Discount</span>
+      <span className="font-semibold text-red-500">− ₹150.00</span>
+    </div>
+
+    {/* Packaging Fee */}
+    <div className="flex justify-between">
+      <span>Packaging & Handling</span>
+      <span className="font-semibold">₹50.00</span>
+    </div>
+  </div>
+
+  <hr className="my-5 border-gray-300 dark:border-slate-600" />
+
+  {/* Total */}
+  <div className="flex justify-between text-lg font-bold text-gray-900 dark:text-gray-100">
+    <span>Total</span>
+    <span>
+      ₹
+      {(
+        cart.items.reduce(
+          (sum, i) =>
+            sum + (i.listing?.pricePerUnit || 0) * (i.qty || 0),
+          0
+        ) *
+          1.05 -
+        150 +
+        50
+      ).toLocaleString()}
+    </span>
+  </div>
+
+  {/* Checkout Button */}
+  <Link
+    to="/harvestLink/checkout"
+    className="block w-full mt-6 py-3 bg-gradient-to-r from-yellow-500 to-green-500 hover:from-yellow-600 hover:to-green-600 text-white font-semibold rounded-lg shadow-lg transition-all text-center"
+  >
+    Proceed to Checkout
+  </Link>
+
+  {/* Notes */}
+  <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+    <p>
+      <FaExclamationTriangle className="inline mr-1 text-yellow-500" />
+      Please review your order carefully before proceeding.
+    </p>
+    <p className="italic mt-1">* Demo checkout — payment coming soon.</p>
+  </div>
+</div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -128,8 +128,12 @@ const authService = {
       const response = await apiClient.post("/auth/google-login", {
         token: googleToken,
       });
+      // console.log("Google login response:", response.data);
+      // console.log("Google login token:", response.data.token);
+      // console.log("Google login user:", response.data.user);
+      // console.log("Google login user token:", response.data.user.token);
       if (response.data.user) {
-        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("token", response.data.user.token);
       }
       return response.data;
     } catch (error) {
@@ -144,6 +148,7 @@ const authService = {
   getCurrentUser: async () => {
     try {
       const response = await apiClient.get("/auth/me");
+      console.log("Fetched current user:", response.data.user);
       return response.data.user;
     } catch (error) {
       // If 401, the token is invalid/expired - redirect to login

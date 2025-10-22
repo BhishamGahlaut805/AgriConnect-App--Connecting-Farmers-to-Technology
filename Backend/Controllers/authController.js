@@ -371,6 +371,7 @@ login: async (req, res) => {
           name: user.name,
           role: user.role,
           contact: user.contact,
+          token: jwtToken,
         },
       });
     } catch (err) {

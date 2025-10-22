@@ -22,6 +22,7 @@ function getMultipartHeaders() {
 
 async function handleApiCall(url, options = {}) {
   try {
+    console.log("fetching the URL as : ", " url ", url, "options", options, "headers", getHeaders());
     const response = await fetch(url, {
       ...options,
       headers: {
@@ -29,11 +30,11 @@ async function handleApiCall(url, options = {}) {
         ...options.headers,
       },
     });
-
+    console.log(response.body);
     if (response.status === 401) {
-      localStorage.removeItem("LoginToken");
-      localStorage.removeItem("userDetails");
-      window.dispatchEvent(new Event("unauthorized"));
+      // localStorage.removeItem("LoginToken");
+      // localStorage.removeItem("userDetails");
+      // window.dispatchEvent(new Event("unauthorized"));
       throw new Error("Authentication required. Please login again.");
     }
 
@@ -84,6 +85,9 @@ export const ProductService = {
   getProduct: async (id) => {
     return handleApiCall(`${BASE_URL}/products/${id}`);
   },
+  getProductHlAdmin: async (id) => {
+    return handleApiCall(`${BASE_URL}/products/hl--admin/${id}`);
+  },
 
   // OTP-based product creation for multiple products
   initiateProductCreation: async (products, email) => {
@@ -94,6 +98,12 @@ export const ProductService = {
   },
 
   verifyAndCreateProducts: async (verificationId, otp, images) => {
+    console.log(
+      "Images received in verifyAndCreateProducts: ",
+      images,
+      verificationId,
+      otp
+    );
     const formData = new FormData();
     formData.append("verificationId", verificationId);
     formData.append("otp", otp);
@@ -104,13 +114,18 @@ export const ProductService = {
         formData.append("images", image);
       });
     }
-
+    console.log(
+      "Submitting FormData as : ",
+      formData.get("verificationId"),
+      formData.get("otp"),
+      formData.getAll("images")
+    );
     const response = await fetch(`${BASE_URL}/products/verify-create`, {
       method: "POST",
       headers: getMultipartHeaders(),
       body: formData,
     });
-
+    console.log(response);
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       throw new Error(
@@ -126,7 +141,8 @@ export const ProductService = {
     // Convert single product to array for consistency
     const products = [productData];
     const user = AuthService.getUser();
-    const email = user?.email;
+    console.log(user);
+    const email = user?.contact;
 
     if (!email) {
       throw new Error("User email is required for product creation");
@@ -158,9 +174,11 @@ export const ProductService = {
   // Get user's products (for sellers)
   getMyProducts: async (filters = {}) => {
     const queryParams = new URLSearchParams(filters).toString();
+    console.log("Fetching my products with filters:", filters);
     const url = `${BASE_URL}/products/user/my-products${
       queryParams ? `?${queryParams}` : ""
     }`;
+    console.log("Constructed URL: Reached Here : ", url);
     return handleApiCall(url);
   },
 
@@ -173,50 +191,71 @@ export const ProductService = {
   },
 };
 
-// Enhanced Listing Service with OTP Verification
+// AgrimarketService.js - Enhanced Listing Service Section
 export const ListingService = {
-  // List all listings with advanced filtering
-  listListings: async (filters = {}) => {
-    const queryParams = new URLSearchParams(filters).toString();
-    const url = `${BASE_URL}/listings${queryParams ? `?${queryParams}` : ""}`;
-    return handleApiCall(url);
-  },
-
-  // OTP-based listing creation
-  createListing: async (listingData) => {
-    const {
-      product,
-      pricePerUnit,
-      availableQty,
-      minOrderQty,
-      description,
-      email,
-    } = listingData;
-
+  // Single OTP-based listing creation initiation
+  initiateListingCreation: async (listingData) => {
+    console.log("Initiating listing with data:", listingData);
     return handleApiCall(`${BASE_URL}/listings`, {
       method: "POST",
-      body: JSON.stringify({
-        product,
-        pricePerUnit,
-        availableQty,
-        minOrderQty,
-        description,
-        email,
-      }),
+      body: JSON.stringify(listingData),
     });
   },
 
+  // Bulk OTP-based listing creation initiation
+  initiateBulkListingCreation: async (listingsData) => {
+    console.log("Initiating bulk listings with data:", listingsData);
+    return handleApiCall(`${BASE_URL}/listings/bulk/initiate`, {
+      method: "POST",
+      body: JSON.stringify(listingsData),
+    });
+  },
+
+  // Verify OTP and create single listing
   verifyAndCreateListing: async (verificationId, otp) => {
+    console.log("Verifying listing with ID and OTP:", verificationId, otp);
     return handleApiCall(`${BASE_URL}/listings/verify`, {
       method: "POST",
       body: JSON.stringify({ verificationId, otp }),
     });
   },
 
+  // Verify OTP and create bulk listings
+  verifyAndCreateBulkListings: async (verificationId, otp) => {
+    console.log("Verifying bulk listings with ID and OTP:", verificationId, otp);
+    return handleApiCall(`${BASE_URL}/listings/bulk/verify`, {
+      method: "POST",
+      body: JSON.stringify({ verificationId, otp }),
+    });
+  },
+
+  // Get bulk creation status
+  getBulkCreationStatus: async (verificationId) => {
+    return handleApiCall(`${BASE_URL}/listings/bulk/status/${verificationId}`);
+  },
+
+  // Get user's listings (for MyListings component)
+  mine: async (userid) => {
+    return handleApiCall(`${BASE_URL}/listings/my-listings/${userid}`, {
+      method: "GET",
+      userId: userid
+    });
+  },
+
+  // Get all public listings
+  listListings: async (filters = {}) => {
+    const queryParams = new URLSearchParams(filters).toString();
+    const url = `${BASE_URL}/listings${queryParams ? `?${queryParams}` : ""}`;
+    return handleApiCall(url);
+  },
+
+  // Get single listing by ID
   getListing: async (id) => {
+    // console.log("Getting listing with ID:", id);
     return handleApiCall(`${BASE_URL}/listings/${id}`);
   },
 
+  // Update listing
   updateListing: async (id, updates) => {
     return handleApiCall(`${BASE_URL}/listings/${id}`, {
       method: "PATCH",
@@ -224,39 +263,45 @@ export const ListingService = {
     });
   },
 
+  // Bulk update listings
+  bulkUpdateListings: async (listingIds, updates) => {
+    return handleApiCall(`${BASE_URL}/listings/bulk/update`, {
+      method: "PATCH",
+      body: JSON.stringify({ listingIds, updates }),
+    });
+  },
+
+  // Delete listing
   deleteListing: async (id) => {
     return handleApiCall(`${BASE_URL}/listings/${id}`, {
       method: "DELETE",
     });
   },
 
+  // Bulk delete listings
+  bulkDeleteListings: async (listingIds) => {
+    return handleApiCall(`${BASE_URL}/listings/bulk/delete`, {
+      method: "POST",
+      body: JSON.stringify({ listingIds }),
+    });
+  },
+
   // Toggle listing status
-  toggleListingStatus: async (id, status) => {
+  toggleStatus: async (id, status) => {
     return handleApiCall(`${BASE_URL}/listings/${id}/status`, {
       method: "PATCH",
       body: JSON.stringify({ status }),
     });
   },
 
-  // Get user's listings
-  getMyListings: async (filters = {}) => {
-    const queryParams = new URLSearchParams(filters).toString();
-    const url = `${BASE_URL}/listings/my-listings${
-      queryParams ? `?${queryParams}` : ""
-    }`;
-    return handleApiCall(url);
-  },
-
-  // Search listings
-  searchListings: async (query, filters = {}) => {
-    const searchParams = new URLSearchParams({
-      q: query,
-      ...filters,
-    }).toString();
-    return handleApiCall(`${BASE_URL}/listings?${searchParams}`);
+  // Bulk toggle listing status
+  bulkToggleStatus: async (listingIds, status) => {
+    return handleApiCall(`${BASE_URL}/listings/bulk/status`, {
+      method: "PATCH",
+      body: JSON.stringify({ listingIds, status }),
+    });
   },
 };
-
 // Enhanced Admin Service with Bulk Operations
 export const AdminService = {
   // Dashboard Metrics
@@ -327,10 +372,20 @@ export const AdminService = {
       page,
       limit,
     }).toString();
-    return handleApiCall(`${BASE_URL}/listings?${queryParams}`);
+    // console.log(
+    //   // `Fetching pending listings from: ${BASE_URL}/listing/all?${queryParams}`
+    // );
+    // console.log("MAKING REQUESTS FROM ADMIN SERVICE");
+    return handleApiCall(`${BASE_URL}/admin/listings/pending/?${queryParams}`);
   },
 
+  //get listing by id- /:id
+  // getListingById: async (id) => {
+  //   return handleApiCall(`${BASE_URL}/listings/${id}`);
+  // },
+
   approveListing: async (listingId) => {
+    console.log("Approving listing with ID:", listingId);
     return handleApiCall(`${BASE_URL}/admin/listings/${listingId}/approve`, {
       method: "PATCH",
     });
@@ -353,7 +408,9 @@ export const AdminService = {
   },
 
   getUserAnalytics: async () => {
-    return handleApiCall(`${BASE_URL}/admin/analytics/users`);
+    const response = await handleApiCall(`${BASE_URL}/admin/analytics/users`);
+    console.log("User analytics response:", response.data);
+    return response.data || response;
   },
 
   getPlatformAnalytics: async (period = "monthly") => {

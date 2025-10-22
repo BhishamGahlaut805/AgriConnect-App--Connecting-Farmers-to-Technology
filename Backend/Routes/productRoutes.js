@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
 const productController = require("../Controllers/ProductController");
-const { auth } = require("../middlewares/auth");
-const requireRole  = require("../middlewares/requireRole");
+const { auth } = require("../Middlewares/auth");
+const requireRole = require("../middlewares/requireRole");
 const upload = require("../utils/upload");
 
 // Validation rules
@@ -60,7 +60,12 @@ router.post(
   productValidation,
   productController.initiateProductCreation
 );
-
+router.get(
+  "/hl--admin/:id",
+  auth,
+  requireRole("Farmer", "Trader", "Admin"),
+  productController.getProduct1
+);
 router.post(
   "/verify-create",
   auth,

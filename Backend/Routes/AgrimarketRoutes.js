@@ -13,5 +13,9 @@ router.use("/shipment", require("./ShipmentRoutes"));
 router.use("/payments", require("./PaymentRoutes"));
 router.use("/admin", require("./AdminRoutes"));
 router.use("/cms", require("./cmsRoutes"));
+router.use("/listings", require("./ListingRoutes"));
+router.use("/dashboard", require("./DashboardRoutes"));
+router.use("/tracking", require("./TrackOrderShipmentRoutes"));
+router.use("/addresses", require("./AddressRoutes"));
 
 module.exports = router;

@@ -1,25 +1,29 @@
-// File: FixedOrders.jsx
 import React, { useEffect, useState } from "react";
-import AgrimarketService from "../../API/AgrimarketService";
-const orderService = AgrimarketService.OrderService;
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaBox,
-  FaShippingFast,
+  FaTruck,
   FaCheckCircle,
   FaTimesCircle,
-  FaInfoCircle,
-  FaSearch,
+  FaClipboardList,
+  FaExclamationTriangle,
   FaRupeeSign,
-  FaEye,
-  FaDownload,
+  FaShoppingBag,
+  FaMapMarkerAlt,
+  FaClock,
+  FaSync,
+  FaArrowRight,
 } from "react-icons/fa";
+import CartBar from "./Cartbar";
+import Links from "./Links";
+import OrderService from "../../API/OrderService";
 
-export default function Orders() {
+const AllOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [error, setError] = useState("");
+  const [refreshing, setRefreshing] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchOrders();
@@ -28,242 +32,273 @@ export default function Orders() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await orderService.my();
-      setOrders(response.success ? response.data : []);
+      setError("");
+
+      const response = await OrderService.getUserOrders();
+      if (response.success) {
+        setOrders(response.data.orders || []);
+      } else {
+        setError(response.message || "Failed to load orders");
+      }
     } catch (err) {
-      console.error("Failed to fetch orders:", err);
+      console.error("Error loading orders:", err);
+      setError(err.message || "Unable to fetch orders");
     } finally {
       setLoading(false);
     }
   };
 
-  const updateOrderStatus = async (orderId, newStatus) => {
-    try {
-      await orderService.updateStatus(orderId, newStatus);
-      setOrders(
-        orders.map((order) =>
-          order._id === orderId ? { ...order, status: newStatus } : order
-        )
-      );
-    } catch (err) {
-      console.error("Failed to update order status:", err);
-    }
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await fetchOrders();
+    setRefreshing(false);
+  };
+
+  const getStatusStyle = (status) => {
+    const styles = {
+      pending_verification:
+        "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+      pending:
+        "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+      confirmed:
+        "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+      shipped:
+        "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400",
+      delivered:
+        "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+      cancelled: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+    };
+    return styles[status] || "bg-gray-100 text-gray-700 dark:bg-gray-800";
   };
 
   const getStatusIcon = (status) => {
     switch (status) {
       case "pending":
-        return <FaBox className="text-yellow-500" />;
+      case "pending_verification":
+        return <FaClock className="text-yellow-500" />;
       case "confirmed":
-        return <FaInfoCircle className="text-blue-500" />;
+        return <FaClipboardList className="text-blue-500" />;
       case "shipped":
-        return <FaShippingFast className="text-indigo-500" />;
+        return <FaTruck className="text-indigo-500" />;
       case "delivered":
         return <FaCheckCircle className="text-green-500" />;
       case "cancelled":
         return <FaTimesCircle className="text-red-500" />;
       default:
-        return <FaBox />;
+        return <FaBox className="text-gray-500" />;
     }
   };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
-      case "confirmed":
-        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200";
-      case "shipped":
-        return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200";
-      case "delivered":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
-      case "cancelled":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
-    }
-  };
-
-  const filteredOrders = orders.filter((order) => {
-    const matchesFilter = filter === "all" || order.status === filter;
-    const matchesSearch =
-      order._id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.items.some((item) =>
-        item.product?.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    return matchesFilter && matchesSearch;
-  });
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 pt-36 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">
+            Loading your orders...
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="mt-12 container mx-auto px-4 py-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
-        <h2 className="text-3xl font-bold text-indigo-900 dark:text-indigo-100 mb-4 md:mb-0">
-          My Orders
-        </h2>
-      </div>
-
-      {/* Filters and Search */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="relative">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search orders..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:text-white"
-            />
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 pt-36">
+      <CartBar />
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FaShoppingBag className="text-3xl text-green-600 dark:text-green-400" />
           </div>
-
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-slate-900 dark:text-white"
-          >
-            <option value="all">All Orders</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="shipped">Shipped</option>
-            <option value="delivered">Delivered</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
-      </div>
-
-      {filteredOrders.length === 0 ? (
-        <div className="bg-white dark:bg-slate-800 rounded-xl p-8 text-center shadow-md">
-          <div className="text-indigo-400 text-6xl mb-4">📦</div>
-          <h3 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-2">
-            {filter === "all" ? "No orders yet" : `No ${filter} orders`}
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            {filter === "all"
-              ? "Your orders will appear here once you make a purchase."
-              : `You don't have any ${filter} orders at the moment.`}
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            All Orders
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            Review all your order statuses and details
           </p>
+          <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="mt-4 inline-flex items-center px-5 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition disabled:opacity-50"
+          >
+            <FaSync className={`mr-2 ${refreshing ? "animate-spin" : ""}`} />
+            {refreshing ? "Refreshing..." : "Refresh"}
+          </button>
         </div>
-      ) : (
-        <div className="space-y-6">
-          {filteredOrders.map((order) => (
+
+        {/* Error */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 text-red-700 dark:text-red-300 rounded-lg flex items-center">
+            <FaExclamationTriangle className="mr-3" />
+            {error}
+          </div>
+        )}
+
+        {/* No Orders */}
+        {orders.length === 0 && !loading && (
+          <div className="text-center py-12">
+            <FaClipboardList className="text-6xl text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No Orders Yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              Your orders will appear here once you start shopping.
+            </p>
+            <Link
+              to="/harvestLink/browse"
+              className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition font-medium"
+            >
+              Browse Products
+            </Link>
+          </div>
+        )}
+
+        {/* Orders Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {orders.map((order) => (
             <div
               key={order._id}
-              className="bg-white dark:bg-slate-800 rounded-xl p-6 shadow-md"
+              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-green-200 dark:border-green-700 hover:shadow-xl transition-all duration-300"
             >
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 pb-4 border-b border-gray-200 dark:border-slate-700">
-                <div>
-                  <div className="flex items-center">
-                    <span className="mr-2">{getStatusIcon(order.status)}</span>
+              {/* Order Header */}
+              <div className="bg-gradient-to-r from-green-500 to-lime-500 p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                      {getStatusIcon(order.orderStatus)}
+                    </div>
+                    <div>
+                      <h3 className="text-white font-bold text-lg">
+                        Order #{order.orderId}
+                      </h3>
+                      <p className="text-green-100 text-sm">
+                        Placed on{" "}
+                        {new Date(order.createdAt).toLocaleDateString("en-IN")}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-white font-bold text-xl">
+                      ₹{order.totalAmount?.toFixed(2)}
+                    </p>
                     <span
-                      className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(
-                        order.status
+                      className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusStyle(
+                        order.orderStatus
                       )}`}
                     >
-                      {order.status.charAt(0).toUpperCase() +
-                        order.status.slice(1)}
+                      {order.orderStatus.replace("_", " ")}
                     </span>
                   </div>
-                  <h3 className="text-lg font-semibold mt-2 text-gray-800 dark:text-white">
-                    Order #{order._id.slice(-8).toUpperCase()}
-                  </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Placed on {new Date(order.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div className="mt-4 md:mt-0 text-right">
-                  <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 flex items-center justify-end">
-                    <FaRupeeSign className="mr-1" />
-                    {order.amount || order.totalAmount}
-                  </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {order.items.length} item(s)
-                  </p>
                 </div>
               </div>
 
-              <div className="mb-4">
-                <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Items:
+              {/* Order Items */}
+              <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-3 flex items-center">
+                  <FaBox className="mr-2 text-green-600" />
+                  Items ({order.items?.length || 0})
                 </h4>
                 <div className="space-y-2">
-                  {order.items.map((item, index) => (
-                    <div key={index} className="flex justify-between text-sm">
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {item.quantity} x {item.product?.name || "Product"}
+                  {order.items?.slice(0, 2).map((item, i) => (
+                    <div
+                      key={i}
+                      className="flex justify-between text-sm text-gray-700 dark:text-gray-300"
+                    >
+                      <span className="truncate">
+                        {item.product?.title || "Product"}
                       </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        ₹{(item.price || item.pricePerUnit) * item.quantity}
+                      <span className="font-medium">
+                        {item.quantity} {item.unit}
                       </span>
                     </div>
                   ))}
+                  {order.items?.length > 2 && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      +{order.items.length - 2} more items
+                    </p>
+                  )}
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center pt-4 border-t border-gray-200 dark:border-slate-700">
-                <div className="mb-4 sm:mb-0">
-                  <h4 className="font-medium text-gray-700 dark:text-gray-300">
-                    Delivery Address:
-                  </h4>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {order.shippingAddress?.addressLine1},{" "}
-                    {order.shippingAddress?.city},{" "}
-                    {order.shippingAddress?.state} -{" "}
-                    {order.shippingAddress?.pincode}
-                  </p>
-                </div>
+              {/* Shipping Info */}
+              <div className="p-4">
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
+                  <FaMapMarkerAlt className="mr-2 text-blue-600" />
+                  Delivery Address
+                </h4>
+                <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                  {order.shippingAddress?.completeAddress ||
+                    `${order.shippingAddress?.street}, ${order.shippingAddress?.city}`}
+                </p>
+              </div>
 
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setSelectedOrder(order)}
-                    className="px-4 py-2 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded-lg text-sm flex items-center"
+              {/* Action Buttons */}
+              <div className="p-4 bg-gray-50 dark:bg-gray-900/40 border-t border-gray-200 dark:border-gray-700 flex space-x-3">
+                <Link
+                  to={`/harvestLink/orders/${order._id}`}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg font-medium text-center transition flex items-center justify-center space-x-2"
+                >
+                  <span>View Details</span>
+                  <FaArrowRight className="text-sm" />
+                </Link>
+
+                {order.orderStatus === "pending_verification" && (
+                  <Link
+                    to={`/harvestLink/users/orders/${order._id}/verify`}
+                    className="px-4 py-3 border border-orange-300 dark:border-orange-600 text-orange-600 dark:text-orange-400 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition"
                   >
-                    <FaEye className="mr-2" /> View Details
-                  </button>
-                </div>
+                    Verify OTP
+                  </Link>
+                )}
               </div>
             </div>
           ))}
         </div>
-      )}
 
-      {/* Order Detail Modal */}
-      {selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-800 rounded-xl p-6 w-full max-w-2xl mx-4">
-            <h3 className="text-xl font-semibold mb-4">Order Details</h3>
-            <div className="space-y-4">
-              <p>
-                <strong>Order ID:</strong> {selectedOrder._id}
-              </p>
-              <p>
-                <strong>Status:</strong> {selectedOrder.status}
-              </p>
-              <p>
-                <strong>Total Amount:</strong> ₹
-                {selectedOrder.amount || selectedOrder.totalAmount}
-              </p>
-              <p>
-                <strong>Order Date:</strong>{" "}
-                {new Date(selectedOrder.createdAt).toLocaleDateString()}
-              </p>
+        {/* Footer Help Section */}
+        {orders.length > 0 && (
+          <div className="mt-10 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-6">
+            <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2">
+              Need Help with Your Orders?
+            </h3>
+            <p className="text-blue-700 dark:text-blue-400 mb-3 text-sm">
+              If your order is delayed or needs attention, please check the
+              order details or contact our support team.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link
+                to="/harvestLink/users/orders/pending"
+                className="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg text-sm font-medium"
+              >
+                Pending Verifications
+              </Link>
+              <Link
+                to="/harvestLink/cart"
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium"
+              >
+                Go to Cart
+              </Link>
+              <Link
+                to="/harvestLink/checkout"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium"
+              >
+                Checkout
+              </Link>
+              <Link
+                to="/harvestLink/browse"
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium"
+              >
+                Browse Products
+              </Link>
             </div>
-            <button
-              onClick={() => setSelectedOrder(null)}
-              className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg"
-            >
-              Close
-            </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
+
+      <Links />
     </div>
   );
-}
+};
+
+export default AllOrders;

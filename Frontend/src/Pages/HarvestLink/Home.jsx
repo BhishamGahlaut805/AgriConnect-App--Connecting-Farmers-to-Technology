@@ -1,7 +1,7 @@
+// Home.jsx - Enhanced Version
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AgrimarketService from "../../API/AgrimarketService";
-// import authService from "../../API/authService";
 import {
   FaSearch,
   FaShoppingCart,
@@ -14,23 +14,13 @@ import {
   FaRupeeSign,
   FaPlus,
   FaCheckCircle,
-  FaPhoneAlt,
-  FaBars,
+  FaEye,
+  FaSpinner,
   FaUsers,
   FaChartLine,
   FaBoxOpen,
-  FaMoneyBillWave,
   FaShoppingBag,
-  FaUserCog,
   FaStore,
-  FaEye,
-  FaSpinner,
-  FaFilter,
-  FaShoppingBasket,
-  FaChartBar,
-  FaUserCheck,
-  FaBoxes,
-  FaPercentage,
   FaArrowRight,
   FaLeaf,
   FaAward,
@@ -40,27 +30,23 @@ import {
   FaMapMarkerAlt,
   FaCalendarAlt,
   FaCertificate,
+  FaFire,
+  FaRocket,
 } from "react-icons/fa";
+import CartNav from "./CartNav";
+import CartBar from "./Cartbar"
 
 export default function Home() {
   const navigate = useNavigate();
-
-  // Auth / layout state
   const [user, setUser] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-
-  // Content state
-  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [featuredListings, setFeaturedListings] = useState([]);
   const [freshArrivals, setFreshArrivals] = useState([]);
+  const [trendingProducts, setTrendingProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [addingToCart, setAddingToCart] = useState({});
-
-  // Search state
   const [searchQuery, setSearchQuery] = useState("");
-
-  // UI utils
   const [message, setMessage] = useState(null);
   const toastTimer = useRef(null);
 
@@ -70,18 +56,15 @@ export default function Home() {
     toastTimer.current = setTimeout(() => setMessage(null), 3000);
   };
 
-  // Stats data
-  const stats = useMemo(
-    () => ({
-      farmers: "12.5K+",
-      products: "45K+",
-      transactions: "189K+",
-      satisfaction: "98%",
-    }),
-    []
-  );
+  // Enhanced stats with real data
+  const [stats, setStats] = useState({
+    farmers: "12.5K+",
+    products: "45K+",
+    transactions: "189K+",
+    satisfaction: "98%",
+  });
 
-  // Enhanced category data based on schema
+  // Enhanced category data
   const categoryData = useMemo(
     () => [
       {
@@ -90,27 +73,31 @@ export default function Home() {
         icon: FaLeaf,
         count: 1250,
         color: "from-green-500 to-emerald-600",
+        bgColor: "bg-green-50 dark:bg-green-900/20",
       },
       {
         name: "Fruits",
         value: "FRUIT",
-        icon: FaShoppingBasket,
+        icon: FaShoppingBag,
         count: 890,
         color: "from-orange-500 to-red-500",
+        bgColor: "bg-orange-50 dark:bg-orange-900/20",
       },
       {
         name: "Grains",
         value: "GRAIN",
-        icon: FaBoxes,
+        icon: FaBoxOpen,
         count: 650,
         color: "from-amber-500 to-yellow-500",
+        bgColor: "bg-amber-50 dark:bg-amber-900/20",
       },
       {
         name: "Dairy",
         value: "DAIRY",
-        icon: FaBoxOpen,
+        icon: FaStore,
         count: 320,
         color: "from-blue-400 to-cyan-500",
+        bgColor: "bg-blue-50 dark:bg-blue-900/20",
       },
       {
         name: "Machinery",
@@ -118,6 +105,7 @@ export default function Home() {
         icon: FaTractor,
         count: 150,
         color: "from-gray-600 to-gray-800",
+        bgColor: "bg-gray-50 dark:bg-gray-900/20",
       },
       {
         name: "Fertilizers",
@@ -125,6 +113,7 @@ export default function Home() {
         count: 280,
         icon: FaSeedling,
         color: "from-lime-500 to-green-500",
+        bgColor: "bg-lime-50 dark:bg-lime-900/20",
       },
       {
         name: "Seeds",
@@ -132,19 +121,21 @@ export default function Home() {
         count: 420,
         icon: FaPlus,
         color: "from-teal-500 to-cyan-500",
+        bgColor: "bg-teal-50 dark:bg-teal-900/20",
       },
       {
         name: "Tools",
         value: "TOOLS",
         count: 190,
-        icon: FaUserCog,
+        icon: FaTractor,
         color: "from-purple-500 to-indigo-500",
+        bgColor: "bg-purple-50 dark:bg-purple-900/20",
       },
     ],
     []
   );
 
-  // Check user authentication
+  // Check authentication
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -163,7 +154,7 @@ export default function Home() {
     return () => clearTimeout(toastTimer.current);
   }, []);
 
-  // Load homepage data with enhanced product handling
+  // Load homepage data with enhanced error handling
   useEffect(() => {
     if (!authChecked) return;
 
@@ -171,35 +162,63 @@ export default function Home() {
       try {
         setLoading(true);
 
-        // Fetch featured products and fresh arrivals using the service
-        const [featuredRes, freshRes] = await Promise.all([
-          AgrimarketService.ProductService.listProducts({
+        // Fetch featured listings, fresh arrivals, and trending products
+        const [featuredRes, freshRes, trendingRes] = await Promise.allSettled([
+          AgrimarketService.ListingService.listListings({
             featured: true,
-            limit: 8,
-            status: "approved",
+            limit: 12,
+            status: "active",
+          }),
+          AgrimarketService.ListingService.listListings({
+            sortBy: "-createdAt",
+            limit: 12,
+            status: "active",
           }),
           AgrimarketService.ProductService.listProducts({
-            sortBy: "-createdAt",
-            limit: 8,
+            sortBy: "-rating",
+            limit: 12,
             status: "approved",
           }),
         ]);
 
-        // Handle response structure properly
+        // Handle listings responses
         const featuredData =
-          featuredRes.data || featuredRes.products || featuredRes || [];
-        const freshData = freshRes.data || freshRes.products || freshRes || [];
+          featuredRes.status === "fulfilled"
+            ? featuredRes.value.data ||
+              featuredRes.value.listings ||
+              featuredRes.value ||
+              []
+            : [];
 
-        setFeaturedProducts(Array.isArray(featuredData) ? featuredData : []);
+        const freshData =
+          freshRes.status === "fulfilled"
+            ? freshRes.value.data ||
+              freshRes.value.listings ||
+              freshRes.value ||
+              []
+            : [];
+
+        // Handle products response
+        const trendingData =
+          trendingRes.status === "fulfilled"
+            ? trendingRes.value.data ||
+              trendingRes.value.products ||
+              trendingRes.value ||
+              []
+            : [];
+
+        setFeaturedListings(Array.isArray(featuredData) ? featuredData : []);
         setFreshArrivals(Array.isArray(freshData) ? freshData : []);
+        setTrendingProducts(Array.isArray(trendingData) ? trendingData : []);
         setCategories(categoryData);
       } catch (error) {
         console.error("Error loading home data:", error);
-        showToast("Failed to load products. Please try again.", "error");
+        showToast("Failed to load content. Please try again.", "error");
 
-        // Fallback to empty arrays
-        setFeaturedProducts([]);
+        // Fallback data
+        setFeaturedListings([]);
         setFreshArrivals([]);
+        setTrendingProducts([]);
         setCategories(categoryData);
       } finally {
         setLoading(false);
@@ -209,26 +228,26 @@ export default function Home() {
     loadHomeData();
   }, [authChecked, categoryData]);
 
-  // Search handler
+  // Search handlers
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      navigate(`/browse?search=${encodeURIComponent(searchQuery.trim())}`);
+      navigate(
+        `/harvestLink/browse?search=${encodeURIComponent(searchQuery.trim())}`
+      );
     }
   };
 
-  // Quick search handlers
   const quickSearch = (query) => {
-    navigate(`/browse?search=${encodeURIComponent(query)}`);
+    navigate(`/harvestLink/browse?search=${encodeURIComponent(query)}`);
   };
 
-  // Quick category search
   const searchByCategory = (category) => {
-    navigate(`/browse?category=${encodeURIComponent(category)}`);
+    navigate(`/harvestLink/browse?category=${encodeURIComponent(category)}`);
   };
 
-  // Add to cart handler (requires login)
-  const addToCart = async (productId) => {
+  // Add to cart handler
+  const addToCart = async (listingId) => {
     if (!user) {
       showToast("Please login to add items to cart", "error");
       navigate("/auth/v1/app/guest/AgriSupport/token");
@@ -236,18 +255,20 @@ export default function Home() {
     }
 
     try {
-      setAddingToCart((prev) => ({ ...prev, [productId]: true }));
-      await AgrimarketService.CartService.addItem(productId, 1);
+      setAddingToCart((prev) => ({ ...prev, [listingId]: true }));
+      console.log("Adding to cart:", listingId);
+      await AgrimarketService.CartService.addItem(listingId, 1);
+      console.log("Item added to cart successfully");
       showToast("Added to cart successfully!");
     } catch (error) {
       console.error("Error adding to cart:", error);
       showToast(error?.message || "Failed to add to cart", "error");
     } finally {
-      setAddingToCart((prev) => ({ ...prev, [productId]: false }));
+      setAddingToCart((prev) => ({ ...prev, [listingId]: false }));
     }
   };
 
-  // Format price with Indian Rupee symbol
+  // Utility functions
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -257,30 +278,38 @@ export default function Home() {
     }).format(price);
   };
 
-  // Get category display name
   const getCategoryDisplayName = (category) => {
     const found = categoryData.find((cat) => cat.value === category);
     return found ? found.name : category;
   };
 
-  // Get category color
   const getCategoryColor = (category) => {
     const found = categoryData.find((cat) => cat.value === category);
     return found ? found.color : "from-gray-500 to-gray-700";
   };
 
-  // Enhanced Product Card Component
-  const ProductCard = ({ product }) => {
+  const getCategoryBgColor = (category) => {
+    const found = categoryData.find((cat) => cat.value === category);
+    return found ? found.bgColor : "bg-gray-50 dark:bg-gray-900/20";
+  };
+  const urlimage = (imagePath) => {
+    if(imagePath.startsWith("http")) {
+      return imagePath;
+    }
+    return `${import.meta.env.VITE_BACKEND_URL}${imagePath}`;
+  };
+  // Enhanced Listing Card Component
+  const ListingCard = ({ listing }) => {
+    const product = listing.product || {};
     const hasCertification = product.specs?.certification;
     const harvestDate = product.specs?.harvestDate;
-    const shelfLife = product.specs?.shelfLife;
 
     return (
       <div className="group bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden transform hover:-translate-y-1">
         <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center overflow-hidden">
           {product?.images?.[0] ? (
             <img
-              src={product.images[0]}
+              src={urlimage(product.images[0])}
               alt={product?.title}
               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               onError={(e) => {
@@ -300,34 +329,27 @@ export default function Home() {
 
           {/* Status Badge */}
           <div className="absolute top-3 left-3">
-            {product.status === "pending" && (
-              <span className="bg-amber-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                Under Review
-              </span>
-            )}
-            {product.status === "approved" && (
-              <span
-                className={`bg-gradient-to-r ${getCategoryColor(
-                  product.category
-                )} text-white px-2 py-1 rounded-full text-xs font-medium`}
-              >
-                {getCategoryDisplayName(product.category)}
-              </span>
-            )}
+            <span
+              className={`bg-gradient-to-r ${getCategoryColor(
+                product.category
+              )} text-white px-2 py-1 rounded-full text-xs font-medium`}
+            >
+              {getCategoryDisplayName(product.category)}
+            </span>
           </div>
 
-          {/* Certification Badge */}
-          {hasCertification && (
-            <div className="absolute top-3 right-3 bg-blue-500 text-white p-1 rounded-full">
-              <FaCertificate className="text-xs" />
-            </div>
-          )}
+          {/* Stock Badge */}
+          <div className="absolute top-3 right-3">
+            <span className="bg-black/70 text-white px-2 py-1 rounded-full text-xs font-medium">
+              Stock: {listing.availableQty}
+            </span>
+          </div>
 
           {/* Quick Actions Overlay */}
-          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
             <div className="flex space-x-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
               <button
-                onClick={() => navigate(`/product/${product._id}`)}
+                onClick={() => navigate(`/listing/${listing._id}`)}
                 className="bg-white text-gray-800 p-2 rounded-full shadow-lg hover:bg-gray-100 transition-colors"
               >
                 <FaEye className="text-sm" />
@@ -356,7 +378,8 @@ export default function Home() {
           </div>
 
           <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 mb-4 min-h-[40px] leading-relaxed">
-            {product?.description ||
+            {listing?.description ||
+              product?.description ||
               "High quality farm produce directly from trusted farmers"}
           </p>
 
@@ -378,11 +401,11 @@ export default function Home() {
               </div>
             )}
 
-            {product.location?.district && (
+            {listing.location?.district && (
               <div className="flex items-center text-xs text-gray-500 dark:text-gray-400">
                 <FaMapMarkerAlt className="mr-1" />
                 <span>
-                  {product.location.district}, {product.location.state}
+                  {listing.location.district}, {listing.location.state}
                 </span>
               </div>
             )}
@@ -390,9 +413,9 @@ export default function Home() {
 
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
-              <FaRupeeSign className="text-emerald-600 dark:text-emerald-400 mr-1" />
+              {/* <FaRupeeSign className="text-emerald-600 dark:text-emerald-400 mr-1" /> */}
               <span className="font-bold text-emerald-600 dark:text-emerald-400 text-xl">
-                {formatPrice(product.price)}
+                {formatPrice(listing.pricePerUnit)}
               </span>
               <span className="text-sm text-gray-500 dark:text-gray-400 ml-1">
                 /{product?.unit?.toLowerCase() || "unit"}
@@ -401,11 +424,11 @@ export default function Home() {
 
             <div className="flex flex-col items-end">
               <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-slate-700 px-2 py-1 rounded-full mb-1">
-                Stock: {product.stock || "0"} {product.unit}
+                Min Order: {listing.minOrderQty} {product.unit}
               </span>
-              {product.minOrderQuantity > 1 && (
-                <span className="text-xs text-amber-600 dark:text-amber-400">
-                  Min: {product.minOrderQuantity} {product.unit}
+              {listing.availableQty < 10 && (
+                <span className="text-xs text-red-600 dark:text-red-400">
+                  Low Stock!
                 </span>
               )}
             </div>
@@ -413,7 +436,7 @@ export default function Home() {
 
           <div className="flex gap-2">
             <Link
-              to={`/product/${product._id}`}
+              to={`/harvestLink/listing/${listing._id}`}
               className="flex-1 flex items-center justify-center px-4 py-3 border-2 border-gray-300 dark:border-slate-600 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-200 font-medium"
             >
               <FaEye className="mr-2" />
@@ -421,21 +444,21 @@ export default function Home() {
             </Link>
 
             <button
-              onClick={() => addToCart(product._id)}
+              onClick={() => addToCart(listing._id)}
               disabled={
-                addingToCart[product._id] ||
-                product.stock < (product.minOrderQuantity || 1)
+                addingToCart[listing._id] ||
+                listing.availableQty < listing.minOrderQty
               }
               className="flex-1 flex items-center justify-center px-4 py-3 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl disabled:shadow-none"
             >
-              {addingToCart[product._id] ? (
+              {addingToCart[listing._id] ? (
                 <FaSpinner className="animate-spin mr-2" />
               ) : (
                 <FaShoppingCart className="mr-2" />
               )}
-              {product.stock < (product.minOrderQuantity || 1)
+              {listing.availableQty < listing.minOrderQty
                 ? "Out of Stock"
-                : addingToCart[product._id]
+                : addingToCart[listing._id]
                 ? "Adding..."
                 : "Add to Cart"}
             </button>
@@ -444,6 +467,57 @@ export default function Home() {
       </div>
     );
   };
+
+  // Product Card Component for trending products
+  const ProductCard = ({ product }) => (
+    <div className="group bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-slate-700 overflow-hidden">
+      <div className="relative h-32 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-700 dark:to-slate-800 flex items-center justify-center">
+        {product?.images?.[0] ? (
+          <img
+            src={urlimage(product.images[0])}
+            alt={product.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <FaSeedling className="text-3xl text-gray-400" />
+        )}
+        <div className="absolute top-2 left-2">
+          <span
+            className={`bg-gradient-to-r ${getCategoryColor(
+              product.category
+            )} text-white px-2 py-1 rounded-full text-xs font-medium`}
+          >
+            {getCategoryDisplayName(product.category)}
+          </span>
+        </div>
+      </div>
+      <div className="p-4">
+        <h4 className="font-semibold text-gray-900 dark:text-white line-clamp-1 mb-2">
+          {product.title}
+        </h4>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center text-emerald-600 dark:text-emerald-400 font-bold">
+            {/* <FaRupeeSign className="text-sm" /> */}
+            {formatPrice(product.price)}
+          </div>
+          <div className="flex items-center text-amber-400 text-sm">
+            <FaStar className="mr-1" />
+            {product.rating || "4.8"}
+          </div>
+        </div>
+      </div>
+      {//button to view product details
+      }
+      <div className="p-4 pt-0">
+        <Link
+          to={`/harvestLink/product/${product._id}`}
+          className="w-full inline-block text-center px-4 py-2 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl"
+        >
+          View Product
+        </Link>
+      </div>
+    </div>
+  );
 
   // Enhanced Category Card Component
   const CategoryCard = ({ category }) => (
@@ -460,13 +534,13 @@ export default function Home() {
         {category.name}
       </h3>
       <p className="text-gray-600 dark:text-gray-400 text-sm">
-        {category.count} products
+        {category.count.toLocaleString()} items
       </p>
     </div>
   );
 
   // Loading Skeleton
-  const ProductSkeleton = () => (
+  const ListingSkeleton = () => (
     <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden animate-pulse">
       <div className="h-48 bg-gray-200 dark:bg-slate-700"></div>
       <div className="p-5">
@@ -498,9 +572,9 @@ export default function Home() {
   );
 
   return (
-    <div className="mt-20 min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-800 dark:to-emerald-900/20">
+    <div className="mt-16 min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50 dark:from-slate-900 dark:via-slate-800 dark:to-emerald-900/20">
       {/* Navigation Header */}
-      <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-slate-700 sticky top-0 z-50">
+      <header className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-lg border-b border-gray-200 dark:border-slate-700 fixed top-20 w-full z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -541,13 +615,13 @@ export default function Home() {
             <div className="flex items-center space-x-4">
               {user ? (
                 <>
-                  <Link
-                    to="/cart"
+                  <CartNav />
+                  {/* <Link
+                    to="/harvestLink/cart"
                     className="relative p-3 text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
                   >
-                    <FaShoppingCart className="text-xl" />
-                  </Link>
-
+                   Go to Cart
+                  </Link> */}
                 </>
               ) : (
                 <div className="flex space-x-3">
@@ -592,7 +666,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main>
+      <main className="pt-16">
         {/* Hero Section */}
         <section className="relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -627,7 +701,7 @@ export default function Home() {
 
               <div className="flex flex-wrap justify-center gap-6">
                 <Link
-                  to="/browse"
+                  to="/harvestLink/browse"
                   className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-2xl font-bold text-lg transition-all shadow-2xl hover:shadow-3xl flex items-center"
                 >
                   Start Shopping
@@ -635,7 +709,7 @@ export default function Home() {
                 </Link>
                 {user ? (
                   <Link
-                    to="/create-listing"
+                    to="/harvestLink/create-listing"
                     className="px-8 py-4 border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-2xl font-bold text-lg transition-all"
                   >
                     Sell Your Produce
@@ -690,21 +764,22 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Featured Products */}
+        {/** Cart Bar */}
+        <CartBar />
+        {/* Featured Listings */}
         <section className="py-16 bg-gray-50 dark:bg-slate-800/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-end justify-between mb-12">
               <div>
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                  Featured Products
+                  Featured Listings
                 </h2>
                 <p className="text-xl text-gray-600 dark:text-gray-300">
                   Handpicked quality from our trusted farmers
                 </p>
               </div>
               <Link
-                to="/browse?featured=true"
+                to="/harvestLink/browse?featured=true"
                 className="hidden lg:flex items-center text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold text-lg"
               >
                 View all
@@ -715,25 +790,25 @@ export default function Home() {
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {Array.from({ length: 8 }).map((_, idx) => (
-                  <ProductSkeleton key={idx} />
+                  <ListingSkeleton key={idx} />
                 ))}
               </div>
-            ) : featuredProducts.length > 0 ? (
+            ) : featuredListings.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {featuredProducts.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                {featuredListings.map((listing) => (
+                  <ListingCard key={listing._id} listing={listing} />
                 ))}
               </div>
             ) : (
               <EmptyState
-                title="No Featured Products"
-                description="Check back later for featured agricultural products from our trusted farmers."
+                title="No Featured Listings"
+                description="Check back later for featured agricultural listings from our trusted farmers."
                 action={
                   <Link
-                    to="/browse"
+                    to="/harvestLink/browse"
                     className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all"
                   >
-                    Browse All Products
+                    Browse All Listings
                   </Link>
                 }
               />
@@ -741,7 +816,7 @@ export default function Home() {
 
             <div className="text-center mt-12 lg:hidden">
               <Link
-                to="/browse?featured=true"
+                to="/harvestLink/browse?featured=true"
                 className="inline-flex items-center px-8 py-3 bg-emerald-600 text-white rounded-2xl font-semibold hover:bg-emerald-700 transition-all"
               >
                 View All Featured
@@ -764,7 +839,7 @@ export default function Home() {
                 </p>
               </div>
               <Link
-                to="/browse"
+                to="/harvestLink/browse"
                 className="hidden lg:flex items-center text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold text-lg"
               >
                 View all
@@ -775,25 +850,25 @@ export default function Home() {
             {loading ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {Array.from({ length: 8 }).map((_, idx) => (
-                  <ProductSkeleton key={idx} />
+                  <ListingSkeleton key={idx} />
                 ))}
               </div>
             ) : freshArrivals.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                {freshArrivals.map((product) => (
-                  <ProductCard key={product._id} product={product} />
+                {freshArrivals.map((listing) => (
+                  <ListingCard key={listing._id} listing={listing} />
                 ))}
               </div>
             ) : (
               <EmptyState
                 title="No Fresh Arrivals"
-                description="New products will be listed soon by our farming community."
+                description="New listings will be added soon by our farming community."
                 action={
                   <Link
-                    to="/browse"
+                    to="/harvestLink/browse"
                     className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all"
                   >
-                    Explore Products
+                    Explore Listings
                   </Link>
                 }
               />
@@ -801,74 +876,67 @@ export default function Home() {
 
             <div className="text-center mt-12 lg:hidden">
               <Link
-                to="/browse"
+                to="/harvestLink/browse"
                 className="inline-flex items-center px-8 py-3 bg-emerald-600 text-white rounded-2xl font-semibold hover:bg-emerald-700 transition-all"
               >
-                Browse All Products
+                Browse All Listings
                 <FaArrowRight className="ml-2" />
               </Link>
             </div>
           </div>
         </section>
 
-        {/* Why Choose Us */}
-        <section className="py-16 bg-gradient-to-r from-emerald-600 to-green-600 text-white">
+        {/* Trending Products */}
+        <section className="py-16 bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-4">
-                Why Choose HarvestLink?
-              </h2>
-              <p className="text-xl text-emerald-100 max-w-2xl mx-auto">
-                We're committed to connecting you with the best agricultural
-                products
-              </p>
+            <div className="flex items-center justify-between mb-12">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  Trending Products
+                </h2>
+                <p className="text-xl text-gray-600 dark:text-gray-300">
+                  Most popular among our customers
+                </p>
+              </div>
+              <div className="flex items-center text-amber-500">
+                <FaFire className="text-2xl mr-2" />
+                <span className="text-lg font-semibold">Hot Picks</span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: FaUserCheck,
-                  title: "Verified Farmers",
-                  description:
-                    "All our farmers are thoroughly verified and trusted partners",
-                },
-                {
-                  icon: FaAward,
-                  title: "Quality Guaranteed",
-                  description:
-                    "Rigorous quality checks ensure you get the best produce",
-                },
-                {
-                  icon: FaShieldAlt,
-                  title: "Secure Transactions",
-                  description: "100% secure payment and transaction protection",
-                },
-                {
-                  icon: FaTruck,
-                  title: "Fast Delivery",
-                  description: "Quick and reliable shipping to your doorstep",
-                },
-                {
-                  icon: FaClock,
-                  title: "Fresh Daily",
-                  description: "Direct from farms, ensuring maximum freshness",
-                },
-                {
-                  icon: FaHeart,
-                  title: "Customer First",
-                  description:
-                    "Dedicated support and customer satisfaction guarantee",
-                },
-              ].map((feature, index) => (
-                <div key={index} className="text-center p-6">
-                  <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="text-2xl" />
+            {loading ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                {Array.from({ length: 6 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm animate-pulse"
+                  >
+                    <div className="h-20 bg-gray-200 dark:bg-slate-700 rounded-lg mb-3"></div>
+                    <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded mb-2"></div>
+                    <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded"></div>
                   </div>
-                  <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                  <p className="text-emerald-100">{feature.description}</p>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : trendingProducts.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                {trendingProducts.map((product) => (
+                  <ProductCard key={product._id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <EmptyState
+                title="No Trending Products"
+                description="Popular products will appear here based on customer preferences."
+                action={
+                  <Link
+                    to="/harvestLink/browse"
+                    className="inline-flex items-center px-6 py-3 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-700 transition-all"
+                  >
+                    Discover Products
+                  </Link>
+                }
+              />
+            )}
           </div>
         </section>
 
@@ -876,22 +944,22 @@ export default function Home() {
         <section className="py-20">
           <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-              Ready to Get Started?
+              Ready to Grow With Us?
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-              Join thousands of farmers and customers who trust HarvestLink for
-              quality agricultural products
+            <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+              Join thousands of farmers and buyers in our agricultural
+              marketplace. Fresh produce, fair prices, and community support.
             </p>
-            <div className="flex flex-wrap justify-center gap-6">
+            <div className="flex flex-wrap justify-center gap-4">
               <Link
-                to="/browse"
-                className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white rounded-2xl font-bold text-lg transition-all shadow-2xl hover:shadow-3xl"
+                to="/harvestLink/browse"
+                className="px-8 py-4 bg-gradient-to-r from-emerald-600 to-green-600 text-white rounded-2xl font-bold text-lg hover:from-emerald-700 hover:to-green-700 transition-all shadow-xl hover:shadow-2xl"
               >
                 Start Shopping
               </Link>
               {user ? (
                 <Link
-                  to="/create-listing"
+                  to="/harvestLink/create-listing"
                   className="px-8 py-4 border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-2xl font-bold text-lg transition-all"
                 >
                   List Your Products
@@ -901,7 +969,7 @@ export default function Home() {
                   to="/auth/v1/app/guest/AgriSupport/token"
                   className="px-8 py-4 border-2 border-emerald-600 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-2xl font-bold text-lg transition-all"
                 >
-                  Join as Seller
+                  Join as Farmer
                 </Link>
               )}
             </div>
@@ -912,10 +980,8 @@ export default function Home() {
       {/* Toast Message */}
       {message && (
         <div
-          className={`fixed top-20 right-4 z-50 px-6 py-3 rounded-2xl shadow-2xl font-semibold transition-all duration-300 ${
-            message.type === "error"
-              ? "bg-red-500 text-white"
-              : "bg-emerald-500 text-white"
+          className={`fixed top-20 right-4 z-50 px-6 py-3 rounded-2xl shadow-2xl font-semibold text-white transition-all duration-300 ${
+            message.type === "error" ? "bg-red-500" : "bg-emerald-500"
           }`}
         >
           {message.text}

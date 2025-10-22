@@ -22,6 +22,7 @@ connectDB();
 
 const app = express();
 const server = http.createServer(app);
+app.set("trust proxy", 1);
 
 // Serve static files from uploads directory
 app.use('/Uploads', express.static(path.join(__dirname, 'uploads')));
@@ -85,7 +86,7 @@ app.post('/api/users/register-device-token', async (req, res) => {
     // Store token in memory (in production, save to database)
     userTokens.set(userId, deviceToken);
 
-    console.log(`Device token registered for user: ${userId}`);
+    // console.log(`Device token registered for user: ${userId}`);
 
     res.json({
       success: true,
