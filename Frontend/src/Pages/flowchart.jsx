@@ -1031,54 +1031,309 @@ const AgriConnectAdvancedProjectReport = () => {
         )}
         {/* Datasets View */}
         {activeTab === "datasets" && (
-          <div className="space-y-8">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-                <DatabaseIcon className="w-8 h-8 mr-3 text-blue-500" />
-                Data & Datasets
-              </h2>
+  <div className="space-y-8">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
+        <DatabaseIcon className="w-8 h-8 mr-3 text-blue-500" />
+        Data & Datasets
+      </h2>
 
-              {/* Crop Disease Dataset */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Crop Disease Dataset Structure
-                </h3>
-                <DataTable
-                  title="Crop Disease Dataset"
-                  data={projectData.datasets.cropDisease.structure}
-                  columns={["Field", "Type", "Example"]}
-                />
+      {/* 1. Crop Disease Outbreak Data */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <ExclamationTriangleIcon className="w-6 h-6 mr-2 text-red-500" />
+          Crop Disease Outbreak Data (Sample Entries)
+        </h3>
+        <div className="overflow-x-auto bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20 rounded-xl p-4">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-red-100 dark:bg-red-900/40">
+              <tr>
+                {["date", "latitude", "longitude", "soil_temp_0cm", "soil_moisture_1_3cm", "risk%", "radius_km"].map((header) => (
+                  <th key={header} className="px-4 py-3 text-left text-xs font-bold text-red-800 dark:text-red-300 uppercase tracking-wider">
+                    {header.replace(/_/g, ' ')}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {[
+                { date: "2025-06-30", latitude: 28.9222, longitude: 78.8888, soil_temp_0cm: 28.8, soil_moisture_1_3cm: 0.341, risk: 7, radius_km: 0.9 },
+                { date: "2025-07-01", latitude: 28.9222, longitude: 78.8888, soil_temp_0cm: 27.2, soil_moisture_1_3cm: 0.337, risk: 3, radius_km: 0.3 },
+                { date: "2025-07-02", latitude: 28.9222, longitude: 78.8888, soil_temp_0cm: 30.4, soil_moisture_1_3cm: 0.282, risk: 13, radius_km: 0.7 },
+                { date: "2025-07-03", latitude: 28.9222, longitude: 78.8888, soil_temp_0cm: 28.5, soil_moisture_1_3cm: 0.332, risk: 12, radius_km: 0.9 },
+                { date: "2025-07-04", latitude: 28.9222, longitude: 78.8888, soil_temp_0cm: 29.1, soil_moisture_1_3cm: 0.315, risk: 8, radius_km: 0.5 }
+              ].map((row, index) => (
+                <tr key={index} className={`hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors ${index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700/50' : 'bg-white dark:bg-gray-800'}`}>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{row.date}</td>
+                  <td className="px-4 py-3 text-sm text-blue-600 dark:text-blue-400">{row.latitude}</td>
+                  <td className="px-4 py-3 text-sm text-blue-600 dark:text-blue-400">{row.longitude}</td>
+                  <td className="px-4 py-3 text-sm text-orange-600 dark:text-orange-400">{row.soil_temp_0cm}°C</td>
+                  <td className="px-4 py-3 text-sm text-green-600 dark:text-green-400">{row.soil_moisture_1_3cm}</td>
+                  <td className="px-4 py-3 text-sm font-bold">
+                    <span className={`px-2 py-1 rounded-full text-xs ${row.risk > 10 ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'}`}>
+                      {row.risk}%
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm text-purple-600 dark:text-purple-400">{row.radius_km} km</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 2. Weather + Season Mapped + LSTM Crop Yield Data */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <ChartBarIcon className="w-6 h-6 mr-2 text-green-500" />
+          Weather + Season Mapped + LSTM Crop Yield Data (Sample Entries)
+        </h3>
+        <div className="overflow-x-auto bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-xl p-4">
+          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+            <thead className="bg-green-100 dark:bg-green-900/40">
+              <tr>
+                {["Crop", "State", "Season", "Year", "Area", "Production", "Yield", "Avg Temp", "Avg Humidity", "Precipitation"].map((header) => (
+                  <th key={header} className="px-4 py-3 text-left text-xs font-bold text-green-800 dark:text-green-300 uppercase tracking-wider">
+                    {header}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              {[
+                { crop: "Rice", state: "Andaman And Nicobar Islands", season: "Kharif", year: 2020, area: 0.06, production: 0.13, yield: 2133.0, temp: 28.32, humidity: 77.31, precipitation: 5.6 },
+                { crop: "Rice", state: "Andaman And Nicobar Islands", season: "Kharif", year: 2021, area: 0.06, production: 0.13, yield: 2133.0, temp: 28.29, humidity: 77.64, precipitation: 6.37 },
+                { crop: "Rice", state: "Andaman And Nicobar Islands", season: "Kharif", year: 2022, area: 0.05, production: 0.11, yield: 2107.0, temp: 28.25, humidity: 77.82, precipitation: 6.67 },
+                { crop: "Rice", state: "Andaman And Nicobar Islands", season: "Kharif", year: 2023, area: 0.05, production: 0.10, yield: 2100.0, temp: 28.55, humidity: 77.77, precipitation: 5.01 },
+                { crop: "Rice", state: "Andaman And Nicobar Islands", season: "Total", year: 2020, area: 0.06, production: 0.13, yield: 2133.0, temp: 28.32, humidity: 77.31, precipitation: 5.6 }
+              ].map((row, index) => (
+                <tr key={index} className={`hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors ${index % 2 === 0 ? 'bg-gray-50 dark:bg-gray-700/50' : 'bg-white dark:bg-gray-800'}`}>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{row.crop}</td>
+                  <td className="px-4 py-3 text-sm text-blue-600 dark:text-blue-400">{row.state}</td>
+                  <td className="px-4 py-3 text-sm">
+                    <span className={`px-2 py-1 rounded-full text-xs ${row.season === 'Kharif' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'}`}>
+                      {row.season}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{row.year}</td>
+                  <td className="px-4 py-3 text-sm text-purple-600 dark:text-purple-400">{row.area}</td>
+                  <td className="px-4 py-3 text-sm text-green-600 dark:text-green-400">{row.production}</td>
+                  <td className="px-4 py-3 text-sm font-bold text-indigo-600 dark:text-indigo-400">{row.yield} kg/ha</td>
+                  <td className="px-4 py-3 text-sm text-red-600 dark:text-red-400">{row.temp}°C</td>
+                  <td className="px-4 py-3 text-sm text-teal-600 dark:text-teal-400">{row.humidity}%</td>
+                  <td className="px-4 py-3 text-sm text-blue-600 dark:text-blue-400">{row.precipitation}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* 3. Yield Predicted Data */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <CpuChipIcon className="w-6 h-6 mr-2 text-purple-500" />
+          Yield Prediction Data (Bajra - Kharif 2025)
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-xl p-6">
+            <h4 className="font-semibold text-purple-700 dark:text-purple-300 mb-4">Prediction Summary</h4>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Predicted Year:</span>
+                <span className="font-bold text-purple-600 dark:text-purple-400">2025</span>
               </div>
-
-              {/* Farm Data Example */}
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Farm Data Example
-                </h3>
-                <pre className="bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 p-4 rounded-lg text-sm overflow-x-auto">
-                  {JSON.stringify(
-                    projectData.datasets.farmData.example,
-                    null,
-                    2
-                  )}
-                </pre>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Predicted Yield:</span>
+                <span className="font-bold text-green-600 dark:text-green-400">1385.46 kg/ha</span>
               </div>
-
-              {/* Crop Recommendation Sample */}
-              <div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                  Crop Recommendation Sample
-                </h3>
-                <DataTable
-                  title="Crop Recommendation Dataset"
-                  data={projectData.datasets.cropRecommendation.sample}
-                  columns={["Field", "Value"]}
-                />
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Crop:</span>
+                <span className="font-bold text-blue-600 dark:text-blue-400">Bajra</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Season:</span>
+                <span className="font-bold text-orange-600 dark:text-orange-400">Kharif</span>
               </div>
             </div>
           </div>
-        )}
 
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-xl p-6">
+            <h4 className="font-semibold text-blue-700 dark:text-blue-300 mb-4">Top Weather Factors</h4>
+            <div className="space-y-2">
+              {[
+                { factor: "Min Temperature", value: "26.11", unit: "°C" },
+                { factor: "Solar Radiation", value: "18.96", unit: "W/m²" },
+                { factor: "Surface Pressure", value: "15.72", unit: "hPa" },
+                { factor: "Max Temperature", value: "12.79", unit: "°C" }
+              ].map((item, index) => (
+                <div key={index} className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{item.factor}:</span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">{item.value} {item.unit}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Farm Stats Data */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <UserGroupIcon className="w-6 h-6 mr-2 text-indigo-500" />
+          Farm Statistics Data
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: "Total Images Analyzed", value: "120", color: "blue", icon: PhotoIcon },
+            { label: "Diseased Images Found", value: "83", color: "red", icon: ExclamationTriangleIcon },
+            { label: "Max Risk Percentage", value: "32.1%", color: "orange", icon: ChartBarIcon },
+            { label: "Most Common Crop", value: "Potato", color: "green", icon: CubeIcon }
+          ].map((stat, index) => (
+            <div key={index} className={`bg-gradient-to-br from-${stat.color}-50 to-${stat.color}-100 dark:from-${stat.color}-900/20 dark:to-${stat.color}-800/20 rounded-xl p-4 text-center`}>
+              <stat.icon className={`w-8 h-8 mx-auto mb-2 text-${stat.color}-500`} />
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 5. Farm Created Model Data */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <WrenchScrewdriverIcon className="w-6 h-6 mr-2 text-yellow-500" />
+          Farm Model Data
+        </h3>
+        <div className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 rounded-xl p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-yellow-700 dark:text-yellow-300 mb-3">Farm Information</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Farm Name:</span>
+                  <span className="font-bold text-gray-900 dark:text-white">SampleFarm</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Location:</span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">28.87, 78.9</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Agro Polygon Area:</span>
+                  <span className="font-bold text-green-600 dark:text-green-400">2.1471 hectares</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-yellow-700 dark:text-yellow-300 mb-3">LSTM Predictions (Next 3 Days)</h4>
+              <div className="space-y-2">
+                {[
+                  { date: "2025-11-11", risk: "9.5%", radius: "-0.84 km" },
+                  { date: "2025-11-12", risk: "15.93%", radius: "-1.12 km" },
+                  { date: "2025-11-13", risk: "22.74%", radius: "-1.38 km" }
+                ].map((pred, index) => (
+                  <div key={index} className="flex justify-between items-center bg-white dark:bg-gray-700 p-2 rounded">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{pred.date}</span>
+                    <span className="font-bold text-red-600 dark:text-red-400">{pred.risk}</span>
+                    <span className="text-sm text-purple-600 dark:text-purple-400">{pred.radius}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 6. Summary Dataset */}
+      <div className="mb-8">
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <DocumentChartBarIcon className="w-6 h-6 mr-2 text-teal-500" />
+          Summary Dataset
+        </h3>
+        <div className="bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 rounded-xl p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-teal-600 dark:text-teal-400">580</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Total Images</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-600 dark:text-red-400">508</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Diseased Images</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">90.5%</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Max Risk</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">87.6%</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Disease Rate</div>
+            </div>
+          </div>
+
+          <h4 className="font-semibold text-teal-700 dark:text-teal-300 mb-3">Top Diseases</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {[
+              { disease: "Early blight", count: 130, color: "red" },
+              { disease: "Bacterial spot", count: 123, color: "orange" },
+              { disease: "Tomato Yellow Leaf Curl Virus", count: 49, color: "yellow" },
+              { disease: "Citrus greening", count: 48, color: "green" }
+            ].map((item, index) => (
+              <div key={index} className="flex justify-between items-center bg-white dark:bg-gray-700 p-3 rounded-lg">
+                <span className="text-sm font-medium text-gray-900 dark:text-white">{item.disease}</span>
+                <span className={`px-2 py-1 rounded-full text-xs font-bold bg-${item.color}-100 text-${item.color}-800 dark:bg-${item.color}-900 dark:text-${item.color}-200`}>
+                  {item.count}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 7. Yield Model Metadata */}
+      <div>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+          <CodeBracketIcon className="w-6 h-6 mr-2 text-gray-500" />
+          Yield Model Metadata
+        </h3>
+        <div className="bg-gradient-to-r from-gray-50 to-slate-50 dark:from-gray-900/20 dark:to-slate-900/20 rounded-xl p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">Model Information</h4>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Model Type:</span>
+                  <span className="font-bold text-purple-600 dark:text-purple-400">LSTM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Crop:</span>
+                  <span className="font-bold text-green-600 dark:text-green-400">Bajra</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Model Size:</span>
+                  <span className="font-bold text-blue-600 dark:text-blue-400">58.56 KB</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Created At:</span>
+                  <span className="font-bold text-gray-900 dark:text-white">2025-08-07</span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-700 dark:text-gray-300 mb-3">Key Input Features</h4>
+              <div className="flex flex-wrap gap-2">
+                {["soil_pH", "temperature", "precipitation", "NPK", "GDD"].map((feature, index) => (
+                  <span key={index} className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full text-sm">
+                    {feature}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         {/* Results View */}
         {activeTab === "results" && (
           <div className="space-y-8">

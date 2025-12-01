@@ -1,0 +1,635 @@
+[
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a53"
+    },
+    "title": "Premium Basmati Rice (Aged 1 Year)",
+    "description": "Extra long grain, aged Basmati rice with a distinct aroma and fluffy texture upon cooking. Ideal for biryanis and pulao.",
+    "category": "GRAIN",
+    "price": 2500,
+    "unit": "sack",
+    "stock": 200,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://flourworks.in/wp-content/uploads/2023/06/1-12.jpeg"
+    ],
+    "specs": {
+      "moisture": "12%",
+      "harvestDate": {
+        "$date": "2024-10-01T00:00:00.000Z"
+      },
+      "shelfLife": 36,
+      "expiryDate": {
+        "$date": "2027-10-01T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Wholesale",
+        "Export"
+      ],
+      "usageInstructions": "Wash thoroughly and soak for 30 minutes before cooking.",
+      "attributes": "Extra Long Grain, Aged, Aromatic"
+    },
+    "location": {
+      "pincode": "141001",
+      "district": "Ludhiana",
+      "state": "Punjab",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          75.8573,
+          30.901
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a54"
+    },
+    "title": "Fresh A2 Desi Cow Milk",
+    "description": "Pure, unadulterated milk from indigenous A2 breed cows. High in protein and essential nutrients. Pasteurized and chilled.",
+    "category": "DAIRY",
+    "price": 60,
+    "unit": "liter",
+    "stock": 1000,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://5.imimg.com/data5/ANDROID/Default/2021/8/MS/ZW/EN/83330732/product-jpeg-500x500.jpg"
+    ],
+    "specs": {
+      "fatContent": "4%",
+      "harvestDate": {
+        "$date": "2025-10-17T06:00:00.000Z"
+      },
+      "shelfLife": 3,
+      "expiryDate": {
+        "$date": "2025-10-20T06:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Daily Consumption",
+        "Dairies"
+      ],
+      "usageInstructions": "Keep refrigerated below 4°C.",
+      "attributes": "A2 Protein Only, No Preservatives, Pasteurized"
+    },
+    "location": {
+      "pincode": "560001",
+      "district": "Bengaluru",
+      "state": "Karnataka",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.5946,
+          12.9716
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a55"
+    },
+    "title": "Mini Tractor Cultivator (7 HP Diesel)",
+    "description": "Compact and powerful mini cultivator suitable for small to medium farms. Ideal for tilling, weeding, and seedbed preparation.",
+    "category": "MACHINERY",
+    "price": 45000,
+    "unit": "unit",
+    "stock": 15,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXquv8uzQp1z8jyYh-4pXSbfYfGySHf3IOSQ&s"
+    ],
+    "specs": {
+      "power": "7 HP",
+      "certification": "CE Certified",
+      "warranty": 12,
+      "fuelType": "Diesel",
+      "recommendedFor": [
+        "Small Farmers",
+        "Horticulture"
+      ],
+      "usageInstructions": "Read manual before operation. Requires periodic maintenance.",
+      "attributes": "High Efficiency, Low Fuel Consumption, Durable Build"
+    },
+    "location": {
+      "pincode": "380001",
+      "district": "Ahmedabad",
+      "state": "Gujarat",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.5714,
+          23.0225
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a56"
+    },
+    "title": "Neem Cake Bio-Fertilizer",
+    "description": "100% organic Neem cake fertilizer, acts as a soil conditioner and natural pest deterrent. Slow-release nitrogen for sustained crop health.",
+    "category": "FERTILIZER",
+    "price": 550,
+    "unit": "pack",
+    "stock": 800,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJbkBI-E5gMIMfzU-h2jer5hzljuDua5q6-Q&s"
+    ],
+    "specs": {
+      "npkRatio": "4-1-2",
+      "certification": "Organic Certified",
+      "shelfLife": 24,
+      "expiryDate": {
+        "$date": "2027-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "All Crops",
+        "Organic Farming"
+      ],
+      "usageInstructions": "Apply 50-100g per plant or 200kg per acre.",
+      "attributes": "Soil Conditioner, Pest Deterrent, Organic"
+    },
+    "location": {
+      "pincode": "700001",
+      "district": "Kolkata",
+      "state": "West Bengal",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          88.3639,
+          22.5726
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a57"
+    },
+    "title": "High Yield Hybrid Wheat Seeds",
+    "description": "Genetically modified wheat seeds for maximum yield and disease resistance. Suitable for diverse climatic conditions.",
+    "category": "SEED",
+    "price": 1500,
+    "unit": "packet",
+    "stock": 300,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://www.agrifarming.in/wp-content/uploads/India_-Guide-to-Buy-Cheap-6.jpg"
+    ],
+    "specs": {
+      "germinationRate": "98%",
+      "certification": "Seed Quality Certified",
+      "shelfLife": 12,
+      "expiryDate": {
+        "$date": "2026-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Commercial Farming"
+      ],
+      "usageInstructions": "Sow in well-prepared soil at optimal moisture level.",
+      "attributes": "High Yield, Disease Resistant, Fast Growth"
+    },
+    "location": {
+      "pincode": "201001",
+      "district": "Ghaziabad",
+      "state": "Uttar Pradesh",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.4533,
+          28.6692
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a58"
+    },
+    "title": "Natural Pyrethrin Pest Repellent Spray",
+    "description": "Eco-friendly, broad-spectrum insecticide derived from chrysanthemum flowers. Safe for food crops when used as directed.",
+    "category": "PESTICIDE",
+    "price": 450,
+    "unit": "bottle",
+    "stock": 400,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://www.katyayaniorganics.com/wp-content/uploads/2022/06/1-2024-12-14T160338.708_11zon-scaled.webp"
+    ],
+    "specs": {
+      "activeIngredient": "Pyrethrin",
+      "certification": "Organic Compliant",
+      "shelfLife": 18,
+      "expiryDate": {
+        "$date": "2027-04-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Integrated Pest Management"
+      ],
+      "usageInstructions": "Dilute 5ml per liter of water and spray during non-sunny hours.",
+      "attributes": "Natural, Fast-Acting, Low Residual Effect"
+    },
+    "location": {
+      "pincode": "400001",
+      "district": "Mumbai",
+      "state": "Maharashtra",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.8777,
+          19.076
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a59"
+    },
+    "title": "Stainless Steel Ergonomic Hand Trowel",
+    "description": "Durable and rust-resistant hand trowel with an ergonomic handle for comfortable gardening and planting.",
+    "category": "TOOLS",
+    "price": 150,
+    "unit": "unit",
+    "stock": 1000,
+    "minOrderQuantity": 20,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://m.media-amazon.com/images/I/51BanzueSHL.jpg"
+    ],
+    "specs": {
+      "material": "SS-304",
+      "warranty": 6,
+      "length": "12 inch",
+      "recommendedFor": [
+        "Gardening",
+        "Nurseries"
+      ],
+      "usageInstructions": "Wash and dry after use to maintain quality.",
+      "attributes": "Rust-proof, Ergonomic Grip, Heavy Duty"
+    },
+    "location": {
+      "pincode": "411001",
+      "district": "Pune",
+      "state": "Maharashtra",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          73.8567,
+          18.5204
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a5a"
+    },
+    "title": "Heavy Duty Jute Storage Bags (100KG)",
+    "description": "Eco-friendly, reusable jute bags for storing grains, pulses, and other agricultural produce. Capacity 100kg.",
+    "category": "OTHER",
+    "price": 300,
+    "unit": "pack",
+    "stock": 2000,
+    "minOrderQuantity": 50,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://m.media-amazon.com/images/I/61a-vx4eb0L._UF894,1000_QL80_.jpg"
+    ],
+    "specs": {
+      "capacity": "100 kg",
+      "material": "Natural Jute Fiber",
+      "reusability": "High",
+      "recommendedFor": [
+        "Storage",
+        "Transportation"
+      ],
+      "usageInstructions": "Avoid sharp objects. Keep dry.",
+      "attributes": "Biodegradable, Durable, Breathable"
+    },
+    "location": {
+      "pincode": "500001",
+      "district": "Hyderabad",
+      "state": "Telangana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          78.4867,
+          17.385
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a5b"
+    },
+    "title": "Cold Pressed Yellow Mustard Oil",
+    "description": "Naturally extracted mustard oil retaining all nutrients and natural flavor. Ideal for cooking and external application.",
+    "category": "OIL",
+    "price": 800,
+    "unit": "can",
+    "stock": 600,
+    "minOrderQuantity": 2,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://farmnaturelle.com/cdn/shop/files/Rectangle9436.jpg?v=1736764694&width=1445"
+    ],
+    "specs": {
+      "purity": "100%",
+      "certification": "FSSAI Approved",
+      "shelfLife": 12,
+      "expiryDate": {
+        "$date": "2026-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Cooking",
+        "Traditional Medicine"
+      ],
+      "usageInstructions": "Store away from direct sunlight.",
+      "attributes": "Cold Pressed, High Omega-3, Strong Aroma"
+    },
+    "location": {
+      "pincode": "208001",
+      "district": "Kanpur",
+      "state": "Uttar Pradesh",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          80.3444,
+          26.4499
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a5c"
+    },
+    "title": "Organic Unpolished Red Lentils (Masoor)",
+    "description": "Nutrient-rich, unpolished Masoor Dal. Free from chemicals and preservatives. Cooks fast and is easy to digest.",
+    "category": "PULSES",
+    "price": 110,
+    "unit": "kg",
+    "stock": 700,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://tiimg.tistatic.com/fp/1/007/637/rich-in-protein-organic-unpolished-masoor-dal-937.jpg"
+    ],
+    "specs": {
+      "polish": "Unpolished",
+      "certification": "Organic Certified",
+      "shelfLife": 24,
+      "expiryDate": {
+        "$date": "2027-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Household",
+        "Bulk Cooking"
+      ],
+      "usageInstructions": "Rinse before use. Soak for 30 minutes for faster cooking.",
+      "attributes": "High Protein, Organic, Unpolished"
+    },
+    "location": {
+      "pincode": "110001",
+      "district": "New Delhi",
+      "state": "Delhi",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.209,
+          28.6139
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a5d"
+    },
+    "title": "Whole Turmeric Root (High Curcumin)",
+    "description": "Dried whole turmeric root, sun-cured to maximize curcumin content. Ideal for powdered spice production.",
+    "category": "SPICES",
+    "price": 180,
+    "unit": "kg",
+    "stock": 1500,
+    "minOrderQuantity": 20,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://m.media-amazon.com/images/I/61I3oSBvVTL._UF1000,1000_QL80_.jpg"
+    ],
+    "specs": {
+      "curcumin": "5% min",
+      "harvestDate": {
+        "$date": "2025-02-01T00:00:00.000Z"
+      },
+      "shelfLife": 48,
+      "expiryDate": {
+        "$date": "2029-02-01T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Spice Manufacturers"
+      ],
+      "usageInstructions": "Store in a cool, dark, dry place.",
+      "attributes": "High Potency, Natural Color, Anti-inflammatory"
+    },
+    "location": {
+      "pincode": "781001",
+      "district": "Guwahati",
+      "state": "Assam",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          91.7362,
+          26.1445
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  }
+]

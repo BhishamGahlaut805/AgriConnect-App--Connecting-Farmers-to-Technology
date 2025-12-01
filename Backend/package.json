@@ -1,0 +1,48 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for AgriSupport Project",
+  "license": "ISC",
+  "author": "Bhisham Gahlaut",
+  "type": "commonjs",
+  "main": "index.js",
+  "bin": {
+    "backend": "./Server.js"
+  },
+  "scripts": {
+    "dev": "nodemon Server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm install && node server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@react-oauth/google": "^0.12.2",
+    "axios": "^1.10.0",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.0.1",
+    "express-validator": "^7.2.1",
+    "firebase": "^12.4.0",
+    "firebase-admin": "^13.5.0",
+    "fs": "^0.0.1-security",
+    "google-auth-library": "^10.1.0",
+    "http": "^0.0.1-security",
+    "joi": "^18.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.3",
+    "multer": "^2.0.1",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.6",
+    "nodemon": "^3.1.10",
+    "path": "^0.12.7",
+    "puppeteer": "^24.24.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "slugify": "^1.6.6"
+  }
+}

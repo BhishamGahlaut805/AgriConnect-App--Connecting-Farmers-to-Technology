@@ -18,6 +18,7 @@ from datetime import datetime
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from langchain.chat_models import ChatOpenAI  # type:ignore
 
 from .config import logger, MONGO_URI, MONGO_DB
 from .PineConeManager import PineconeManager
@@ -27,6 +28,7 @@ from .AdminManager import AdminManager
 load_dotenv()
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+API_KEY_GPT = os.getenv("API_KEY_GPT")
 
 # Initialize components
 Agribot_bp1 = Blueprint("Agribot", __name__)
@@ -674,12 +676,13 @@ def chat():
         conversation_context = session_manager.get_conversation_context(context_types)
 
         # Initialize LLM
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash-exp",
-            google_api_key=GEMINI_API_KEY,
-            temperature=0.3,
-            max_output_tokens=1500
-        )
+        llm = ChatOpenAI(
+    model="llama-3.1-8b-instant",   # or "llama-3.3-70b-versatile" for more power
+    openai_api_key=API_KEY_GPT,
+    openai_api_base="https://api.groq.com/openai/v1",
+    temperature=0.3,
+    max_tokens=1500
+)
 
         # Create RAG chain with enhanced prompt
         prompt_template = ChatPromptTemplate.from_template(system_prompt)

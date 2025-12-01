@@ -1,0 +1,1627 @@
+[
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a5e"
+    },
+    "title": "Natural Organic Jaggery Blocks",
+    "description": "Traditional unrefined cane sugar blocks. No chemicals or artificial colors added. A healthy alternative to white sugar.",
+    "category": "SWEETENERS",
+    "price": 120,
+    "unit": "pack",
+    "stock": 900,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/jaggery-blocks.jpg"
+    ],
+    "specs": {
+      "additives": "None",
+      "certification": "Organic Certified",
+      "shelfLife": 12,
+      "expiryDate": {
+        "$date": "2026-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Baking",
+        "Beverages"
+      ],
+      "usageInstructions": "Store in an airtight container.",
+      "attributes": "Mineral Rich, Unrefined, Natural Sweetener"
+    },
+    "location": {
+      "pincode": "247667",
+      "district": "Muzaffarnagar",
+      "state": "Uttar Pradesh",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.7011,
+          29.4795
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a5f"
+    },
+    "title": "Pure Wildflower Forest Honey",
+    "description": "Raw, unfiltered honey collected from deep forest beehives. Distinct flavor and texture. No added sugar or preservatives.",
+    "category": "NATURAL PRODUCTS",
+    "price": 350,
+    "unit": "bottle",
+    "stock": 450,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/forest-honey.jpg"
+    ],
+    "specs": {
+      "source": "Wildflower",
+      "certification": "FSSAI Approved, GMP",
+      "shelfLife": 36,
+      "expiryDate": {
+        "$date": "2028-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Health & Wellness",
+        "Direct Consumption"
+      ],
+      "usageInstructions": "Do not refrigerate. May crystallize over time.",
+      "attributes": "Raw, Unfiltered, High Antioxidants"
+    },
+    "location": {
+      "pincode": "751001",
+      "district": "Bhubaneswar",
+      "state": "Odisha",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          85.8245,
+          20.2961
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a60"
+    },
+    "title": "Export Grade Organic Bell Peppers",
+    "description": "Vibrant, crisp bell peppers (capsicum) in red, yellow, and green. Packed fresh for export markets.",
+    "category": "VEGETABLE",
+    "price": 120,
+    "unit": "kg",
+    "stock": 300,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/bell-peppers.jpg"
+    ],
+    "specs": {
+      "variety": "California Wonder",
+      "harvestDate": {
+        "$date": "2025-10-15T00:00:00.000Z"
+      },
+      "shelfLife": 10,
+      "expiryDate": {
+        "$date": "2025-10-25T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Export",
+        "Salad Bars"
+      ],
+      "usageInstructions": "Refrigerate immediately upon receipt.",
+      "attributes": "Vibrant Colors, High Vitamin A & C, Crisp"
+    },
+    "location": {
+      "pincode": "122001",
+      "district": "Gurugram",
+      "state": "Haryana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.0266,
+          28.4595
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a61"
+    },
+    "title": "Fresh Kinnow Oranges (Bulk Supply)",
+    "description": "Juicy and tangy Kinnow oranges, freshly picked and packed. Ideal for juicing and direct consumption.",
+    "category": "FRUIT",
+    "price": 55,
+    "unit": "kg",
+    "stock": 1500,
+    "minOrderQuantity": 50,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/kinnow-oranges.jpg"
+    ],
+    "specs": {
+      "ripeness": "Fully Ripe",
+      "harvestDate": {
+        "$date": "2025-01-20T00:00:00.000Z"
+      },
+      "shelfLife": 14,
+      "expiryDate": {
+        "$date": "2025-02-03T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Juice Factories",
+        "Wholesale"
+      ],
+      "usageInstructions": "Store in a cool, ventilated area.",
+      "attributes": "High Juice Content, High Vitamin C"
+    },
+    "location": {
+      "pincode": "141001",
+      "district": "Ludhiana",
+      "state": "Punjab",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          75.8573,
+          30.901
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a62"
+    },
+    "title": "Organic Foxtail Millet (Korralu)",
+    "description": "Gluten-free, highly nutritious millet grain. Excellent for dietary health and diabetic-friendly meals.",
+    "category": "GRAIN",
+    "price": 95,
+    "unit": "kg",
+    "stock": 400,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/foxtail-millet.jpg"
+    ],
+    "specs": {
+      "moisture": "10%",
+      "certification": "Organic Certified",
+      "shelfLife": 18,
+      "expiryDate": {
+        "$date": "2027-04-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Health Food Stores",
+        "Households"
+      ],
+      "usageInstructions": "Cook like rice or use in porridge.",
+      "attributes": "Gluten-Free, High Fiber, Low Glycemic Index"
+    },
+    "location": {
+      "pincode": "500001",
+      "district": "Hyderabad",
+      "state": "Telangana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          78.4867,
+          17.385
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a63"
+    },
+    "title": "Fresh Goat Milk (Raw & Unpasteurized)",
+    "description": "Naturally homogenized raw goat milk. High in fat and nutrients. Ideal for cheese making and direct consumption.",
+    "category": "DAIRY",
+    "price": 90,
+    "unit": "liter",
+    "stock": 250,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/goat-milk.jpg"
+    ],
+    "specs": {
+      "fatContent": "5%",
+      "harvestDate": {
+        "$date": "2025-10-17T07:00:00.000Z"
+      },
+      "shelfLife": 2,
+      "expiryDate": {
+        "$date": "2025-10-19T07:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Cheese Makers",
+        "Specialty Dairies"
+      ],
+      "usageInstructions": "Boil before consuming. Keep refrigerated.",
+      "attributes": "Easily Digestible, Rich in Calcium, Raw"
+    },
+    "location": {
+      "pincode": "700001",
+      "district": "Kolkata",
+      "state": "West Bengal",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          88.3639,
+          22.5726
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a64"
+    },
+    "title": "High-Capacity Crop Sprayer Drone",
+    "description": "Advanced agricultural drone with a 15-liter capacity. Features autonomous flight and precision spraying.",
+    "category": "MACHINERY",
+    "price": 250000,
+    "unit": "unit",
+    "stock": 5,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/sprayer-drone.jpg"
+    ],
+    "specs": {
+      "power": "Electric Battery",
+      "capacity": "15 Liter",
+      "warranty": 24,
+      "coverage": "10 acres/hour",
+      "recommendedFor": [
+        "Large Farms",
+        "Service Providers"
+      ],
+      "usageInstructions": "Requires FAA/DGCA certification for operation.",
+      "attributes": "Precision Spraying, Autonomous Navigation, GPS Enabled"
+    },
+    "location": {
+      "pincode": "380001",
+      "district": "Ahmedabad",
+      "state": "Gujarat",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.5714,
+          23.0225
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a65"
+    },
+    "title": "BioGrow Organic Fertilizer (Paddy Special)",
+    "description": "BioGrow is a natural, eco-friendly fertilizer made from decomposed plant waste and beneficial microbes. Specifically formulated for paddy crops.",
+    "category": "FERTILIZER",
+    "price": 650,
+    "unit": "pack",
+    "stock": 100,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://down-ph.img.susercontent.com/file/ph-11134207-81zto-mfdidqv0twy52b"
+    ],
+    "specs": {
+      "npkRatio": "8-4-6",
+      "certification": "ISO 9001:2015 Certified",
+      "shelfLife": 18,
+      "expiryDate": {
+        "$date": "2027-04-10T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Paddy Crops"
+      ],
+      "usageInstructions": "Mix 50–100 kg per acre with soil before sowing.",
+      "attributes": "100% organic, paddy yield booster"
+    },
+    "location": {
+      "pincode": "122001",
+      "district": "Gurugram",
+      "state": "Haryana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.0266,
+          28.4595
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a66"
+    },
+    "title": "BT Cotton Seeds (High Boll Count)",
+    "description": "Genetically engineered cotton seeds providing resistance against bollworm pests and offering a higher yield.",
+    "category": "SEED",
+    "price": 2800,
+    "unit": "packet",
+    "stock": 150,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/bt-cotton-seeds.jpg"
+    ],
+    "specs": {
+      "germinationRate": "95%",
+      "certification": "Govt. Approved",
+      "shelfLife": 9,
+      "expiryDate": {
+        "$date": "2026-07-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Cotton Farmers"
+      ],
+      "usageInstructions": "Follow local agricultural guidelines for planting.",
+      "attributes": "Pest Resistant, High Yield, Uniform Fiber"
+    },
+    "location": {
+      "pincode": "395003",
+      "district": "Surat",
+      "state": "Gujarat",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.8333,
+          21.1959
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a67"
+    },
+    "title": "Copper-Based Fungicide Solution (5L)",
+    "description": "Broad-spectrum copper fungicide for the control of fungal and bacterial diseases in various crops including vegetables and fruits.",
+    "category": "PESTICIDE",
+    "price": 1100,
+    "unit": "bottle",
+    "stock": 250,
+    "minOrderQuantity": 2,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/copper-fungicide.jpg"
+    ],
+    "specs": {
+      "activeIngredient": "Copper Oxychloride",
+      "certification": "EPA Registered Equivalent",
+      "shelfLife": 24,
+      "expiryDate": {
+        "$date": "2027-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Fungal Disease Control"
+      ],
+      "usageInstructions": "Mix 2g per liter of water. Wear protective gear.",
+      "attributes": "Protective & Curative Action, Broad Spectrum"
+    },
+    "location": {
+      "pincode": "500001",
+      "district": "Hyderabad",
+      "state": "Telangana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          78.4867,
+          17.385
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a68"
+    },
+    "title": "Adjustable PVC Garden Hose Pipe (50m)",
+    "description": "Heavy-duty, kink-free garden hose pipe with adjustable nozzle and quick connectors. UV stabilized.",
+    "category": "TOOLS",
+    "price": 1800,
+    "unit": "unit",
+    "stock": 500,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/garden-hose.jpg"
+    ],
+    "specs": {
+      "material": "PVC",
+      "length": "50m",
+      "pressureRating": "10 Bar",
+      "recommendedFor": [
+        "Irrigation",
+        "Horticulture"
+      ],
+      "usageInstructions": "Roll up after use to prevent damage.",
+      "attributes": "Kink-Free, UV Resistant, Complete Set"
+    },
+    "location": {
+      "pincode": "411001",
+      "district": "Pune",
+      "state": "Maharashtra",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          73.8567,
+          18.5204
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a69"
+    },
+    "title": "Biodegradable Crop Mulch Film",
+    "description": "Eco-friendly mulch film that suppresses weeds and retains soil moisture. Naturally degrades after harvest, eliminating disposal needs.",
+    "category": "OTHER",
+    "price": 950,
+    "unit": "roll",
+    "stock": 150,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/mulch-film.jpg"
+    ],
+    "specs": {
+      "material": "Biodegradable Polymer",
+      "width": "1.2 meter",
+      "thickness": "25 micron",
+      "recommendedFor": [
+        "Vegetable Crops",
+        "Organic Farms"
+      ],
+      "usageInstructions": "Lay over prepared beds before planting.",
+      "attributes": "Weed Suppression, Moisture Retention, Zero Waste"
+    },
+    "location": {
+      "pincode": "110001",
+      "district": "New Delhi",
+      "state": "Delhi",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.209,
+          28.6139
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a6a"
+    },
+    "title": "Virgin Coconut Oil (Edible Grade)",
+    "description": "100% pure virgin coconut oil, cold-pressed from fresh coconut milk. Used for cooking, baking, and health supplements.",
+    "category": "OIL",
+    "price": 650,
+    "unit": "can",
+    "stock": 350,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/coconut-oil.jpg"
+    ],
+    "specs": {
+      "purity": "100%",
+      "certification": "Organic, FSSAI",
+      "shelfLife": 24,
+      "expiryDate": {
+        "$date": "2027-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Health & Cooking"
+      ],
+      "usageInstructions": "Store at room temperature. Solidifies below 24°C.",
+      "attributes": "High MCTs, Cold Pressed, Natural Aroma"
+    },
+    "location": {
+      "pincode": "600001",
+      "district": "Chennai",
+      "state": "Tamil Nadu",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          80.2707,
+          13.0827
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a6b"
+    },
+    "title": "Organic Split Yellow Pigeon Peas (Toor Dal)",
+    "description": "Split and peeled pigeon peas, a staple pulse. High in vegetable protein. Unpolished and retains natural texture.",
+    "category": "PULSES",
+    "price": 135,
+    "unit": "kg",
+    "stock": 850,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/toor-dal.jpg"
+    ],
+    "specs": {
+      "polish": "Unpolished",
+      "certification": "Organic Certified",
+      "shelfLife": 18,
+      "expiryDate": {
+        "$date": "2027-04-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Household",
+        "Hotels"
+      ],
+      "usageInstructions": "Rinse well and boil until tender.",
+      "attributes": "High Protein, Organic, Fast Cooking"
+    },
+    "location": {
+      "pincode": "400001",
+      "district": "Mumbai",
+      "state": "Maharashtra",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.8777,
+          19.076
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a6c"
+    },
+    "title": "High Quality Cardamom Pods (Green)",
+    "description": "Premium quality green cardamom pods, known for their strong aroma and flavor. Ideal for desserts, tea, and curries.",
+    "category": "SPICES",
+    "price": 1500,
+    "unit": "kg",
+    "stock": 300,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/cardamom.jpg"
+    ],
+    "specs": {
+      "grade": "Grade A",
+      "harvestDate": {
+        "$date": "2025-09-01T00:00:00.000Z"
+      },
+      "shelfLife": 36,
+      "expiryDate": {
+        "$date": "2028-09-01T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Catering",
+        "Confectionery"
+      ],
+      "usageInstructions": "Store in an airtight container to preserve aroma.",
+      "attributes": "Highly Aromatic, Natural Green Color"
+    },
+    "location": {
+      "pincode": "685551",
+      "district": "Idukki",
+      "state": "Kerala",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.1643,
+          9.7997
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a6d"
+    },
+    "title": "Palm Jaggery Powder (Karupatti)",
+    "description": "Finely powdered jaggery made from palm sap. Low glycemic index and rich in minerals. Ideal for baking and beverages.",
+    "category": "SWEETENERS",
+    "price": 250,
+    "unit": "pack",
+    "stock": 600,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/palm-jaggery.jpg"
+    ],
+    "specs": {
+      "additives": "None",
+      "certification": "Organic, Vegan",
+      "shelfLife": 18,
+      "expiryDate": {
+        "$date": "2027-04-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Diabetic Diets",
+        "Dessert Making"
+      ],
+      "usageInstructions": "Can be used as a 1:1 substitute for sugar.",
+      "attributes": "Low GI, Rich in Iron, Unrefined"
+    },
+    "location": {
+      "pincode": "600001",
+      "district": "Chennai",
+      "state": "Tamil Nadu",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          80.2707,
+          13.0827
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a6e"
+    },
+    "title": "Natural Aloe Vera Pulp Extract",
+    "description": "Pure, stabilized aloe vera pulp extract. Used in cosmetic, pharmaceutical, and health drink industries.",
+    "category": "NATURAL PRODUCTS",
+    "price": 800,
+    "unit": "liter",
+    "stock": 200,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/aloe-vera-pulp.jpg"
+    ],
+    "specs": {
+      "source": "Aloe Barbadensis Miller",
+      "certification": "Cosmetic Grade",
+      "shelfLife": 12,
+      "expiryDate": {
+        "$date": "2026-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Cosmetics",
+        "Pharma"
+      ],
+      "usageInstructions": "Requires further processing before final product creation.",
+      "attributes": "99% Pure Extract, Stabilized, Anti-inflammatory"
+    },
+    "location": {
+      "pincode": "302001",
+      "district": "Jaipur",
+      "state": "Rajasthan",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          75.7873,
+          26.9124
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a6f"
+    },
+    "title": "Fresh Green Okra (Lady's Finger)",
+    "description": "Tender and firm green okra, harvested before maturity. Low in calories, high in vitamins.",
+    "category": "VEGETABLE",
+    "price": 60,
+    "unit": "kg",
+    "stock": 450,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/okra-fresh.jpg"
+    ],
+    "specs": {
+      "variety": "Pusa Sawani",
+      "harvestDate": {
+        "$date": "2025-10-17T05:00:00.000Z"
+      },
+      "shelfLife": 5,
+      "expiryDate": {
+        "$date": "2025-10-22T05:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Retail",
+        "Indian Cuisine"
+      ],
+      "usageInstructions": "Wash thoroughly before cooking.",
+      "attributes": "Tender, High Fiber, Zero Pesticides"
+    },
+    "location": {
+      "pincode": "122001",
+      "district": "Gurugram",
+      "state": "Haryana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.0266,
+          28.4595
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a70"
+    },
+    "title": "Fresh Seedless Watermelons (Bulk)",
+    "description": "Large, sweet, and seedless watermelons. Perfect for the summer season. High water content for hydration.",
+    "category": "FRUIT",
+    "price": 40,
+    "unit": "kg",
+    "stock": 800,
+    "minOrderQuantity": 100,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/watermelon-seedless.jpg"
+    ],
+    "specs": {
+      "ripeness": "Fully Ripe",
+      "harvestDate": {
+        "$date": "2025-06-10T00:00:00.000Z"
+      },
+      "shelfLife": 14,
+      "expiryDate": {
+        "$date": "2025-06-24T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Juice Stands",
+        "Wholesale"
+      ],
+      "usageInstructions": "Store in a cool place, consume chilled.",
+      "attributes": "Seedless, Sweet, Refreshing"
+    },
+    "location": {
+      "pincode": "208001",
+      "district": "Kanpur",
+      "state": "Uttar Pradesh",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          80.3444,
+          26.4499
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a71"
+    },
+    "title": "Sona Masoori Rice (Medium Grain)",
+    "description": "A light and aromatic medium-grain rice, commonly used for daily cooking across South India.",
+    "category": "GRAIN",
+    "price": 75,
+    "unit": "sack",
+    "stock": 1200,
+    "minOrderQuantity": 25,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/sona-masoori.jpg"
+    ],
+    "specs": {
+      "moisture": "13%",
+      "harvestDate": {
+        "$date": "2025-03-01T00:00:00.000Z"
+      },
+      "shelfLife": 24,
+      "expiryDate": {
+        "$date": "2027-03-01T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Daily Household Use"
+      ],
+      "usageInstructions": "Wash and cook directly in a pot or rice cooker.",
+      "attributes": "Medium Grain, Light, Aromatic"
+    },
+    "location": {
+      "pincode": "560001",
+      "district": "Bengaluru",
+      "state": "Karnataka",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.5946,
+          12.9716
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a72"
+    },
+    "title": "Buffalo Ghee (Clarified Butter)",
+    "description": "Traditional homemade ghee from buffalo milk. Rich in flavor and texture, suitable for cooking and traditional rituals.",
+    "category": "DAIRY",
+    "price": 750,
+    "unit": "jar",
+    "stock": 300,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/buffalo-ghee.jpg"
+    ],
+    "specs": {
+      "fatContent": "99.8%",
+      "certification": "FSSAI Approved",
+      "shelfLife": 9,
+      "expiryDate": {
+        "$date": "2026-07-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Cooking",
+        "Ayurveda"
+      ],
+      "usageInstructions": "Store at room temperature in a dark place.",
+      "attributes": "Rich Aroma, High Smoke Point, Homemade"
+    },
+    "location": {
+      "pincode": "440001",
+      "district": "Nagpur",
+      "state": "Maharashtra",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          79.0882,
+          21.1458
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a73"
+    },
+    "title": "Multi-Purpose Power Tiller (10 HP)",
+    "description": "Robust 10 HP power tiller for heavy-duty farming tasks, including plowing and harvesting small grains.",
+    "category": "MACHINERY",
+    "price": 85000,
+    "unit": "unit",
+    "stock": 8,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/power-tiller.jpg"
+    ],
+    "specs": {
+      "power": "10 HP",
+      "warranty": 18,
+      "fuelType": "Diesel",
+      "PTO": "Available",
+      "recommendedFor": [
+        "Medium Farms",
+        "Contract Farming"
+      ],
+      "usageInstructions": "Regular oil change and servicing required.",
+      "attributes": "Versatile, Heavy Duty, Low Vibration"
+    },
+    "location": {
+      "pincode": "721101",
+      "district": "Midnapore",
+      "state": "West Bengal",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          87.3242,
+          22.4284
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a74"
+    },
+    "title": "Premium Liquid NPK Fertilizer (19-19-19)",
+    "description": "Water-soluble liquid fertilizer with balanced NPK ratio (19-19-19). Suitable for foliar and drip irrigation application.",
+    "category": "FERTILIZER",
+    "price": 1200,
+    "unit": "liter",
+    "stock": 900,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/liquid-npk.jpg"
+    ],
+    "specs": {
+      "npkRatio": "19-19-19",
+      "certification": "Fungicide & Herbicide Free",
+      "shelfLife": 36,
+      "expiryDate": {
+        "$date": "2028-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Horticulture",
+        "Precision Farming"
+      ],
+      "usageInstructions": "Dilute 5ml per liter of water for foliar spray.",
+      "attributes": "Water Soluble, Balanced Nutrients, High Absorption"
+    },
+    "location": {
+      "pincode": "600001",
+      "district": "Chennai",
+      "state": "Tamil Nadu",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          80.2707,
+          13.0827
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a75"
+    },
+    "title": "High Grade Organic Carrots",
+    "description": "Sweet and crisp organic carrots, rich in Beta-Carotene. Harvested and packed for maximum freshness.",
+    "category": "VEGETABLE",
+    "price": 70,
+    "unit": "kg",
+    "stock": 600,
+    "minOrderQuantity": 5,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/carrots-organic.jpg"
+    ],
+    "specs": {
+      "variety": "Early Nantes",
+      "harvestDate": {
+        "$date": "2025-10-16T00:00:00.000Z"
+      },
+      "shelfLife": 14,
+      "expiryDate": {
+        "$date": "2025-10-30T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Juice Production",
+        "Home Cooking"
+      ],
+      "usageInstructions": "Keep refrigerated for best results.",
+      "attributes": "Sweet Flavor, High Beta-Carotene, Organic"
+    },
+    "location": {
+      "pincode": "122001",
+      "district": "Gurugram",
+      "state": "Haryana",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.0266,
+          28.4595
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a76"
+    },
+    "title": "Fresh Pomegranates (Bhagwa Variety)",
+    "description": "Sweet and juicy Bhagwa variety pomegranates. Known for their deep red arils and health benefits.",
+    "category": "FRUIT",
+    "price": 180,
+    "unit": "kg",
+    "stock": 350,
+    "minOrderQuantity": 10,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/pomegranate.jpg"
+    ],
+    "specs": {
+      "ripeness": "Fully Ripe",
+      "harvestDate": {
+        "$date": "2025-09-20T00:00:00.000Z"
+      },
+      "shelfLife": 30,
+      "expiryDate": {
+        "$date": "2025-10-20T00:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Retail",
+        "Processing"
+      ],
+      "usageInstructions": "Can be stored for weeks if kept cool and dry.",
+      "attributes": "Rich Red Color, High Antioxidants, Juicy"
+    },
+    "location": {
+      "pincode": "411001",
+      "district": "Pune",
+      "state": "Maharashtra",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          73.8567,
+          18.5204
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a77"
+    },
+    "title": "Organic Red Wheat Grain (Lokwan)",
+    "description": "Traditional Lokwan variety red wheat. High protein content, ideal for making chapatis and whole wheat flour.",
+    "category": "GRAIN",
+    "price": 45,
+    "unit": "sack",
+    "stock": 1500,
+    "minOrderQuantity": 50,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/red-wheat.jpg"
+    ],
+    "specs": {
+      "moisture": "11%",
+      "certification": "Organic Certified",
+      "shelfLife": 36,
+      "expiryDate": {
+        "$date": "2028-10-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Flour Mills",
+        "Wholesale"
+      ],
+      "usageInstructions": "Store in a dry, pest-free warehouse.",
+      "attributes": "High Protein, Easy to Mill, Traditional Variety"
+    },
+    "location": {
+      "pincode": "462001",
+      "district": "Bhopal",
+      "state": "Madhya Pradesh",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.4126,
+          23.2599
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a78"
+    },
+    "title": "Bulk Skimmed Milk Powder",
+    "description": "High-quality skimmed milk powder (SMP) for industrial use in confectionery and dairy blending.",
+    "category": "DAIRY",
+    "price": 350,
+    "unit": "kg",
+    "stock": 5000,
+    "minOrderQuantity": 100,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/smp-powder.jpg"
+    ],
+    "specs": {
+      "fatContent": "0.5%",
+      "certification": "ISO 22000",
+      "shelfLife": 18,
+      "expiryDate": {
+        "$date": "2027-04-17T08:00:00.000Z"
+      },
+      "recommendedFor": [
+        "Industrial Use",
+        "Baking"
+      ],
+      "usageInstructions": "Mix with warm water to reconstitute milk.",
+      "attributes": "Long Shelf Life, Low Fat, High Protein"
+    },
+    "location": {
+      "pincode": "380001",
+      "district": "Ahmedabad",
+      "state": "Gujarat",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.5714,
+          23.0225
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1e2aa855c7ace51330a79"
+    },
+    "title": "Diesel Water Pump Set (5 HP)",
+    "description": "High-efficiency diesel-powered water pump for drawing groundwater and large-scale irrigation applications.",
+    "category": "MACHINERY",
+    "price": 18000,
+    "unit": "unit",
+    "stock": 20,
+    "minOrderQuantity": 1,
+    "seller": {
+      "$oid": "652fa12e3cfa5c43b0a4d9a1"
+    },
+    "images": [
+      "https://example.com/images/water-pump.jpg"
+    ],
+    "specs": {
+      "power": "5 HP",
+      "warranty": 12,
+      "head": "30 meter",
+      "fuelType": "Diesel",
+      "recommendedFor": [
+        "Irrigation",
+        "Farm Pumping"
+      ],
+      "usageInstructions": "Regularly check fuel and oil levels.",
+      "attributes": "High Discharge Rate, Portable, Reliable"
+    },
+    "location": {
+      "pincode": "141001",
+      "district": "Ludhiana",
+      "state": "Punjab",
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          75.8573,
+          30.901
+        ]
+      }
+    },
+    "status": "approved",
+    "isActive": true,
+    "verifiedBy": {
+      "$oid": "652fa12e3cfa5c43b0a4d9b5"
+    },
+    "verifiedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "createdAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:00:00.000Z"
+    }
+  }
+]

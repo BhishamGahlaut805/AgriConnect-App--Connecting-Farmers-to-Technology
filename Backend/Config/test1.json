@@ -1,0 +1,290 @@
+[
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e473"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a5e"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 115,
+    "availableQty": 850,
+    "minOrderQty": 20,
+    "description": "Natural organic cane jaggery blocks. Unrefined traditional sweetener, rich in minerals, and free from chemicals. A healthy alternative to refined sugar.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.7011,
+          29.4795
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:13.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:13.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e474"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a5f"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 345,
+    "availableQty": 420,
+    "minOrderQty": 5,
+    "description": "Raw, unfiltered Wildflower Forest Honey. Sustainably harvested from deep forest beehives. Distinct natural flavor and high antioxidant levels.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          85.8245,
+          20.2961
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:14.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:14.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e475"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a60"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 118,
+    "availableQty": 280,
+    "minOrderQty": 30,
+    "description": "Export grade organic bell peppers (capsicum) in mixed colors (Red, Yellow, Green). Crisp texture and vibrant color, packed fresh for international or premium retail.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.0266,
+          28.4595
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:15.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:15.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e476"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a61"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 52,
+    "availableQty": 1400,
+    "minOrderQty": 100,
+    "description": "Bulk Kinnow Oranges, juicy and tangy. Freshly picked from the orchards in Punjab. High yield of juice, suitable for beverage production and wholesale market.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          75.8573,
+          30.901
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:16.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:16.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e477"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a62"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 92,
+    "availableQty": 380,
+    "minOrderQty": 15,
+    "description": "Organic Foxtail Millet (Korralu). Gluten-free, low glycemic index grain. Highly recommended for dietary health and available for health food stores/bulk buyers.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          78.4867,
+          17.385
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:17.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:17.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e478"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a63"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 88,
+    "availableQty": 230,
+    "minOrderQty": 10,
+    "description": "Raw, unpasteurized goat milk, naturally homogenized. Ideal for specialty cheese makers or consumers seeking easily digestible, nutrient-rich dairy.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          88.3639,
+          22.5726
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:18.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:18.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e479"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a64"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 245000,
+    "availableQty": 3,
+    "minOrderQty": 1,
+    "description": "Advanced 15-liter capacity crop sprayer drone. Features autonomous flight and precision spraying for large farms. Reduces labor and chemical usage.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          72.5714,
+          23.0225
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:19.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:19.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  },
+  {
+    "_id": {
+      "$oid": "68f1fe00cd0b2cb980e9e47a"
+    },
+    "product": {
+      "$oid": "68f1e2aa855c7ace51330a65"
+    },
+    "farmer": {
+      "$oid": "687384eaf8246bd0befdda60"
+    },
+    "pricePerUnit": 645,
+    "availableQty": 90,
+    "minOrderQty": 10,
+    "description": "BioGrow Organic Fertilizer, specifically formulated for paddy crops. Improves soil fertility and microbial activity, leading to better yield and sustained soil health.",
+    "location": {
+      "geo": {
+        "type": "Point",
+        "coordinates": [
+          77.0266,
+          28.4595
+        ]
+      }
+    },
+    "status": "active",
+    "isActive": true,
+    "__v": 0,
+    "createdAt": {
+      "$date": "2025-10-17T08:35:20.000Z"
+    },
+    "updatedAt": {
+      "$date": "2025-10-17T08:35:20.000Z"
+    },
+    "verifiedBy": {
+      "$oid": "68f0aea24d4a98236143c088"
+    }
+  }
+]
