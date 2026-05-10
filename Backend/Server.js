@@ -59,7 +59,7 @@ app.use("/Agrimarket/v1/api", Agrimarketroutes);
 app.use("/cropMonitor", require("./Routes/CropMonitoringRoutes"));
 
 // Initialize Firebase Admin (for sending notifications)
-const serviceAccount = require("./Firebase/serviceAccountkey.json"); // Download from Firebase Console
+const serviceAccount =require("serviceAccountKey.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
