@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const requireAuth = require("../middlewares/requireAuth");
-const ctrl = require("../controllers/CartController");
+const requireAuth = require("../Middlewares/requireAuth");
+const ctrl = require("../Controllers/CartController");
 
 router.get("/", requireAuth, ctrl.getCart);
 router.post("/items", requireAuth, ctrl.addItem);

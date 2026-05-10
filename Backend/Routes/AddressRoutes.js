@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const addressController = require("../controllers/addressController");
-const { auth } = require("../middlewares/auth"); // Ensure user is authenticated
+const addressController = require("../Controllers/AddressController");
+const { auth } = require("../Middlewares/auth"); // Ensure user is authenticated
 
 // All routes require authentication
 router.use(auth);

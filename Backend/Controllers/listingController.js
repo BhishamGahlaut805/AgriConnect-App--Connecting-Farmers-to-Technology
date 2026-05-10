@@ -1,6 +1,6 @@
 // controllers/ListingController.js
-const Listing = require("../models/Listing");
-const Product = require("../models/Product");
+const Listing = require("../Models/Listing");
+const Product = require("../Models/Product");
 const OTPVerification = require("../Models/OTPVerification");
 const emailService = require("../Utils/emailService");
 const { validationResult } = require("express-validator");
@@ -307,7 +307,7 @@ class ListingController {
       const updatedListing = await Listing.findByIdAndUpdate(
         req.params.id,
         { $set: req.body },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       )
         .populate("product", "title category images")
         .populate("farmer", "name email");
@@ -530,9 +530,7 @@ class ListingController {
     // Implementation for fetching bulk creation status
     const { verificationId } = req.params;
     try {
-      const otpRecord = await OTPVerification
-        .findById(verificationId)
-        .lean();
+      const otpRecord = await OTPVerification.findById(verificationId).lean();
       if (!otpRecord) {
         return res.status(404).json({
           success: false,
@@ -554,7 +552,6 @@ class ListingController {
         error: error.message,
       });
     }
-
   }
   async bulkUpdateListings(req, res) {
     // Implementation for bulk updating listings
@@ -568,7 +565,7 @@ class ListingController {
       }
       const result = await Listing.updateMany(
         { _id: { $in: listingIds }, farmer: req.user._id, isActive: true },
-        { $set: updateData }
+        { $set: updateData },
       );
       res.status(200).json({
         success: true,
@@ -597,7 +594,7 @@ class ListingController {
       }
       const result = await Listing.updateMany(
         { _id: { $in: listingIds }, farmer: req.user._id, isActive: true },
-        { $set: { isActive: false } }
+        { $set: { isActive: false } },
       );
       res.status(200).json({
         success: true,
@@ -632,7 +629,7 @@ class ListingController {
       }
       const result = await Listing.updateMany(
         { _id: { $in: listingIds }, farmer: req.user._id, isActive: true },
-        { $set: { status } }
+        { $set: { status } },
       );
       res.status(200).json({
         success: true,
@@ -661,7 +658,7 @@ class ListingController {
 
         .populate("product", "title category images unit specs description")
         .populate("farmer", "name email phone rating");
-        console.log("Listing found: ", listing);
+      console.log("Listing found: ", listing);
       if (!listing) {
         return res.status(404).json({
           success: false,

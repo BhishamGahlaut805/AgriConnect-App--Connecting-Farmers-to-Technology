@@ -4,8 +4,8 @@ const router = express.Router();
 const { body } = require("express-validator");
 const productController = require("../Controllers/ProductController");
 const { auth } = require("../Middlewares/auth");
-const requireRole = require("../middlewares/requireRole");
-const upload = require("../utils/upload");
+const requireRole = require("../Middlewares/requireRole");
+const upload = require("../Utils/Upload");
 
 // Validation rules
 const productValidation = [
@@ -58,13 +58,13 @@ router.post(
   auth,
   requireRole("Farmer", "Trader", "Admin"),
   productValidation,
-  productController.initiateProductCreation
+  productController.initiateProductCreation,
 );
 router.get(
   "/hl--admin/:id",
   auth,
   requireRole("Farmer", "Trader", "Admin"),
-  productController.getProduct1
+  productController.getProduct1,
 );
 router.post(
   "/verify-create",
@@ -72,7 +72,7 @@ router.post(
   requireRole("Farmer", "Trader", "Admin"),
   otpValidation,
   upload.array("images", 6),
-  productController.verifyAndCreateProducts
+  productController.verifyAndCreateProducts,
 );
 
 // User's products

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const ctrl = require("../controllers/CMSController");
+const ctrl = require("../Controllers/CMSController");
 const requireAuth = require("../Middlewares/requireAuth");
-const requireRole = require("../middlewares/requireRole");
+const requireRole = require("../Middlewares/requireRole");
 const { auth, protect } = require("../Middlewares/auth");
 
 router.get("/", ctrl.list);

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-router.use("/products", require("./ProductRoutes"));
+router.use("/products", require("./productRoutes"));
 router.use("/crops", require("./cropRoutes"));
 router.use("/auctions", require("./AuctionRoutes"));
 router.use("/cart", require("./CartRoutes"));

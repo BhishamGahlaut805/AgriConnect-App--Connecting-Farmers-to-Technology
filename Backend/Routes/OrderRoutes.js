@@ -9,7 +9,7 @@ const {
   updateOrderStatusValidation,
   cancelOrderValidation,
   verifyOTPValidation,
-  validate
+  validate,
 } = require("../Services/orderValidations");
 
 // All routes are protected
@@ -19,13 +19,13 @@ router.use(auth);
 router.post(
   "/checkout",
   // validate(createOrderValidation),
-  orderController.createOrder
+  orderController.createOrder,
 );
 
 router.post(
   "/:id/verify-otp",
   // validate(verifyOTPValidation),
-  orderController.verifyOrderOTP
+  orderController.verifyOrderOTP,
 );
 
 router.get("/my-orders", orderController.getUserOrders);
@@ -36,14 +36,14 @@ router.post("/:orderId/resend-otp", orderController.resendOrderOTP);
 router.put(
   "/:id/cancel",
   validate(cancelOrderValidation),
-  orderController.cancelOrder
+  orderController.cancelOrder,
 );
 
 // Seller routes
 router.get(
   "/seller/orders",
   requireRole("farmer", "admin", "trader"),
-  orderController.getSellerOrders
+  orderController.getSellerOrders,
 );
 
 // Admin routes
@@ -51,9 +51,9 @@ router.get("/", requireRole("admin"), orderController.getAllOrders);
 
 router.put(
   "/:id/status",
-  requireRole("admin", "farmer","trader"),
+  requireRole("admin", "farmer", "trader"),
   validate(updateOrderStatusValidation),
-  orderController.updateOrderStatus
+  orderController.updateOrderStatus,
 );
 
 router.delete("/:id", requireRole("admin"), orderController.deleteOrder);

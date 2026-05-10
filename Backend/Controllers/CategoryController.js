@@ -1,5 +1,5 @@
 const Category = require("../Models/Category");
-const asyncHandler = require("../utils/asyncHandler");
+const asyncHandler = require("../Utils/asyncHandler");
 const slugify = (s) => s.toLowerCase().replace(/\s+/g, "-");
 
 exports.create = asyncHandler(async (req, res) => {
@@ -27,7 +27,7 @@ exports.update = asyncHandler(async (req, res) => {
       slug: name ? slugify(name) : undefined,
       parent: parent ?? undefined,
     },
-    { new: true }
+    { new: true },
   );
   if (!doc) return res.status(404).json({ message: "Not found" });
   res.json({ message: "Updated", data: doc });

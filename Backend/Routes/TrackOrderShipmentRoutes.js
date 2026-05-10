@@ -14,7 +14,7 @@ router.get("/:orderId/timeline", trackingController.getOrderTimeline);
 router.post(
   "/:orderId/update-location",
   requireRole("admin"),
-  trackingController.updateOrderLocation
+  trackingController.updateOrderLocation,
 );
 
 router.get("/user/active-orders", trackingController.getUserActiveOrders);
@@ -22,7 +22,7 @@ router.get("/user/active-orders", trackingController.getUserActiveOrders);
 router.get(
   "/seller/pending-shipments",
   requireRole("farmer", "admin"),
-  trackingController.getSellerPendingShipments
+  trackingController.getSellerPendingShipments,
 );
 
 // Delivery management

@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
 const adminController = require("../Controllers/AdminController");
-const { auth } = require("../middlewares/auth");
-const requireRole  = require("../middlewares/requireRole");
+const { auth } = require("../Middlewares/auth");
+const requireRole = require("../Middlewares/requireRole");
 
 // Admin middleware
 router.use(auth);
@@ -19,14 +19,14 @@ router.patch("/products/:id/approve", adminController.approveProduct);
 router.patch(
   "/products/:id/reject",
   body("reason").notEmpty().withMessage("Rejection reason is required"),
-  adminController.rejectProduct
+  adminController.rejectProduct,
 );
 router.post(
   "/products/bulk-approve",
   body("productIds")
     .isArray({ min: 1 })
     .withMessage("Product IDs array is required"),
-  adminController.bulkApproveProducts
+  adminController.bulkApproveProducts,
 );
 router.post(
   "/products/bulk-reject",
@@ -34,7 +34,7 @@ router.post(
     .isArray({ min: 1 })
     .withMessage("Product IDs array is required"),
   body("reason").notEmpty().withMessage("Rejection reason is required"),
-  adminController.bulkRejectProducts
+  adminController.bulkRejectProducts,
 );
 router.get("/products/stats", adminController.getProductStats);
 
@@ -47,7 +47,7 @@ router.post(
   body("listingIds")
     .isArray({ min: 1 })
     .withMessage("Listing IDs array is required"),
-  adminController.bulkApproveListings
+  adminController.bulkApproveListings,
 );
 router.post(
   "/listings/bulk-reject",
@@ -55,7 +55,7 @@ router.post(
     .isArray({ min: 1 })
     .withMessage("Listing IDs array is required"),
   body("reason").notEmpty().withMessage("Rejection reason is required"),
-  adminController.bulkRejectListings
+  adminController.bulkRejectListings,
 );
 router.get("/listings/stats", adminController.getListingStats);
 
@@ -65,7 +65,7 @@ router.patch(
   body("role")
     .isIn(["Farmer", "Trader", "admin", "Buyer"])
     .withMessage("Invalid role"),
-  adminController.updateUserRole
+  adminController.updateUserRole,
 );
 router.get("/kyc/pending", adminController.getPendingKYC);
 router.patch("/kyc/:id/verify", adminController.verifyKYC);

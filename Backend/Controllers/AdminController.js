@@ -1,21 +1,20 @@
 // controllers/AdminController.js
-const Product = require("../models/Product");
+const Product = require("../Models/Product");
 const User = require("../Models/userModel");
-const Order = require("../models/Order");
-const Listing = require("../models/Listing");
+const Order = require("../Models/Order");
+const Listing = require("../Models/Listing");
 // const Inventory = require("../models/Inventory");
-const Auction = require("../models/Auction");
-const Crop = require("../models/Crop");
-const Payment = require("../models/Payment");
-const Farm = require("../models/FarmModel");
-const DiseaseReport = require("../models/DiseaseReportsmodel");
-const YieldPrediction = require("../models/YieldPredictions");
-const Category = require("../models/Category");
-const FarmStats = require("../models/farmstatmodel");
-const CropData = require("../models/CropData");
-const Transaction = require("../models/Transaction");
-const UserSummary = require("../models/usersummarymodel");
-
+const Auction = require("../Models/Auction");
+const Crop = require("../Models/Crop");
+const Payment = require("../Models/Payment");
+const Farm = require("../Models/farmmodel");
+const DiseaseReport = require("../Models/DiseaseReportsmodel");
+const YieldPrediction = require("../Models/YieldPredictions");
+const Category = require("../Models/Category");
+const FarmStats = require("../Models/farmstatmodel");
+const CropData = require("../Models/CropData");
+const Transaction = require("../Models/Transaction");
+const UserSummary = require("../Models/usersummarymodel");
 
 class AdminController {
   // Get dashboard metrics
@@ -593,7 +592,7 @@ class AdminController {
             verifiedBy: req.user._id,
             verifiedAt: new Date(),
           },
-        }
+        },
       );
 
       res.status(200).json({
@@ -643,7 +642,7 @@ class AdminController {
             verifiedBy: req.user._id,
             verifiedAt: new Date(),
           },
-        }
+        },
       );
 
       res.status(200).json({
@@ -728,7 +727,7 @@ class AdminController {
       const user = await User.findByIdAndUpdate(
         req.params.id,
         { role },
-        { new: true }
+        { new: true },
       ).select("-password");
 
       if (!user) {
@@ -908,7 +907,7 @@ class AdminController {
         "Rejecting listing with ID:",
         req.params.id,
         "Reason:",
-        reason
+        reason,
       );
       if (!reason || reason.trim().length === 0) {
         return res.status(400).json({
@@ -971,7 +970,7 @@ class AdminController {
             verifiedBy: req.user._id,
             verifiedAt: new Date(),
           },
-        }
+        },
       );
       res.status(200).json({
         success: true,
@@ -998,7 +997,7 @@ class AdminController {
         "Bulk rejecting listings with IDs:",
         listingIds,
         "Reason:",
-        reason
+        reason,
       );
       if (!Array.isArray(listingIds) || listingIds.length === 0) {
         return res.status(400).json({
@@ -1026,7 +1025,7 @@ class AdminController {
             verifiedBy: req.user._id,
             verifiedAt: new Date(),
           },
-        }
+        },
       );
       res.status(200).json({
         success: true,

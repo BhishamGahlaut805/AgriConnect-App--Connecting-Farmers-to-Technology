@@ -1,6 +1,6 @@
 // validations/orderValidations.js
 const Joi = require("joi");
-const { AppError } = require("../utils/AppError");
+const { AppError } = require("../Utils/AppError");
 
 // Common validation patterns
 const phonePattern = /^[6-9]\d{9}$/;
@@ -128,7 +128,7 @@ const updateOrderStatusValidation = Joi.object({
       "processing",
       "shipped",
       "delivered",
-      "cancelled"
+      "cancelled",
     )
     .optional()
     .messages({
@@ -142,7 +142,7 @@ const updateOrderStatusValidation = Joi.object({
       "in_transit",
       "out_for_delivery",
       "delivered",
-      "failed"
+      "failed",
     )
     .optional()
     .messages({
@@ -210,7 +210,7 @@ const orderQueryValidation = Joi.object({
       "processing",
       "shipped",
       "delivered",
-      "cancelled"
+      "cancelled",
     )
     .optional()
     .messages({
@@ -289,7 +289,7 @@ const validate = (schema, property = "body") => {
       }));
 
       const validationError = AppError.validationError(
-        "Validation failed"
+        "Validation failed",
       ).addContext({ errors: errorDetails });
 
       return next(validationError);

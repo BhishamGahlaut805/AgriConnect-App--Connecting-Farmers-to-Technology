@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const requireAuth = require("../Middlewares/requireAuth");
-const ctrl = require("../controllers/ChatController");
+const ctrl = require("../Controllers/ChatController");
 const { auth, protect } = require("../Middlewares/auth");
 
 router.get("/threads", auth, ctrl.listThreads);

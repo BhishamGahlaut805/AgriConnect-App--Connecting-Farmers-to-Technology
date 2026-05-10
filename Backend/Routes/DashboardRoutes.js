@@ -14,39 +14,39 @@ router.get("/user/analytics", dashboardController.getUserAnalytics);
 // Seller dashboard
 router.get(
   "/seller/overview",
-  requireRole("farmer", "admin","trader"),
-  dashboardController.getSellerDashboard
+  requireRole("farmer", "admin", "trader"),
+  dashboardController.getSellerDashboard,
 );
 
 router.get(
   "/seller/analytics",
-  requireRole("farmer", "admin","trader"),
-  dashboardController.getSellerAnalytics
+  requireRole("farmer", "admin", "trader"),
+  dashboardController.getSellerAnalytics,
 );
 
 router.get(
   "/seller/products",
-  requireRole("farmer", "admin","trader"),
-  dashboardController.getSellerProducts
+  requireRole("farmer", "admin", "trader"),
+  dashboardController.getSellerProducts,
 );
 
 // Admin dashboard
 router.get(
   "/admin/overview",
   requireRole("admin"),
-  dashboardController.getAdminDashboard
+  dashboardController.getAdminDashboard,
 );
 
 router.get(
   "/admin/analytics",
   requireRole("admin"),
-  dashboardController.getAdminAnalytics
+  dashboardController.getAdminAnalytics,
 );
 
 router.get(
   "/admin/reports",
   requireRole("admin"),
-  dashboardController.getAdminReports
+  dashboardController.getAdminReports,
 );
 
 module.exports = router;

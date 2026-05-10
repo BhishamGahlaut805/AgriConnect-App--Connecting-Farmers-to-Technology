@@ -1,4 +1,4 @@
-const CropReport = require("../models/CropReports");
+const CropReport = require("../Models/CropReports");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const path = require("path");
 const fs = require("fs");

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { auth, protect } = require("../Middlewares/auth");
-const ctrl = require("../controllers/CropController");
+const ctrl = require("../Controllers/CropController");
 const upload = require("../Utils/Upload");
 
 router.get("/", ctrl.listCrops);

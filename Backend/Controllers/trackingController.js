@@ -1,6 +1,6 @@
-const Order = require("../models/Order");
-const { AppError } = require("../utils/AppError");
-const {asyncHandler} = require("../Services/asyncHandler");
+const Order = require("../Models/Order");
+const { AppError } = require("../Utils/AppError");
+const { asyncHandler } = require("../Services/asyncHandler");
 
 const {
   sendOTPEmail,
@@ -27,7 +27,7 @@ const trackingController = {
     // Check access permissions
     const isOwner = order.user._id.toString() === userId;
     const isSeller = order.items.some(
-      (item) => item.farmer._id.toString() === userId
+      (item) => item.farmer._id.toString() === userId,
     );
     const isAdmin = userRole === "admin";
 
@@ -226,7 +226,7 @@ const trackingController = {
 
     if (order.deliveryStatus !== "out_for_delivery") {
       return next(
-        new AppError("OTP can only be sent for orders out for delivery", 400)
+        new AppError("OTP can only be sent for orders out for delivery", 400),
       );
     }
 

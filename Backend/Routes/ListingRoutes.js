@@ -3,8 +3,8 @@ const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
 const listingController = require("../Controllers/listingController");
-const { auth } = require("../middlewares/auth");
-const  requireRole = require("../middlewares/requireRole");
+const { auth } = require("../Middlewares/auth");
+const requireRole = require("../Middlewares/requireRole");
 
 // Validation rules
 const createListingValidation = [
@@ -40,7 +40,7 @@ router.post(
   auth,
   requireRole("farmer", "trader", "admin"),
   createListingValidation,
-  listingController.createListing
+  listingController.createListing,
 );
 
 router.post(
@@ -48,15 +48,25 @@ router.post(
   auth,
   requireRole("farmer", "trader", "admin"),
   otpValidation,
-  listingController.verifyAndCreateListing
+  listingController.verifyAndCreateListing,
 );
 // Get listing details
-router.get("/:id", auth, requireRole("farmer", "trader", "admin","other"), listingController.getListing);
+router.get(
+  "/:id",
+  auth,
+  requireRole("farmer", "trader", "admin", "other"),
+  listingController.getListing,
+);
 
 // User's listings
 router.get("/my-listings/:userId", auth, listingController.getMyListings);
 
-router.get("/all", auth, requireRole("admin"), listingController.getAllListings);
+router.get(
+  "/all",
+  auth,
+  requireRole("admin"),
+  listingController.getAllListings,
+);
 // Listing management
 router.patch("/:id", auth, listingController.updateListing);
 router.delete("/:id", auth, listingController.deleteListing);
@@ -66,7 +76,7 @@ router.patch(
   body("status")
     .isIn(["active", "inactive", "soldout"])
     .withMessage("Invalid status"),
-  listingController.toggleListingStatus
+  listingController.toggleListingStatus,
 );
 
 // Bulk OTP-based listing creation initiation
@@ -74,7 +84,7 @@ router.post(
   "/bulk/initiate",
   auth,
   requireRole("farmer", "trader", "admin"),
-  listingController.initiateBulkListingCreation
+  listingController.initiateBulkListingCreation,
 );
 
 // Bulk OTP-based listing verification
@@ -83,33 +93,37 @@ router.post(
   auth,
   requireRole("farmer", "trader", "admin"),
   otpValidation,
-  listingController.verifyAndCreateBulkListings
+  listingController.verifyAndCreateBulkListings,
 );
 
 // Get bulk creation status
-router.get("/bulk/status/:verificationId", auth, listingController.getBulkCreationStatus);
+router.get(
+  "/bulk/status/:verificationId",
+  auth,
+  listingController.getBulkCreationStatus,
+);
 
 // Bulk update listings
 router.patch(
   "/bulk/update",
   auth,
   requireRole("admin", "trader", "farmer"),
-  listingController.bulkUpdateListings
+  listingController.bulkUpdateListings,
 );
 // Bulk delete listings
 router.delete(
   "/bulk/delete",
   auth,
   requireRole("admin", "trader", "farmer"),
-  listingController.bulkDeleteListings
+  listingController.bulkDeleteListings,
 );
 
 // Bulk toggle listing status
 router.patch(
   "/bulk/toggle-status",
   auth,
-  requireRole("admin","trader","farmer"),
-  listingController.bulkToggleListingStatus
+  requireRole("admin", "trader", "farmer"),
+  listingController.bulkToggleListingStatus,
 );
 
 module.exports = router;

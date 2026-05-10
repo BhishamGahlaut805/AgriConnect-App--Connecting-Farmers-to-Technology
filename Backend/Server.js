@@ -8,14 +8,13 @@ const connectDB = require("./Config/db");
 const authRoutes = require("./Routes/authRoutes");
 const agriRoutes = require("./Routes/AgriRoutes");
 const cropReportRoutes = require("./Routes/CropReportRoutes");
-const translateRoute= require("./Routes/Translate");
+const translateRoute = require("./Routes/Translate");
 const yieldRoutes = require("./Routes/YieldRoutes");
 const Agrimarketroutes = require("./Routes/AgrimarketRoutes");
-dotenv.config({ path: true, quiet:true}); // Load environment variables
+dotenv.config({ path: true, quiet: true }); // Load environment variables
 const { publicLimiter } = require("./Middlewares/rateLimiters");
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
-
 
 // Connect to MongoDB
 connectDB();
@@ -25,7 +24,7 @@ const server = http.createServer(app);
 app.set("trust proxy", 1);
 
 // Serve static files from uploads directory
-app.use('/Uploads', express.static(path.join(__dirname, 'uploads')));
+app.use("/Uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middlewares
 app.use(express.json());
@@ -38,17 +37,16 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://j2rgc684-5173.inc1.devtunnels.ms",
-      "https://klg2zcrt-5173.inc1.devtunnels.ms/"
+      "https://klg2zcrt-5173.inc1.devtunnels.ms/",
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use("/dataset-images", express.static("C:/Users/bhish/Downloads"));
 
 // Apply rate limiting to all requests
 app.use(publicLimiter);
-
 
 // Routes
 app.use("/auth", authRoutes);
@@ -61,7 +59,7 @@ app.use("/Agrimarket/v1/api", Agrimarketroutes);
 app.use("/cropMonitor", require("./Routes/CropMonitoringRoutes"));
 
 // Initialize Firebase Admin (for sending notifications)
-const serviceAccount = require('./Firebase/serviceAccountKey.json'); // Download from Firebase Console
+const serviceAccount = require("./Firebase/serviceAccountkey.json"); // Download from Firebase Console
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -72,7 +70,7 @@ const userTokens = new Map(); // userId -> deviceToken
 const notifications = new Map(); // userId -> notification[]
 
 // 1. Register Device Token Endpoint
-app.post('/api/users/register-device-token', async (req, res) => {
+app.post("/api/users/register-device-token", async (req, res) => {
   try {
     const { userId, deviceToken } = req.body;
 
@@ -80,7 +78,7 @@ app.post('/api/users/register-device-token', async (req, res) => {
     if (!userId || !deviceToken) {
       return res.status(400).json({
         success: false,
-        message: 'User ID and device token are required'
+        message: "User ID and device token are required",
       });
     }
 
@@ -91,28 +89,28 @@ app.post('/api/users/register-device-token', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Device token registered successfully',
-      data: { userId, tokenRegistered: true }
+      message: "Device token registered successfully",
+      data: { userId, tokenRegistered: true },
     });
   } catch (error) {
-    console.error('Error registering device token:', error);
+    console.error("Error registering device token:", error);
     res.status(500).json({
       success: false,
-      message: 'Internal server error',
-      error: error.message
+      message: "Internal server error",
+      error: error.message,
     });
   }
 });
 
 // 2. Get Latest Notifications Endpoint
-app.get('/api/notifications/latest/:userId', async (req, res) => {
+app.get("/api/notifications/latest/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
     if (!userId) {
       return res.status(400).json({
         success: false,
-        message: 'User ID is required'
+        message: "User ID is required",
       });
     }
 
@@ -128,24 +126,24 @@ app.get('/api/notifications/latest/:userId', async (req, res) => {
 
     res.json(latestNotifications);
   } catch (error) {
-    console.error('Error fetching notifications:', error);
+    console.error("Error fetching notifications:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch notifications',
-      error: error.message
+      message: "Failed to fetch notifications",
+      error: error.message,
     });
   }
 });
 
 // 3. Send Test Notification Endpoint
-app.post('/api/notifications/test', async (req, res) => {
+app.post("/api/notifications/test", async (req, res) => {
   try {
     const { userId } = req.body;
 
     if (!userId) {
       return res.status(400).json({
         success: false,
-        message: 'User ID is required'
+        message: "User ID is required",
       });
     }
 
@@ -155,7 +153,7 @@ app.post('/api/notifications/test', async (req, res) => {
     if (!deviceToken) {
       return res.status(404).json({
         success: false,
-        message: 'Device token not found for user'
+        message: "Device token not found for user",
       });
     }
 
@@ -169,7 +167,7 @@ app.post('/api/notifications/test', async (req, res) => {
       read: false,
       farmId: "test-farm",
       disease: "Test Disease",
-      severity: "Low"
+      severity: "Low",
     };
 
     // Store notification
@@ -182,44 +180,43 @@ app.post('/api/notifications/test', async (req, res) => {
     const message = {
       notification: {
         title: "🧪 Test Notification",
-        body: "This is a test notification from the backend server!"
+        body: "This is a test notification from the backend server!",
       },
       data: {
-        type: 'test',
-        farmId: 'test-farm',
-        disease: 'Test Disease',
-        severity: 'Low',
-        timestamp: new Date().toISOString()
+        type: "test",
+        farmId: "test-farm",
+        disease: "Test Disease",
+        severity: "Low",
+        timestamp: new Date().toISOString(),
       },
-      token: deviceToken
+      token: deviceToken,
     };
 
     try {
       const response = await admin.messaging().send(message);
-      console.log('Test notification sent via FCM:', response);
+      console.log("Test notification sent via FCM:", response);
     } catch (fcmError) {
-      console.warn('FCM notification failed, but stored locally:', fcmError);
+      console.warn("FCM notification failed, but stored locally:", fcmError);
     }
 
     res.json({
       success: true,
-      message: 'Test notification sent successfully',
+      message: "Test notification sent successfully",
       notification: testNotification,
-      fcmSent: true
+      fcmSent: true,
     });
-
   } catch (error) {
-    console.error('Error sending test notification:', error);
+    console.error("Error sending test notification:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to send test notification',
-      error: error.message
+      message: "Failed to send test notification",
+      error: error.message,
     });
   }
 });
 
 // 4. Add Sample Notifications Endpoint (for demo)
-app.post('/api/notifications/sample/:userId', async (req, res) => {
+app.post("/api/notifications/sample/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -233,7 +230,7 @@ app.post('/api/notifications/sample/:userId', async (req, res) => {
         read: false,
         farmId: "farm-123",
         disease: "Healthy",
-        severity: "None"
+        severity: "None",
       },
       {
         _id: `sample-${Date.now()}-2`,
@@ -244,18 +241,19 @@ app.post('/api/notifications/sample/:userId', async (req, res) => {
         read: false,
         farmId: "farm-123",
         disease: "Leaf Rust",
-        severity: "Medium"
+        severity: "Medium",
       },
       {
         _id: `sample-${Date.now()}-3`,
         title: "📈 Yield Prediction",
-        message: "Expected yield increase of 15% this season based on current conditions",
+        message:
+          "Expected yield increase of 15% this season based on current conditions",
         type: "info",
         timestamp: new Date(Date.now() - 1800000).toISOString(), // 30 mins ago
         read: true,
         farmId: "farm-123",
         disease: "None",
-        severity: "None"
+        severity: "None",
       },
       {
         _id: `sample-${Date.now()}-4`,
@@ -266,8 +264,8 @@ app.post('/api/notifications/sample/:userId', async (req, res) => {
         read: true,
         farmId: "farm-123",
         disease: "None",
-        severity: "None"
-      }
+        severity: "None",
+      },
     ];
 
     // Store sample notifications
@@ -278,31 +276,30 @@ app.post('/api/notifications/sample/:userId', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Sample notifications added',
+      message: "Sample notifications added",
       count: sampleNotifications.length,
-      notifications: sampleNotifications
+      notifications: sampleNotifications,
     });
-
   } catch (error) {
-    console.error('Error adding sample notifications:', error);
+    console.error("Error adding sample notifications:", error);
     res.status(500).json({
       success: false,
-      message: 'Failed to add sample notifications',
-      error: error.message
+      message: "Failed to add sample notifications",
+      error: error.message,
     });
   }
 });
 
 // 5. Health Check Endpoint
-app.get('/api/health', (req, res) => {
+app.get("/api/health", (req, res) => {
   res.json({
     success: true,
-    message: 'Notification server is running',
+    message: "Notification server is running",
     timestamp: new Date().toISOString(),
     stats: {
       usersWithTokens: userTokens.size,
-      totalNotifications: Array.from(notifications.values()).flat().length
-    }
+      totalNotifications: Array.from(notifications.values()).flat().length,
+    },
   });
 });
 
@@ -317,5 +314,5 @@ app.use((req, res) => {
 // Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () =>
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`)
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`),
 );

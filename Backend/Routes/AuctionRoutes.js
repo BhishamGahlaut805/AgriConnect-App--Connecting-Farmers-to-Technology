@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const ctrl = require("../controllers/AuctionController");
+const ctrl = require("../Controllers/AuctionController");
 const requireAuth = require("../Middlewares/requireAuth");
 const { auth, protect } = require("../Middlewares/auth");
 

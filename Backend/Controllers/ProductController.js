@@ -1,9 +1,9 @@
 // controllers/ProductController.js
-const Product = require("../models/Product");
+const Product = require("../Models/Product");
 const OTPVerification = require("../Models/OTPVerification");
 const emailService = require("../Utils/emailService");
 const { validationResult } = require("express-validator");
-const Listing = require("../models/Listing");
+const Listing = require("../Models/Listing");
 class ProductController {
   // Initiate product creation with OTP
   async initiateProductCreation(req, res) {
@@ -136,7 +136,7 @@ class ProductController {
       if (req.user.role !== "Admin") {
         await emailService.sendAdminNotification(
           otpRecord.email,
-          createdProducts.length
+          createdProducts.length,
         );
       }
 
@@ -330,7 +330,7 @@ class ProductController {
       const updatedProduct = await Product.findByIdAndUpdate(
         req.params.id,
         { $set: req.body },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       ).populate("seller", "name email");
 
       res.status(200).json({

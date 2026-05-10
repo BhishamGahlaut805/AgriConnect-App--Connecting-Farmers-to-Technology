@@ -1,8 +1,8 @@
-const Order = require("../models/Order");
-const User = require("../models/UserModel");
-const Product = require("../models/Product");
-const Listing = require("../models/Listing");
-const { AppError } = require("../utils/AppError");
+const Order = require("../Models/Order");
+const User = require("../Models/userModel");
+const Product = require("../Models/Product");
+const Listing = require("../Models/Listing");
+const { AppError } = require("../Utils/AppError");
 const { asyncHandler } = require("../Services/asyncHandler");
 
 const dashboardController = {
@@ -376,7 +376,7 @@ const dashboardController = {
 
     const listingsWithSales = listings.map((listing) => {
       const sales = salesData.find(
-        (s) => s._id.toString() === listing.product._id.toString()
+        (s) => s._id.toString() === listing.product._id.toString(),
       );
       return {
         ...listing.toObject(),

@@ -1,6 +1,6 @@
 // services/emailService.js
 const nodemailer = require("nodemailer");
-const { AppError } = require("../utils/AppError");
+const { AppError } = require("../Utils/AppError");
 
 class EmailService {
   constructor() {
@@ -88,10 +88,10 @@ class EmailService {
       <h2>Order Confirmation - ${order.orderId}</h2>
       <p>Hi ${user.name},</p>
       <p>Thank you for your order placed on ${new Date(
-        order.createdAt
+        order.createdAt,
       ).toLocaleDateString()}.</p>
       <p>Estimated Delivery: ${new Date(
-        order.estimatedDelivery
+        order.estimatedDelivery,
       ).toLocaleDateString()}</p>
       <p>Order Total: ₹${order.total}</p>
       <p>Regards, <br/> AgriMarket Team</p>
@@ -141,8 +141,8 @@ class EmailService {
       <h3>Order ${statusMap[status] || "Update"}</h3>
       <p>Order ID: ${order.orderId}</p>
       <p>Hi ${user.name}, your order status is now <strong>${
-      statusMap[status]
-    }</strong>.</p>
+        statusMap[status]
+      }</strong>.</p>
       ${
         order.trackingNumber
           ? `<p>Tracking Number: ${order.trackingNumber}</p>`
@@ -175,14 +175,14 @@ class EmailService {
   async sendBulkOrderUpdates(orders, status) {
     const sendPromises = orders.map(async (order) => {
       try {
-        const User = require("../models/User");
+        const User = require("../Models/userModel");
         const user = await User.findById(order.user);
         if (!user) throw new Error("User not found");
         await this.sendOrderStatusEmail(order, user, status);
       } catch (error) {
         console.error(
           `Failed to send email for order ${order.orderId}:`,
-          error
+          error,
         );
       }
     });
