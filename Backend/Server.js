@@ -38,6 +38,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "https://j2rgc684-5173.inc1.devtunnels.ms",
+      "https://klg2zcrt-5173.inc1.devtunnels.ms/"
     ],
     credentials: true,
   })

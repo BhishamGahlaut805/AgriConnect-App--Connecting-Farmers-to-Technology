@@ -235,5 +235,8 @@ pip-delete-this-directory.txt
 /uploads/
 # *.json
 *.yml
-
+Backend/Firebase/serviceAccountKey.json
+C:\Users\bhish\OneDrive\Desktop\AgriSupport\Backend\Firebase\serviceAccountKey.json
 ML\LLM\DataDirAgribot\news\*.json
+serviceAccountKey.json
+Backend/Firebase/serviceAccountKey.json
