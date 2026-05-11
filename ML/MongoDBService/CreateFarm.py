@@ -8,7 +8,7 @@ class CreateFarmService:
     def __init__(self):
         mongo_uri = os.getenv("MONGO_URI")
         self.client = MongoClient(mongo_uri)
-        self.db = self.client["AgriSupportDB"]
+        self.db = self.client
         self.farms_collection = self.db["farms"]
 
     def generate_farm_id(self):

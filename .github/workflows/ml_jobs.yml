@@ -2,12 +2,15 @@ name: ML Training Jobs (Every 3 Days)
 
 on:
   schedule:
-    - cron: "0 2 */3 * *"   # every 3rd day at 2 AM UTC
+    - cron: "0 2 */3 * *"
   workflow_dispatch:
 
 jobs:
   run-ml-jobs:
     runs-on: ubuntu-latest
+
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout code

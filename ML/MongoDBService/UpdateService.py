@@ -5,9 +5,9 @@ import os
 
 class SummaryUpdateService:
     def __init__(self):
-        mongo_uri = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
+        mongo_uri = os.getenv("MONGO_URI")
         client = MongoClient(mongo_uri)
-        self.db = client["AgriSupportDB"]
+        self.db = client
         self.disease_col = self.db["disease_reports"]
         self.farms_col = self.db["farms"]
         self.farm_stats_col = self.db["farm_stats"]
