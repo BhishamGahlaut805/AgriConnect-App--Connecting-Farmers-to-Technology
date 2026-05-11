@@ -11,8 +11,8 @@
 secrets/
 keys/
 # *.json
-*.yml
-*.yaml
+# *.yml
+# *.yaml
 *.mp4
 
 # Ignore India GeoJSON file
@@ -99,7 +99,7 @@ tensorboard/
 # *.json
 *.xml
 *.yaml
-*.yml
+# *.yml
 *.parquet
 *.feather
 *.db
@@ -234,7 +234,7 @@ pip-delete-this-directory.txt
 
 /uploads/
 # *.json
-*.yml
+# *.yml
 Backend/Firebase/serviceAccountKey.json
 C:\Users\bhish\OneDrive\Desktop\AgriSupport\Backend\Firebase\serviceAccountKey.json
 ML\LLM\DataDirAgribot\news\*.json
