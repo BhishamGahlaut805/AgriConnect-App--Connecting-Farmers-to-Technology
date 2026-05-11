@@ -6,11 +6,11 @@ import uuid
 from datetime import datetime
 class CreateFarmService:
     def __init__(self):
-        mongo_uri = os.getenv("MONGO_URI", "mongodb://127.0.0.1:27017")
+        mongo_uri = os.getenv("MONGO_URI")
         self.client = MongoClient(mongo_uri)
         self.db = self.client["AgriSupportDB"]
         self.farms_collection = self.db["farms"]
-    
+
     def generate_farm_id(self):
         timestamp = int(time.time())  # Current UNIX timestamp
         random_suffix = uuid.uuid4().hex[:6].upper()  # First 6 chars of UUID
