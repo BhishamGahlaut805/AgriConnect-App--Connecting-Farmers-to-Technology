@@ -147,7 +147,7 @@ outputs/
 *.jpg
 *.jpeg
 *.png
-*.gif
+# *.gif
 *.bmp
 *.svg
 *.ico
@@ -159,7 +159,7 @@ outputs/
 *.tif
 *.tiff
 media/
-images/
+# images/
 screenshots/
 videos/
 static/uploads/

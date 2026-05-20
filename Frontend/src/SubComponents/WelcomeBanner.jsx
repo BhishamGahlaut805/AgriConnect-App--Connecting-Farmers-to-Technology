@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import bgImage from "/src/assets/images/cont2.png";
+const bgImage =
+  "https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
 import sunGif from "/src/assets/images/hot.gif";
 import cloudGif from "/src/assets/images/cloudy.gif";
 import windGif from "/src/assets/images/forest.gif";

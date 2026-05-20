@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import bgImage from "/src/assets/images/image15.png";
+const bgImage =
+  "https://images.unsplash.com/photo-1655934161455-11042d605a5a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
 import leafGif from "/src/assets/images/camping.gif";
 import tractorGif from "/src/assets/images/newi.gif";
 import cloudGif from "/src/assets/images/cloudy.gif";

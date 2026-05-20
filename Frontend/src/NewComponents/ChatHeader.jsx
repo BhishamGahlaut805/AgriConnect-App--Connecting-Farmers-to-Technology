@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import headerBg from "../assets/images/bg1.png"; // Background image
+const headerBg = "https://unsplash.com/photos/green-corn-maize-plants-on-a-field-agricultural-landscape-m6xWSjiQaww"; // Background image
 import cropGif from "/src/assets/images/fruit.gif";
 import aiGif from "/src/assets/images/chat-bot.gif";
 import liveGif from "/src/assets/images/environment.gif";

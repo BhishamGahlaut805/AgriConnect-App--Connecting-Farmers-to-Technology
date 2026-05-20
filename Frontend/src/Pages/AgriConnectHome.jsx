@@ -559,7 +559,7 @@ const AgriConnectHome = () => {
           {/* Left Image */}
           <div className="w-full md:w-1/2 flex justify-center">
             <img
-              src="/src/assets/images/Tagimage2.png"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258168/TagImage2_gdo9he.png"
               alt="Left Divider"
               className="w-full h-auto object-contain transform scale-70 origin-center"
             />
@@ -568,7 +568,7 @@ const AgriConnectHome = () => {
           {/* Right Image */}
           <div className="w-full md:w-1/2 flex justify-center">
             <img
-              src="/src/assets/images/Tagimage.png"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258168/Tagimage_kc9pyd.png"
               alt="Right Divider"
               className="w-full h-auto object-contain transform scale-90 origin-center"
             />
@@ -714,7 +714,7 @@ const AgriConnectHome = () => {
           {/* Left Image */}
           <div className="w-full md:w-1/2 flex justify-center">
             <img
-              src="/src/assets/images/Tagimage2.png"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258168/TagImage2_gdo9he.png"
               alt="Left Divider"
               className="w-full h-auto object-contain transform scale-70 origin-center"
             />
@@ -723,7 +723,7 @@ const AgriConnectHome = () => {
           {/* Right Image */}
           <div className="w-full md:w-1/2 flex justify-center">
             <img
-              src="/src/assets/images/Tagimage4.png"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258169/Tagimage4_icb05s.png"
               alt="Right Divider"
               className="w-full h-auto object-contain transform scale-80 origin-center"
             />

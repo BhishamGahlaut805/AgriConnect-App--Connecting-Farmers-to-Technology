@@ -1,23 +1,41 @@
 import React, { useState } from "react";
 
-import img1 from "../../assets/images/Flow1.png";
-import img2 from "../../assets/images/chatbot1.png";
-import img3 from "../../assets/images/chatbot2.png";
-import img4 from "../../assets/images/chatbot3.png";
-import img5 from "../../assets/images/chatbot4.png";
-import img6 from "../../assets/images/LSTM1.png";
-import img7 from "../../assets/images/LSTM2.png";
-import img8 from "../../assets/images/dashboard.png";
-import img9 from "../../assets/images/YOLO.png";
-import img10 from "../../assets/images/Tagimage.png";
-import img11 from "../../assets/images/Tagimage2.png";
-import img12 from "../../assets/images/Tagimage3.png";
-import img13 from "../../assets/images/Tagimage4.png";
-import img14 from "../../assets/images/view1.png";
-import img15 from "../../assets/images/view2.png";
-import img16 from "../../assets/images/view3.png";
-import img17 from "../../assets/images/view4.png";
-import img18 from "../../assets/images/view5.png";
+const img1 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/Flow1_ya2csh.png";
+const img2 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/v1779258545/chatbot1_rktcai.png";
+const img3 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/v1779258546/chatbot2_qbtj93.png";
+const img4 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/v1779258547/chatbot3_zhyde2.png";
+const img5 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chatbot4_z9jn83.png";
+const img6 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/v1779258550/LSTM1_xmzfyp.png";
+const img7 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/LSTM2_grd70w.png";
+const img8 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/dashboard_wx5c3m.png";
+const img9 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258555/YOLO_lxyvmj.png";
+const img10 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258168/Tagimage_kc9pyd.png";
+const img11 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258168/TagImage2_gdo9he.png";
+const img12 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258169/TagImage3_t75ujb.png";
+const img13 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258169/Tagimage4_icb05s.png";
+const img14 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/view1_eeppgd.png";
+const img15 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258553/view2_whebxm.png";
+const img16 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258553/view3_ap0aum.png";
+const img17 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258554/view4_s1hpbx.png";
+const img18 =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258553/view5_pmgukw.png";
 
 const ImagesView = () => {
   const images = [

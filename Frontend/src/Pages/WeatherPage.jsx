@@ -26,24 +26,40 @@ import playGif from "/src/assets/images/play.gif";
 import pauseGif from "/src/assets/images/play.gif";
 import stopGif from "/src/assets/images/play.gif";
 
-
-import cardcontainerimage1 from "../assets/images/cont1.png";
-import cardcontainerimage2 from "../assets/images/cont2.png";
-import cardcontainerimage3 from "../assets/images/cont3.png";
-import cardcontainerimage4 from "../assets/images/cont4.png";
-import image1 from "../assets/images/bg1.png";
-import image2 from "../assets/images/bg2.png";
-import image3 from "../assets/images/bg3.png";
-import image4 from "../assets/images/bg4.png";
-import image5 from "../assets/images/bg5.png";
-import image6 from "../assets/images/bg6.png";
-import image8 from "../assets/images/bg8.png";
-import image7 from "../assets/images/bg7.png";
-import image9 from "../assets/images/bg9.png";
-import image10 from "../assets/images/bg10.png";
-import image11 from "../assets/images/bg11.png";
-import image12 from "../assets/images/bg12.png";
-import image13 from "../assets/images/card1.png";
+const cardcontainerimage1 =
+  "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const cardcontainerimage2 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const cardcontainerimage3 =
+  "https://source.unsplash.com/600x400/?fieldhttps://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const cardcontainerimage4 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image1 =
+  "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const image2 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image3 =
+  "https://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image4 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image5 =
+  "https://plus.unsplash.com/premium_photo-1663945778994-11b3201882a0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const image6 =
+  "https://images.unsplash.com/photo-1655216422591-19f199ec4528?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image8 =
+  "https://images.unsplash.com/photo-1615129825073-c47c67bdec5b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image7 =
+  "https://images.unsplash.com/photo-1645366262263-876a1d4c8e00?q=80&w=624&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+const image9 =
+  "https://plus.unsplash.com/premium_photo-1663945778994-11b3201882a0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const image10 =
+  "https://images.unsplash.com/photo-1655216422591-19f199ec4528?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image11 =
+  "https://images.unsplash.com/photo-1655934161455-11042d605a5a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image12 =
+  "https://images.unsplash.com/photo-1645366262263-876a1d4c8e00?q=80&w=624&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
+const image13 =
+  "https://images.unsplash.com/photo-1615129825073-c47c67bdec5b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
 
 // Import images for graph cards
 import tempRainImg from "/src/assets/images/rain.gif";
@@ -62,7 +78,6 @@ import cloudydaygif from "/src/assets/images/cloudy.gif";
 import hottempgif from "/src/assets/images/hot.gif";
 import clearnight from "/src/assets/images/night1.gif";
 
-
 // Register ChartJS components
 ChartJS.register(
   CategoryScale,
@@ -72,7 +87,7 @@ ChartJS.register(
   BarElement,
   Title,
   ChartTooltip,
-  Legend
+  Legend,
 );
 
 // Default WMO weather code descriptions
@@ -422,7 +437,7 @@ export default function WeatherPage() {
   const [voiceIndex, setVoiceIndex] = useState(0);
   const [ttsLang, setTtsLang] = useState("en-US");
   const [wmoDescriptions, setWmoDescriptions] = useState(
-    defaultWmoDescriptions
+    defaultWmoDescriptions,
   );
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [graphDataLoaded, setGraphDataLoaded] = useState(false);
@@ -479,7 +494,7 @@ export default function WeatherPage() {
       };
       localStorage.setItem(
         STORAGE_KEYS.WEATHER_DATA,
-        JSON.stringify(cacheData)
+        JSON.stringify(cacheData),
       );
       localStorage.setItem(STORAGE_KEYS.TIMESTAMP, Date.now().toString());
     } catch (error) {
@@ -497,7 +512,7 @@ export default function WeatherPage() {
         const newScript = document.createElement("script");
         // Copy script attributes
         Array.from(oldScript.attributes).forEach((attr) =>
-          newScript.setAttribute(attr.name, attr.value)
+          newScript.setAttribute(attr.name, attr.value),
         );
         if (oldScript.src) {
           // Load external scripts independently
@@ -528,7 +543,7 @@ export default function WeatherPage() {
           v.name.toLowerCase().includes("swara") ||
           v.name.toLowerCase().includes("hindi") ||
           v.name.toLowerCase().includes("female") ||
-          v.name.toLowerCase().includes("google हिन्दी")
+          v.name.toLowerCase().includes("google हिन्दी"),
       );
 
       if (preferredHindiVoices.length > 0) {
@@ -578,7 +593,7 @@ export default function WeatherPage() {
         window.speechSynthesis.speak(utter);
       }
     },
-    [ttsLang, getVoiceByLang]
+    [ttsLang, getVoiceByLang],
   );
 
   const stopSpeech = useCallback(() => {
@@ -629,7 +644,7 @@ export default function WeatherPage() {
         if (!nameHint && cur) {
           const reverseGeo = await WeatherService.reverseGeocode(
             latitude,
-            longitude
+            longitude,
           );
           if (reverseGeo) {
             determinedCityMeta = reverseGeo.city;
@@ -676,7 +691,7 @@ export default function WeatherPage() {
           try {
             const seasonalBackendResponse =
               await WeatherService.generateSeasonalGraphsBackend(
-                seasonalDataFormatted
+                seasonalDataFormatted,
               );
             if (seasonalBackendResponse?.graph_html && seasonRef.current) {
               setTimeout(() => {
@@ -695,7 +710,7 @@ export default function WeatherPage() {
         setLoading(false);
       }
     },
-    [runScripts, saveDataToCache]
+    [runScripts, saveDataToCache],
   );
 
   const handleSearch = useCallback(
@@ -714,7 +729,7 @@ export default function WeatherPage() {
         await fetchAllForCoords(
           coordsObj.latitude,
           coordsObj.longitude,
-          locationString
+          locationString,
         );
       } catch (err) {
         console.error("Error in search operation:", err);
@@ -722,7 +737,7 @@ export default function WeatherPage() {
         setLoading(false);
       }
     },
-    [query, fetchAllForCoords]
+    [query, fetchAllForCoords],
   );
 
   const useMyLocation = useCallback(() => {
@@ -741,7 +756,7 @@ export default function WeatherPage() {
         console.error("Error getting user location:", err.message);
         setLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 10000 },
     );
   }, [fetchAllForCoords]);
 
@@ -750,7 +765,7 @@ export default function WeatherPage() {
       window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       console.warn(
-        "Speech recognition is not supported in this browser. Please use Chrome."
+        "Speech recognition is not supported in this browser. Please use Chrome.",
       );
       return;
     }
@@ -824,11 +839,11 @@ export default function WeatherPage() {
         const dailyIdxOffset = Math.floor(
           (new Date(times[hourlyIndex]).setHours(0, 0, 0, 0) -
             new Date(dTime[0]).setHours(0, 0, 0, 0)) /
-            (1000 * 60 * 60 * 24)
+            (1000 * 60 * 60 * 24),
         );
         const effectiveDailyIndex = Math.max(
           0,
-          Math.min(dailyIdxOffset, dTime.length - 1)
+          Math.min(dailyIdxOffset, dTime.length - 1),
         );
 
         parsed.push({
@@ -859,7 +874,7 @@ export default function WeatherPage() {
       }
       return parsed;
     },
-    [formatTimeLabel]
+    [formatTimeLabel],
   );
 
   const injectBackendGraphs = useCallback(
@@ -879,7 +894,7 @@ export default function WeatherPage() {
 
           if (payload?.pie_chart_html && c3Ref.current) {
             const existingPie = c3Ref.current.querySelector(
-              ".pie-chart-container"
+              ".pie-chart-container",
             );
             if (!existingPie) {
               const pie = document.createElement("div");
@@ -911,7 +926,7 @@ export default function WeatherPage() {
         console.warn("Error injecting backend graphs:", err);
       }
     },
-    [runScripts]
+    [runScripts],
   );
 
   const build24HourChartData = useCallback(() => {
@@ -929,13 +944,13 @@ export default function WeatherPage() {
 
     const sliceTimes = times.slice(
       startIndex,
-      Math.min(startIndex + 48, times.length)
+      Math.min(startIndex + 48, times.length),
     );
     const labels = sliceTimes.map((t) => formatTimeLabel(t));
     const temps =
       hourly.hourly?.temperature_2m?.slice(
         startIndex,
-        startIndex + sliceTimes.length
+        startIndex + sliceTimes.length,
       ) || [];
     const precip = (
       hourly.hourly?.precipitation ||
@@ -994,7 +1009,7 @@ Stay hydrated and plan your field activities wisely — early mornings or evenin
 AgriConnect stands with you in every season!`;
       }
     },
-    [current, cityMeta, ttsLang]
+    [current, cityMeta, ttsLang],
   );
 
   const buildOffsetReport = useCallback(
@@ -1069,7 +1084,7 @@ AgriConnect stands with you in every season!`;
         }
       }
     },
-    [hourly, daily, formatTimeLabel, wmoDescriptions, ttsLang]
+    [hourly, daily, formatTimeLabel, wmoDescriptions, ttsLang],
   );
 
   // Component Effects
@@ -1140,7 +1155,7 @@ AgriConnect stands with you in every season!`;
         wmoDescriptions[weatherCode]?.[isDaytime ? "day" : "night"];
       return weatherInfo?.gif || clearsun;
     },
-    [wmoDescriptions]
+    [wmoDescriptions],
   );
 
   // Get weather icon based on conditions
@@ -1150,7 +1165,7 @@ AgriConnect stands with you in every season!`;
         wmoDescriptions[weatherCode]?.[isDaytime ? "day" : "night"];
       return weatherInfo?.icon || "bi-brightness-high";
     },
-    [wmoDescriptions]
+    [wmoDescriptions],
   );
 
   // Get background color based on weather
@@ -1191,7 +1206,7 @@ AgriConnect stands with you in every season!`;
 
     const forecastHours = times.slice(
       startIndex,
-      Math.min(startIndex + 12, times.length)
+      Math.min(startIndex + 12, times.length),
     );
 
     // 🌾 Alternate background images for variety
@@ -1219,7 +1234,7 @@ AgriConnect stands with you in every season!`;
         {forecastHours.map((time, index) => {
           const actualIndex = startIndex + index;
           const temp = Math.round(
-            hourly.hourly.temperature_2m?.[actualIndex] || 0
+            hourly.hourly.temperature_2m?.[actualIndex] || 0,
           );
           const weatherCode = hourly.hourly.weather_code?.[actualIndex] || 0;
           const precip = hourly.hourly.precipitation?.[actualIndex] || 0;
@@ -1342,10 +1357,10 @@ AgriConnect stands with you in every season!`;
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-7 gap-6 mb-10">
         {days.slice(0, 7).map((day, index) => {
           const maxTemp = Math.round(
-            daily.daily.temperature_2m_max?.[index] || 0
+            daily.daily.temperature_2m_max?.[index] || 0,
           );
           const minTemp = Math.round(
-            daily.daily.temperature_2m_min?.[index] || 0
+            daily.daily.temperature_2m_min?.[index] || 0,
           );
           const weatherCode = daily.daily.weather_code?.[index] || 0;
           const precip = daily.daily.precipitation_sum?.[index] || 0;

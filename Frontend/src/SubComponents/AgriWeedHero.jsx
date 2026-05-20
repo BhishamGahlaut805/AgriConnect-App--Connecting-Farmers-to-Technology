@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import headerBg from "../assets/images/bg1.png"; // Background image
+const headerBg =
+  "https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D"; // Background image (Unsplash)
 import cropGif from "/src/assets/images/fruit.gif";
 import aiGif from "/src/assets/images/chat-bot.gif";
 import liveGif from "/src/assets/images/environment.gif";
@@ -25,8 +26,6 @@ const AgriWeedHero = ({ setSidebarOpen }) => {
 
       {/* Foreground Content */}
       <div className="relative z-10 text-center py-16 px-6 md:px-12 text-white">
-      
-
         {/* Title */}
         <motion.h1
           initial={{ scale: 0.95, opacity: 0 }}

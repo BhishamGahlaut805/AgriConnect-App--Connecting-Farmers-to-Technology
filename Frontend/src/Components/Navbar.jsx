@@ -4,7 +4,8 @@ import { ThemeContext } from "../Util/ThemeContext";
 import { motion, AnimatePresence } from "framer-motion";
 import authService from "../API/authService";
 import { generateToken, generateTokenSmall } from "../utilJs/generateToken";
-import logo from "../assets/images/logo1.png";
+const logo =
+  "https://plus.unsplash.com/premium_vector-1723555158836-8bc23353de33?q=80&w=1112&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 import avatar from "../assets/images/podcast.gif";
 import logoutimg from "../assets/images/logout.gif";
 import translateIcon from "../assets/images/translate.gif";
@@ -93,7 +94,7 @@ const Navbar = () => {
       }
 
       const existingScript = document.querySelector(
-        'script[src*="translate.google.com"]'
+        'script[src*="translate.google.com"]',
       );
       if (existingScript) {
         existingScript.addEventListener("load", initializeTranslate);
@@ -125,7 +126,7 @@ const Navbar = () => {
                   .HORIZONTAL,
               autoDisplay: false,
             },
-            "google_translate_element"
+            "google_translate_element",
           );
           setTranslateReady(true);
           hideGoogleBanner();
@@ -169,14 +170,14 @@ const Navbar = () => {
     { name: "Community", path: "/community" },
     { name: "Support", path: "/support" },
   ];
-const navigaterolewise=(role,id)=>{
-    if(role==="admin" || role==="Admin"){
+  const navigaterolewise = (role, id) => {
+    if (role === "admin" || role === "Admin") {
       navigate(`Admin/dashboard/${id}`);
-    }else if(role==="farmer" || role==="Farmer"){
+    } else if (role === "farmer" || role === "Farmer") {
       navigate(`Farmer/dashboard/${id}`);
-    }else if(role==="trader" || role==="Trader"){
+    } else if (role === "trader" || role === "Trader") {
       navigate(`Trader/dashboard/${id}`);
-    }else{
+    } else {
       navigate(`/user/dashboard/${id}`);
     }
   };
@@ -294,9 +295,7 @@ const navigaterolewise=(role,id)=>{
                   </span>
                 </div>
                 <button
-                  onClick={() =>
-                    navigaterolewise(user.role, user.id)
-                  }
+                  onClick={() => navigaterolewise(user.role, user.id)}
                   className="px-5 py-2 rounded-xl bg-yellow-400 text-gray-900 font-bold shadow hover:bg-yellow-500"
                 >
                   Dashboard

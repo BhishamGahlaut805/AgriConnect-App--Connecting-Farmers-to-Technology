@@ -1,12 +1,23 @@
 import { motion } from "framer-motion";
-import image1 from "../assets/images/bg1.png";
-import cardcontainerimage1 from "../assets/images/cont1.png";
-import cardcontainerimage2 from "../assets/images/cont2.png";
-import cardcontainerimage3 from "../assets/images/cont3.png";
-import cardcontainerimage4 from "../assets/images/cont4.png";
-import image2 from "../assets/images/image15.png";
-import image3 from "../assets/images/bg3.png";
-import image4 from "../assets/images/bg4.png";
+
+const cardcontainerimage1 =
+  "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const cardcontainerimage2 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const cardcontainerimage3 =
+  "https://source.unsplash.com/600x400/?fieldhttps://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const cardcontainerimage4 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image1 =
+  "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const image2 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image3 =
+  "https://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image4 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image5 =
+  "https://plus.unsplash.com/premium_photo-1663945778994-11b3201882a0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
 import cropGif from "/src/assets/images/fruit.gif";
 import yieldGif from "/src/assets/images/environment.gif";
 import aiGif from "/src/assets/images/chat-bot.gif";

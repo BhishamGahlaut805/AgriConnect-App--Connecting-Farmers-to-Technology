@@ -15,51 +15,12 @@ import ModelOption from "./ModelOption";
 import CropHeader from "../NewComponents/CropHeader"
 // Import images and GIFs
 // Correct relative imports
-import cropImg from "../assets/images/crop.png";
-import cottonImg from "../assets/images/cotton.png";
-import potatoImg from "../assets/images/Potato.png";
-import campingImg from "../assets/images/camping.gif";
-import newImg from "../assets/images/newi.gif";
-import envirImg from "../assets/images/environment.gif";
-import harvestImg from "../assets/images/fruit.gif";
-import agribotImg from "../assets/images/chat-bot.gif";
-import communityImg from "../assets/images/communityimg.gif";
+const cropImg =
+  "https://plus.unsplash.com/premium_photo-1661962692059-55d5a4319814?fm=jpg&q=60&w=3000&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y3JvcHN8ZW58MHx8MHx8fDA%3D";
+const cottonImg="https://cdn.pixabay.com/photo/2019/11/24/17/08/cotton-4649804_1280.jpg";
+const potatoImg =
+  "https://plus.unsplash.com/premium_photo-1724256031338-b5bfba816cfd?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cG90YXRvfGVufDB8fDB8fHww";
 
-
-import cardcontainerimage1 from "../assets/images/cont1.png";
-import cardcontainerimage2 from "../assets/images/cont2.png";
-import cardcontainerimage3 from "../assets/images/cont3.png";
-import cardcontainerimage4 from "../assets/images/cont4.png";
-import image1 from "../assets/images/bg1.png";
-import image2 from "../assets/images/bg2.png";
-import image3 from "../assets/images/bg3.png";
-import image4 from "../assets/images/bg4.png";
-import image5 from "../assets/images/bg5.png";
-import image6 from "../assets/images/bg6.png";
-import image8 from "../assets/images/bg8.png";
-import image7 from "../assets/images/bg7.png";
-import image9 from "../assets/images/bg9.png";
-import image10 from "../assets/images/bg10.png";
-import image11 from "../assets/images/bg11.png";
-import image12 from "../assets/images/bg12.png";
-import image13 from "../assets/images/card1.png";
-
-// Import images for graph cards
-import tempRainImg from "/src/assets/images/rain.gif";
-import analysisImg from "/src/assets/images/fruit.gif";
-import metricsImg from "/src/assets/images/newi.gif";
-import analyticsImg from "/src/assets/images/camping.gif";
-import seasonalImg from "/src/assets/images/environment.gif";
-
-// Import weather GIFs
-import stormgif from "/src/assets/images/storm.gif";
-import rain1gif from "/src/assets/images/rain1.gif";
-import clearsun from "/src/assets/images/sun.gif";
-import nightclouds from "/src/assets/images/night.gif";
-import windgif from "/src/assets/images/forest.gif";
-import cloudydaygif from "/src/assets/images/cloudy.gif";
-import hottempgif from "/src/assets/images/hot.gif";
-import clearnight from "/src/assets/images/night1.gif";
 
 const UploadTabContent = ({
   modelType,

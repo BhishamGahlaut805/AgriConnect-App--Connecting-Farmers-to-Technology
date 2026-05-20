@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback,useMemo } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { fetchYieldByState } from "../API/YieldService";
 import {
   LineChart,
@@ -37,14 +37,22 @@ import {
 } from "lucide-react";
 import IndianMap from "../SubComponents/indianMap";
 
-import cardcontainerimage1 from "../assets/images/cont1.png";
-import cardcontainerimage2 from "../assets/images/cont2.png";
-import cardcontainerimage3 from "../assets/images/cont3.png";
-import cardcontainerimage4 from "../assets/images/cont4.png";
-import image1 from "../assets/images/bg1.png";
-import image2 from "../assets/images/bg2.png";
-import image3 from "../assets/images/bg3.png";
-import image4 from "../assets/images/bg4.png";
+const cardcontainerimage1 =
+  "https://plus.unsplash.com/premium_photo-1674624682232-c9ced5360a2e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const cardcontainerimage2 =
+  "https://images.unsplash.com/photo-1569239591652-6cc3025b07fa?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const cardcontainerimage3 =
+  "https://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const cardcontainerimage4 =
+  "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const image1 =
+  "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const image2 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image3 =
+  "https://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
+const image4 =
+  "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
 import campingimg from "/src/assets/images/camping.gif";
 import newimg from "/src/assets/images/newi.gif";
 import envirimg from "/src/assets/images/environment.gif";
@@ -264,7 +272,7 @@ const YieldChartDialog = ({ crop, state, data, yieldUnit, onClose }) => {
                     ...item,
                     yield_display: convertYield(
                       item.yield_kg_per_ha,
-                      yieldUnit
+                      yieldUnit,
                     ),
                   }))}
                   margin={{ top: 5, right: 20, left: -10, bottom: 5 }}
@@ -350,7 +358,7 @@ const YieldChartDialog = ({ crop, state, data, yieldUnit, onClose }) => {
                     <p className="font-semibold text-blue-900 dark:text-blue-100">
                       {convertYield(
                         validData[0]?.yield_kg_per_ha,
-                        yieldUnit
+                        yieldUnit,
                       )?.toFixed(2)}{" "}
                       <span className="text-xs">{unitLabel.split("/")[0]}</span>
                     </p>
@@ -362,7 +370,7 @@ const YieldChartDialog = ({ crop, state, data, yieldUnit, onClose }) => {
                     <p className="font-semibold text-blue-900 dark:text-blue-100">
                       {convertYield(
                         validData[validData.length - 1]?.yield_kg_per_ha,
-                        yieldUnit
+                        yieldUnit,
                       )?.toFixed(2)}{" "}
                       <span className="text-xs">{unitLabel.split("/")[0]}</span>
                     </p>
@@ -382,7 +390,7 @@ const CropCard = React.memo(({ entry, yieldUnit, onClick }) => {
   const CropIcon = CropIcons[entry.crop] || BarChart2; // Fallback icon
   const predictedYieldValue = convertYield(
     entry.prediction?.predicted_yield,
-    yieldUnit
+    yieldUnit,
   );
   const unitLabel =
     YIELD_UNITS.find((u) => u.value === yieldUnit)?.label || "Kg/Hectare";
@@ -394,7 +402,7 @@ const CropCard = React.memo(({ entry, yieldUnit, onClick }) => {
     .pop();
   const lastYearYield = convertYield(
     lastYearYieldData?.yield_kg_per_ha,
-    yieldUnit
+    yieldUnit,
   );
 
   const yieldChange =
@@ -466,7 +474,7 @@ const CropCard = React.memo(({ entry, yieldUnit, onClick }) => {
 const CropCategoryRow = ({ title, crops, yieldData, yieldUnit }) => {
   const filteredCrops = yieldData.filter(
     (entry) =>
-      crops.includes(entry.crop) && entry.prediction?.predicted_yield !== null
+      crops.includes(entry.crop) && entry.prediction?.predicted_yield !== null,
   );
 
   const [selectedCrop, setSelectedCrop] = useState(null);
@@ -518,11 +526,10 @@ const CropCategoryRow = ({ title, crops, yieldData, yieldUnit }) => {
   );
 };
 
-
 // --- Hero Section (Responsive design) ---
 const HeroSection = ({ yieldState, yieldData, selectedCrop, onCropSelect }) => {
   const totalCrops = yieldData.filter(
-    (entry) => entry.prediction?.predicted_yield
+    (entry) => entry.prediction?.predicted_yield,
   ).length;
   const availableStates = [...new Set(yieldData.map((entry) => entry.state))]
     .length;
@@ -586,10 +593,14 @@ const SidebarNavItem = ({
     aria-current={isActive ? "page" : undefined}
     title={!sidebarOpen ? label : undefined}
   >
-    <div className={`relative flex items-center ${sidebarOpen ? "w-full" : "w-auto"}`}>
-      <Icon className={`w-6 h-6 flex-shrink-0 transition-transform duration-300 ${
-        isActive ? "scale-110" : "group-hover:scale-110"
-      }`} />
+    <div
+      className={`relative flex items-center ${sidebarOpen ? "w-full" : "w-auto"}`}
+    >
+      <Icon
+        className={`w-6 h-6 flex-shrink-0 transition-transform duration-300 ${
+          isActive ? "scale-110" : "group-hover:scale-110"
+        }`}
+      />
       {sidebarOpen && (
         <span className="ml-4 whitespace-nowrap overflow-hidden font-medium text-left text-lg">
           {label}
@@ -611,7 +622,7 @@ const EnhancedSidebar = ({
   yieldState,
   setYieldState,
   yieldUnit,
-  setYieldUnit
+  setYieldUnit,
 }) => {
   const navigationItems = [
     { key: "yield", label: "Yield Forecast", icon: BarChart2 },
@@ -916,7 +927,7 @@ export default function CropYieldPortal() {
       try {
         // Fetch yield data for all available states in parallel
         const allStatePromises = availableStates.map((state) =>
-          fetchYieldByState(state)
+          fetchYieldByState(state),
         );
 
         const results = await Promise.all(allStatePromises);
@@ -930,7 +941,7 @@ export default function CropYieldPortal() {
       } catch (err) {
         console.error("Failed to fetch yield data for all states:", err);
         setAllDataError(
-          "Failed to load yield data for all states. Please try again later."
+          "Failed to load yield data for all states. Please try again later.",
         );
         setAllStatesYieldData([]);
       } finally {
@@ -1219,5 +1230,3 @@ export default function CropYieldPortal() {
     </div>
   );
 }
-
-
