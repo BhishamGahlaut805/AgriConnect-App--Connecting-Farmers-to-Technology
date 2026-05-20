@@ -32,7 +32,7 @@ import {
 import { onMessage, getToken } from "firebase/messaging";
 import { messaging } from "../Firebase/firebase-config";
 import AgriService from "../API/AgriService";
-import FarmOverviewCard from "../Components/FarmOverviewCard";
+import FarmOverviewCard from "../Components/FarmOverViewCard";
 import NearbyFarmsCard from "../Components/NearbyFarmsCard";
 import DiseaseRiskCard from "../Components/DiseaseRiskCard";
 import UserAnalyticsCard from "../Components/UserAnalyticsCard";
