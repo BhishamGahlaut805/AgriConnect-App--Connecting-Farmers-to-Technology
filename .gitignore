@@ -146,10 +146,10 @@ outputs/
 # =========================
 *.jpg
 *.jpeg
-*.png
+# *.png
 # *.gif
 *.bmp
-*.svg
+# *.svg
 *.ico
 *.mp4
 *.mov
