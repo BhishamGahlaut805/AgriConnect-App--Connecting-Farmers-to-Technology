@@ -6,8 +6,6 @@ from typing import Dict, Any
 
 # Configuration
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), "config.yaml")
-MODEL_DIR = r"C:\Users\bhish\OneDrive\Desktop\AgriSupport\ML\TrainingReports"
-os.makedirs(MODEL_DIR, exist_ok=True)
 
 def load_config() -> Dict[str, Any]:
     try:

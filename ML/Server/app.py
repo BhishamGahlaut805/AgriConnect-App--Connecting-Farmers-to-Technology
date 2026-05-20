@@ -60,7 +60,7 @@ app.secret_key = os.getenv(
 # =========================================================
 # CONFIGURATION
 # =========================================================
-from config import Config
+from Server.config import Config
 
 app.config.from_object(Config)
 
@@ -79,17 +79,17 @@ socketio = SocketIO(
 # =========================================================
 # IMPORT MODULES
 # =========================================================
-from ..CropVsWeed.api import (
+from CropVsWeed.api import (
     weed_bp,
     generate_frames,
     camera_manager
 )
 
-from ..CropDiseaseOutbreakPredictor.DataService.CropReports import (
+from CropDiseaseOutbreakPredictor.DataService.CropReports import (
     CropDiseasePredictor
 )
 
-from ..cropYieldPrediction.api import api_blueprint
+from cropYieldPrediction.api import api_blueprint
 
 from ..MongoDBService.CreateFarm import CreateFarmService
 
@@ -444,4 +444,3 @@ if __name__ == '__main__':
         host='0.0.0.0',
         port=PORT
     )
-    

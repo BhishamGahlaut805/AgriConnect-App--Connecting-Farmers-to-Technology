@@ -14,7 +14,7 @@ from flask import Blueprint, render_template, request, jsonify, session
 from flask_socketio import emit
 from ultralytics import YOLO
 import os
-from ..CropVsWeed.Config import Config
+from CropVsWeed.Config import Config
 from datetime import datetime
 import matplotlib
 matplotlib.use('Agg')  # Use non-GUI backend
@@ -25,6 +25,8 @@ import logging
 
 #importing cors
 from flask_cors import CORS
+from huggingface_hub import hf_hub_download
+HF_REPO_ID = os.getenv('HF_REPO_ID')
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -32,10 +34,15 @@ logger = logging.getLogger(__name__)
 
 weed_bp = Blueprint("weed_bp", __name__, static_folder="static")
 CORS(weed_bp)
+MODEL_PATH=hf_hub_download(
+            repo_id=HF_REPO_ID,
+            filename="Crop_Weed_Detection_yolo_API.pt"
+        )
+
 # Load YOLO model with error handling
 try:
-    model = YOLO(Config.MODEL_PATH)
-    logger.info(f"Successfully loaded model from {Config.MODEL_PATH}")
+    model = YOLO(MODEL_PATH)
+    logger.info(f"Successfully loaded model from {MODEL_PATH}")
 except Exception as e:
     logger.error(f"Failed to load model: {e}")
     model = None

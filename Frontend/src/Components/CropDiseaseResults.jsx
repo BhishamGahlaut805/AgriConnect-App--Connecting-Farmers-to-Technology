@@ -40,8 +40,8 @@ const CropDiseaseResults = ({
 
   // Background images and GIFs
   const backgroundImages = {
-    main: "/src/assets/images/bg1.png",
-    gradient: "/src/assets/images/cardcontainerimage2.jpg",
+    main: "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1778833550/bg1_x4idx8.png",
+    // gradient: "/src/assets/images/cardcontainerimage2.jpg",
     pattern: "/src/assets/images/image15.png",
     voiceAssistant: "/src/assets/images/chat-bot.gif",
     farmer: "/src/assets/images/environment.gif",

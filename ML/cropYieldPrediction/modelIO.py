@@ -1,87 +1,148 @@
-import torch    #type:ignore
+import torch  # type:ignore
 import os
-import json
+import io
 from datetime import datetime
 from typing import Optional, Dict
-from .dependencies import logger, MODEL_DIR
-from .mongoDbSaving import MongoService
 from sklearn.preprocessing import MinMaxScaler
 
-def save_lstm_model(model, scalers, farm_id: str, crop_name: str, config: dict) -> str:
-    """Save LSTM model with all necessary components"""
+from .dependencies import logger
+from .mongoDbSaving import MongoService
+
+
+def save_lstm_model(
+    model,
+    scalers,
+    farm_id: str,
+    crop_name: str,
+    config: dict
+) -> str:
+    """
+    Save LSTM model directly into MongoDB GridFS
+    """
+
     try:
-        model_dir = os.path.join(MODEL_DIR, farm_id,"crops", crop_name.replace(" ", "_"))
-        os.makedirs(model_dir, exist_ok=True)
-
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        model_path = os.path.join(model_dir, "model_latest.pt")
 
-        # Save model checkpoint
-        torch.save({
-            'model_state': model.state_dict(),
-            'scaler_state': {k: v.__dict__ for k, v in scalers.items()},
-            'config': config,
-            'feature_columns': model.feature_columns,
-            'timestamp': timestamp
-        }, model_path)
+        # Create in-memory buffer
+        buffer = io.BytesIO()
+
+        # Save checkpoint into memory
+        torch.save(
+            {
+                "model_state": model.state_dict(),
+                "scaler_state": {
+                    k: v.__dict__
+                    for k, v in scalers.items()
+                },
+                "config": config,
+                "feature_columns": model.feature_columns,
+                "timestamp": timestamp
+            },
+            buffer
+        )
+
+        buffer.seek(0)
+
+        mongo_service = MongoService()
+
+        # Store model in MongoDB GridFS
+        file_id = mongo_service.save_model_file(
+            file_bytes=buffer.read(),
+            filename=f"{farm_id}_{crop_name}_lstm.pt",
+            metadata={
+                "farm_id": farm_id,
+                "crop_name": crop_name,
+                "model_type": "LSTM",
+                "version": timestamp
+            }
+        )
 
         # Save metadata
         metadata = {
             "farm_id": farm_id,
             "crop": crop_name,
             "model_type": "LSTM",
-            "model_path": model_path,
+            "gridfs_file_id": file_id,
             "input_features": model.feature_columns,
-            "model_size": sum(p.numel() for p in model.parameters()),
-            "created_at": datetime.now()
+            "model_size": sum(
+                p.numel()
+                for p in model.parameters()
+            ),
+            "created_at": datetime.utcnow(),
+            "version": timestamp
         }
 
-        # Save to MongoDB
-        MongoService().save_model_metadata(metadata)
+        mongo_service.save_model_metadata(metadata)
 
-        logger.info(f"Saved LSTM model to {model_path}")
-        return model_path
+        logger.info(
+            f"Successfully saved LSTM model to MongoDB GridFS | "
+            f"Farm: {farm_id} | Crop: {crop_name}"
+        )
+
+        return str(file_id)
 
     except Exception as e:
         logger.error(f"Failed to save model: {str(e)}")
         raise
 
-def load_latest_lstm_model(farm_id: str, crop_name: str) -> Optional[Dict]:
-    """Load the most recent LSTM model for a farm/crop"""
+
+def load_latest_lstm_model(
+    farm_id: str,
+    crop_name: str
+) -> Optional[Dict]:
+    """
+    Load latest LSTM model from MongoDB GridFS
+    """
+
     try:
-        model_dir = os.path.join(MODEL_DIR, farm_id,"crops", crop_name.replace(" ", "_"))
+        mongo_service = MongoService()
 
-        if not os.path.exists(model_dir):
-            return None
-
-        # Find latest model file
-        model_files = sorted(
-            [f for f in os.listdir(model_dir) if f.startswith("model_") and f.endswith(".pt")],
-            key=lambda x: os.path.getmtime(os.path.join(model_dir, x)),
-            reverse=True
+        # Load model bytes from GridFS
+        model_bytes = mongo_service.load_model_file(
+            farm_id=farm_id,
+            crop_name=crop_name
         )
 
-        if not model_files:
+        if not model_bytes:
+            logger.warning(
+                f"No model found for farm={farm_id}, crop={crop_name}"
+            )
             return None
 
-        # Load checkpoint
-        checkpoint = torch.load(os.path.join(model_dir, model_files[0]))
+        # Convert bytes to memory buffer
+        buffer = io.BytesIO(model_bytes)
+
+        # Load torch checkpoint
+        checkpoint = torch.load(
+            buffer,
+            map_location=torch.device("cpu")
+        )
 
         # Rebuild scalers
         scalers = {}
-        for col, state in checkpoint['scaler_state'].items():
+
+        for col, state in checkpoint["scaler_state"].items():
+
             scaler = MinMaxScaler()
+
             scaler.__dict__.update(state)
+
             scalers[col] = scaler
 
+        logger.info(
+            f"Successfully loaded model from MongoDB GridFS | "
+            f"Farm: {farm_id} | Crop: {crop_name}"
+        )
+
         return {
-            "model_state": checkpoint['model_state'],
+            "model_state": checkpoint["model_state"],
             "scalers": scalers,
-            "config": checkpoint['config'],
-            "feature_columns": checkpoint['feature_columns'],
-            "timestamp": checkpoint['timestamp']
+            "config": checkpoint["config"],
+            "feature_columns": checkpoint["feature_columns"],
+            "timestamp": checkpoint["timestamp"]
         }
 
     except Exception as e:
         logger.error(f"Failed to load model: {str(e)}")
         return None
+    

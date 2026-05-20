@@ -239,6 +239,7 @@ class AgriService {
   static async getDiseaseReports(farmId) {
     try {
       const res = await fetch(`${BASE_URL}/api/disease-reports/${farmId}`);
+      console.log("Getting data as : ", res)    ;
       if (!res.ok) throw new Error("Disease reports not found");
       return await res.json();
     } catch (err) {

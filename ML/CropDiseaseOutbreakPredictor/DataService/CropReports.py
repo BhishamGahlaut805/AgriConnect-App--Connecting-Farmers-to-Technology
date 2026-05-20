@@ -4,12 +4,25 @@ import numpy as np
 from PIL import Image
 from werkzeug.utils import secure_filename
 from tensorflow.keras.preprocessing.image import img_to_array
+from huggingface_hub import hf_hub_download
+HF_REPO_ID = os.getenv('HF_REPO_ID')
 
 class CropDiseasePredictor:
     def __init__(self):
-        self.ModelPathPotato = os.getenv('MODEL_PATH_POTATO')
-        self.ModelPathCotton = os.getenv('MODEL_PATH_COTTON')
-        self.ModelPathAll = os.getenv('MODEL_PATH_ALL')
+        self.ModelPathPotato = hf_hub_download(
+            repo_id=HF_REPO_ID,
+            filename="Potato_Crop_Disease_Detection.keras"
+        )
+
+        self.ModelPathCotton = hf_hub_download(
+            repo_id=HF_REPO_ID,
+            filename="Cotton_Crop_Disease_Detection.keras"
+        )
+
+        self.ModelPathAll = hf_hub_download(
+            repo_id=HF_REPO_ID,
+            filename="Multiple_Crop_Disease_Detection.keras"
+        )
         self.IMAGE_SIZE = tuple(map(int, os.getenv('IMAGE_SIZE').split(',')))
 
         # Class label mappings

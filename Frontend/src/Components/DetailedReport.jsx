@@ -102,17 +102,35 @@ const DetailedReportCard = ({
   const severityInfo = getSeverityInfo(confidence);
 
   // Format text with proper bullet points and structure
+  // Format text with proper bullet points and structure
   const formatText = (text) => {
-    if (!text) return "";
+    if (text === null || text === undefined) return "";
 
-    // Split by *, •, or semicolons
-    const lines = text.split(/[\*\•;]/).filter((line) => line.trim());
+    let formatted = "";
+
+    // Handle arrays
+    if (Array.isArray(text)) {
+      formatted = text.join(" ; ");
+    }
+    // Handle objects
+    else if (typeof text === "object") {
+      formatted = Object.values(text).join(" ; ");
+    }
+    // Handle normal strings/numbers
+    else {
+      formatted = String(text);
+    }
+
+    // Split by *, •, semicolon, or newline
+    const lines = formatted.split(/[\*\•;\n]/).filter((line) => line.trim());
 
     return lines.map((line, index) => {
       const cleanLine = line.trim().replace(/\*\*/g, "");
+
       return (
         <div key={index} className="flex items-start gap-3 mb-3">
           <div className="w-2 h-2 bg-green-500 rounded-full mt-2 flex-shrink-0"></div>
+
           <span className="text-gray-700 dark:text-gray-300 text-base leading-relaxed">
             {cleanLine}
           </span>
@@ -122,11 +140,25 @@ const DetailedReportCard = ({
   };
 
   // Format text for speech (remove markdown)
-  // Enhanced function to format text for TTS
+  // Format text for speech (safe version)
   const formatTextForSpeech = (text) => {
-    if (!text) return "";
+    // Handle null/undefined
+    if (text === null || text === undefined) return "";
 
-    let formatted = text;
+    let formatted = "";
+
+    // Convert arrays to string
+    if (Array.isArray(text)) {
+      formatted = text.join(". ");
+    }
+    // Convert objects to readable string
+    else if (typeof text === "object") {
+      formatted = Object.values(text).join(". ");
+    }
+    // Convert everything else to string
+    else {
+      formatted = String(text);
+    }
 
     // Remove markdown formatting
     formatted = formatted.replace(/\*\*/g, "").replace(/\*/g, "");
@@ -134,21 +166,23 @@ const DetailedReportCard = ({
     // Replace bullet symbols with periods
     formatted = formatted.replace(/•/g, ".");
 
-    // Replace multiple spaces or newlines with a single space
+    // Replace multiple spaces/newlines
     formatted = formatted.replace(/\s+/g, " ").trim();
 
-    // Replace parentheses with " — " for better spoken clarity
+    // Better speech formatting
     formatted = formatted.replace(/\(([^)]+)\)/g, " — $1 —");
 
-    // Ensure proper spacing after periods
+    // Ensure spacing after periods
     formatted = formatted.replace(/\.([^\s])/g, ". $1");
 
-    // Optionally, split long sentences by semicolons or commas for easier TTS
-    formatted = formatted.replace(/;/g, "."); // semicolons → periods
-    formatted = formatted.replace(/, /g, ", "); // normalize commas
-    // Add pauses for better speech
-    formatted = formatted.replace(/([.;])/g, "$1 "); // ensure spacing
-    formatted = formatted.replace(/\n/g, ". "); // replace line breaks with periods
+    // Semicolons -> periods
+    formatted = formatted.replace(/;/g, ".");
+
+    // Line breaks -> pauses
+    formatted = formatted.replace(/\n/g, ". ");
+
+    // Add pause spacing
+    formatted = formatted.replace(/([.;])/g, "$1 ");
 
     return formatted;
   };
@@ -161,14 +195,14 @@ const DetailedReportCard = ({
       } and found ${
         report?.disease?.replace(/_/g, " ") || "a disease"
       } with ${Math.round(
-        confidence * 100
+        confidence * 100,
       )} percent confidence. Let me guide you through the detailed report.`,
       hi: `आपके फसल रोग विश्लेषण रिपोर्ट में स्वागत है। मैं हूं आपकी AI किसान मित्र। हमने आपकी ${
         report?.crop || "फसल"
       } का विश्लेषण किया है और ${
         report?.disease?.replace(/_/g, " ") || "एक रोग"
       } पाया है, ${Math.round(
-        confidence * 100
+        confidence * 100,
       )} प्रतिशत विश्वास के साथ। मैं आपको विस्तृत रिपोर्ट के माध्यम से मार्गदर्शन करूंगा।`,
     },
     overview: {
@@ -299,8 +333,6 @@ const DetailedReportCard = ({
     speakText(textToSpeak, language);
   };
 
-
-
   // Play full report
   const playFullReport = () => {
     const fullReport = Object.keys(ttsContent)
@@ -310,14 +342,14 @@ const DetailedReportCard = ({
   };
 
   // Stop speech
-const stopSpeech = () => {
-  if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
-    window.speechSynthesis.cancel();
-  }
-  setIsSpeaking(false);
-  setCurrentSection("");
-  setIsPlayingWelcome(false);
-};
+  const stopSpeech = () => {
+    if (window.speechSynthesis.speaking || window.speechSynthesis.pending) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+    setCurrentSection("");
+    setIsPlayingWelcome(false);
+  };
 
   // Toggle language
   const toggleLanguage = () => {
@@ -336,7 +368,7 @@ const stopSpeech = () => {
       setIsLoadingImages(true);
       const images = await CropMonitorService.webScrapeUpload(
         report.crop,
-        report.disease
+        report.disease,
       );
       // console.log("Fetched scraped images:", images);
       setScrapedImages(images.imageUrls || []);
@@ -567,7 +599,7 @@ const stopSpeech = () => {
                           report.image_url ||
                             report.imageUrl ||
                             report.image_path,
-                          "_blank"
+                          "_blank",
                         )
                       }
                     >
@@ -761,7 +793,6 @@ const stopSpeech = () => {
 
             {/* Scraped Images Grid */}
             {(scrapedImages.length > 0 || isLoadingImages) && (
-
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -877,6 +908,6 @@ const stopSpeech = () => {
       </motion.div>
     </div>
   );
-};
+};;;
 
 export default DetailedReportCard;

@@ -203,7 +203,7 @@ export async function generateHourlyGraphsBackend(dataSets) {
       sunshineF: item.sunshineF || 0
     }));
 
-    const res = await fetch(`${API_BASE_URL}/weather/generateGraph`, {
+    const res = await fetch(`${API_BASE_URL}/api/weather/generateGraph`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cleanedData),
@@ -228,7 +228,7 @@ export async function generateSeasonalGraphsBackend(dataSets) {
       rain: dataSets.rain?.map((val) => val || 0) || [],
     };
 
-    const res = await fetch(`${API_BASE_URL}/weather/generateSeasonal`, {
+    const res = await fetch(`${API_BASE_URL}/api/weather/generateSeasonal`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cleanedData),

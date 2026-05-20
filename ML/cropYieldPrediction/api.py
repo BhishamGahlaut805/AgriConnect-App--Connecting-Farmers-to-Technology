@@ -17,7 +17,6 @@ mongo_service = MongoService()
 
 # Enhanced Configuration
 CONFIG = {
-    'model_dir': r"C:\Users\bhish\OneDrive\Desktop\AgriSupport\ML\TrainingReports",
     'training': {
         'batch_size': 32,
         'epochs': 5,

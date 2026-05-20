@@ -4,8 +4,6 @@ import pandas as pd
 from datetime import datetime, timedelta
 from typing import Dict
 
-#Modifying to return 3470 entries in the way as :
-#2020
 
 class WeatherDataProcessor:
     def __init__(self, latitude: float, longitude: float, farm_id: str,farm_name:str):
