@@ -1,10 +1,11 @@
 import React from "react";
 import { motion } from "framer-motion";
-const headerBg = "https://unsplash.com/photos/green-corn-maize-plants-on-a-field-agricultural-landscape-m6xWSjiQaww"; // Background image
-import cropGif from "/src/assets/images/fruit.gif";
-import aiGif from "/src/assets/images/chat-bot.gif";
-import liveGif from "/src/assets/images/environment.gif";
-import videoGif from "/src/assets/images/newi.gif";
+const headerBg =
+  "https://unsplash.com/photos/green-corn-maize-plants-on-a-field-agricultural-landscape-m6xWSjiQaww"; // Background image
+const cropGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const aiGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
+const liveGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
+const videoGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
 
 const ChatHeader = ({ setSidebarOpen }) => {
   return (
@@ -124,9 +125,9 @@ const ChatHeader = ({ setSidebarOpen }) => {
 
         {/* Tagline */}
         <p className="mt-8 text-lg text-gray-100 italic max-w-2xl mx-auto">
-          “Empowering farmers with real-time insights, advanced AI
-          predictions, and data-driven weed management for higher yield and
-          sustainable farming.”
+          “Empowering farmers with real-time insights, advanced AI predictions,
+          and data-driven weed management for higher yield and sustainable
+          farming.”
         </p>
       </div>
     </motion.div>

@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 const bgImage =
   "https://images.unsplash.com/photo-1655934161455-11042d605a5a?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
-import leafGif from "/src/assets/images/camping.gif";
-import tractorGif from "/src/assets/images/newi.gif";
-import cloudGif from "/src/assets/images/cloudy.gif";
-import aiGif from "/src/assets/images/chat-bot.gif";
+const leafGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
+const tractorGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
+const cloudGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/cloudy_vumjce.gif";
+const aiGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
 
 const AgriConnectBenefits = () => {
   return (

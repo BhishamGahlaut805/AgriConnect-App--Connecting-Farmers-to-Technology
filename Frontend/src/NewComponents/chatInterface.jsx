@@ -14,14 +14,14 @@ import {
   User,
   AlertCircle,
   Wifi,
-  WifiOff
+  WifiOff,
 } from "lucide-react";
 import MessageBubble from "./MessageBubble";
-import bgGif from "../assets/images/camping.gif";
+const bgGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
 
 // Import animated icons with fallbacks
-import speakingGif from "../assets/images/play.gif";
-import listeningGif from "../assets/images/play.gif";
+const speakingGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/play_akkaf8.gif";
+const listeningGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/play_akkaf8.gif";
 
 // Error boundary component
 class ChatErrorBoundary extends React.Component {
@@ -35,7 +35,7 @@ class ChatErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('ChatInterface Error:', error, errorInfo);
+    console.error("ChatInterface Error:", error, errorInfo);
   }
 
   render() {
@@ -44,8 +44,12 @@ class ChatErrorBoundary extends React.Component {
         <div className="flex items-center justify-center h-64 bg-red-50 rounded-lg border border-red-200">
           <div className="text-center p-6">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-red-800 mb-2">Something went wrong</h3>
-            <p className="text-red-600 mb-4">Please refresh the page and try again.</p>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">
+              Something went wrong
+            </h3>
+            <p className="text-red-600 mb-4">
+              Please refresh the page and try again.
+            </p>
             <button
               onClick={() => window.location.reload()}
               className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
@@ -61,7 +65,12 @@ class ChatErrorBoundary extends React.Component {
   }
 }
 
-const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClearChat }) => {
+const ChatInterface = ({
+  messages = [],
+  isLoading = false,
+  onSendMessage,
+  onClearChat,
+}) => {
   // State management with validation
   const [inputMessage, setInputMessage] = useState("");
   const [listening, setListening] = useState(false);
@@ -70,9 +79,9 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     // Initialize from localStorage or default to 'en'
     try {
-      return localStorage.getItem('agri-chat-language') || 'en';
+      return localStorage.getItem("agri-chat-language") || "en";
     } catch {
-      return 'en';
+      return "en";
     }
   });
   const [isLanguageDropdownOpen, setIsLanguageDropdownOpen] = useState(false);
@@ -80,8 +89,10 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
   const [error, setError] = useState(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [speechSupport, setSpeechSupport] = useState({
-    synthesis: typeof window !== 'undefined' && 'speechSynthesis' in window,
-    recognition: typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)
+    synthesis: typeof window !== "undefined" && "speechSynthesis" in window,
+    recognition:
+      typeof window !== "undefined" &&
+      ("webkitSpeechRecognition" in window || "SpeechRecognition" in window),
   });
 
   // Refs with null checks
@@ -92,46 +103,72 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
   const textareaRef = useRef(null);
 
   // Robust language options with fallbacks
-  const languageOptions = React.useMemo(() => ({
-    en: { name: "English", nativeName: "English", flag: "🇺🇸", voice: "en-US" },
-    hi: { name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳", voice: "hi-IN" },
-    te: { name: "Telugu", nativeName: "తెలుగు", flag: "🇮🇳", voice: "te-IN" },
-    ta: { name: "Tamil", nativeName: "தமிழ்", flag: "🇮🇳", voice: "ta-IN" },
-    mr: { name: "Marathi", nativeName: "मराठी", flag: "🇮🇳", voice: "mr-IN" },
-    bn: { name: "Bengali", nativeName: "বাংলা", flag: "🇮🇳", voice: "bn-IN" },
-    gu: { name: "Gujarati", nativeName: "ગુજરાતી", flag: "🇮🇳", voice: "gu-IN" },
-    kn: { name: "Kannada", nativeName: "ಕನ್ನಡ", flag: "🇮🇳", voice: "kn-IN" },
-    ml: { name: "Malayalam", nativeName: "മലയാളം", flag: "🇮🇳", voice: "ml-IN" },
-    pa: { name: "Punjabi", nativeName: "ਪੰਜਾਬੀ", flag: "🇮🇳", voice: "pa-IN" },
-    or: { name: "Odia", nativeName: "ଓଡ଼ିଆ", flag: "🇮🇳", voice: "or-IN" },
-    as: { name: "Assamese", nativeName: "অসমীয়া", flag: "🇮🇳", voice: "as-IN" }
-  }), []);
+  const languageOptions = React.useMemo(
+    () => ({
+      en: {
+        name: "English",
+        nativeName: "English",
+        flag: "🇺🇸",
+        voice: "en-US",
+      },
+      hi: { name: "Hindi", nativeName: "हिन्दी", flag: "🇮🇳", voice: "hi-IN" },
+      te: { name: "Telugu", nativeName: "తెలుగు", flag: "🇮🇳", voice: "te-IN" },
+      ta: { name: "Tamil", nativeName: "தமிழ்", flag: "🇮🇳", voice: "ta-IN" },
+      mr: { name: "Marathi", nativeName: "मराठी", flag: "🇮🇳", voice: "mr-IN" },
+      bn: { name: "Bengali", nativeName: "বাংলা", flag: "🇮🇳", voice: "bn-IN" },
+      gu: {
+        name: "Gujarati",
+        nativeName: "ગુજરાતી",
+        flag: "🇮🇳",
+        voice: "gu-IN",
+      },
+      kn: { name: "Kannada", nativeName: "ಕನ್ನಡ", flag: "🇮🇳", voice: "kn-IN" },
+      ml: {
+        name: "Malayalam",
+        nativeName: "മലയാളം",
+        flag: "🇮🇳",
+        voice: "ml-IN",
+      },
+      pa: { name: "Punjabi", nativeName: "ਪੰਜਾਬੀ", flag: "🇮🇳", voice: "pa-IN" },
+      or: { name: "Odia", nativeName: "ଓଡ଼ିଆ", flag: "🇮🇳", voice: "or-IN" },
+      as: {
+        name: "Assamese",
+        nativeName: "অসমীয়া",
+        flag: "🇮🇳",
+        voice: "as-IN",
+      },
+    }),
+    [],
+  );
 
   // Safe language getter
-  const getLanguageOption = useCallback((code) => {
-    return languageOptions[code] || languageOptions.en;
-  }, [languageOptions]);
+  const getLanguageOption = useCallback(
+    (code) => {
+      return languageOptions[code] || languageOptions.en;
+    },
+    [languageOptions],
+  );
 
   // Network status monitoring
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
     };
   }, []);
 
   // Persist language selection
   useEffect(() => {
     try {
-      localStorage.setItem('agri-chat-language', selectedLanguage);
+      localStorage.setItem("agri-chat-language", selectedLanguage);
     } catch (error) {
-      console.warn('Could not save language preference:', error);
+      console.warn("Could not save language preference:", error);
     }
   }, [selectedLanguage]);
 
@@ -151,8 +188,8 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
-      textarea.style.height = 'auto';
-      textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+      textarea.style.height = "auto";
+      textarea.style.height = Math.min(textarea.scrollHeight, 120) + "px";
     }
   }, [inputMessage]);
 
@@ -161,10 +198,10 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
     try {
       messagesEndRef.current?.scrollIntoView({
         behavior: "smooth",
-        block: "nearest"
+        block: "nearest",
       });
     } catch (error) {
-      console.warn('Scroll error:', error);
+      console.warn("Scroll error:", error);
       messagesEndRef.current?.scrollIntoView();
     }
   }, [messages]);
@@ -190,7 +227,7 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
 
   // Robust language detection
   const detectLanguage = useCallback((text) => {
-    if (!text || typeof text !== 'string') return 'en';
+    if (!text || typeof text !== "string") return "en";
 
     const languagePatterns = {
       hi: /[\u0900-\u097F]/, // Hindi
@@ -212,7 +249,7 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
       }
     }
 
-    return 'en';
+    return "en";
   }, []);
 
   // Safe text conversion with error handling
@@ -225,31 +262,55 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
     try {
       // Enhanced mock translations with more comprehensive data
       const mockTranslations = {
-        "hi": {
-          "नमस्ते": "Hello", "मौसम": "weather", "फसल": "crop", "खेती": "farming",
-          "कीट": "insect", "बीमारी": "disease", "आलू": "potato", "गेहूं": "wheat",
-          "चावल": "rice", "सिंचाई": "irrigation", "खाद": "fertilizer", "कीटनाशक": "pesticide",
-          "क्या": "what", "कैसे": "how", "कब": "when", "कहाँ": "where"
+        hi: {
+          नमस्ते: "Hello",
+          मौसम: "weather",
+          फसल: "crop",
+          खेती: "farming",
+          कीट: "insect",
+          बीमारी: "disease",
+          आलू: "potato",
+          गेहूं: "wheat",
+          चावल: "rice",
+          सिंचाई: "irrigation",
+          खाद: "fertilizer",
+          कीटनाशक: "pesticide",
+          क्या: "what",
+          कैसे: "how",
+          कब: "when",
+          कहाँ: "where",
         },
-        "te": {
-          "హలో": "Hello", "వాతావరణం": "weather", "పంట": "crop", "వ్యవసాయం": "farming",
-          "కీటకం": "insect", "రోగం": "disease", "ఆలుగడ్డ": "potato", "గోధుమ": "wheat"
+        te: {
+          హలో: "Hello",
+          వాతావరణం: "weather",
+          పంట: "crop",
+          వ్యవసాయం: "farming",
+          కీటకం: "insect",
+          రోగం: "disease",
+          ఆలుగడ్డ: "potato",
+          గోధుమ: "wheat",
         },
-        "ta": {
-          "வணக்கம்": "Hello", "வானிலை": "weather", "பயிர்": "crop", "விவசாயம்": "farming"
+        ta: {
+          வணக்கம்: "Hello",
+          வானிலை: "weather",
+          பயிர்: "crop",
+          விவசாயம்: "farming",
         },
-        "bn": {
-          "নমস্কার": "Hello", "আবহাওয়া": "weather", "ফসল": "crop", "চাষ": "farming"
-        }
+        bn: {
+          নমস্কার: "Hello",
+          আবহাওয়া: "weather",
+          ফসল: "crop",
+          চাষ: "farming",
+        },
       };
 
       let translatedText = text;
       const translations = mockTranslations[sourceLang];
 
       if (translations) {
-        Object.keys(translations).forEach(word => {
+        Object.keys(translations).forEach((word) => {
           try {
-            const regex = new RegExp(word, 'gi');
+            const regex = new RegExp(word, "gi");
             translatedText = translatedText.replace(regex, translations[word]);
           } catch (e) {
             console.warn(`Translation regex failed for word: ${word}`, e);
@@ -262,8 +323,10 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
 
       return translatedText !== text ? translatedText : text;
     } catch (error) {
-      console.error('Conversion failed:', error);
-      setError('Translation service temporarily unavailable. Using original text.');
+      console.error("Conversion failed:", error);
+      setError(
+        "Translation service temporarily unavailable. Using original text.",
+      );
       return text;
     } finally {
       setProcessing(false);
@@ -276,7 +339,9 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
 
     if (!inputMessage.trim() || isLoading || processing) return;
     if (!isOnline) {
-      setError('No internet connection. Please check your network and try again.');
+      setError(
+        "No internet connection. Please check your network and try again.",
+      );
       return;
     }
 
@@ -292,81 +357,84 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
       const englishMessage = await convertToEnglish(userMessage, detectedLang);
 
       // Validate callback before calling
-      if (typeof onSendMessage === 'function') {
+      if (typeof onSendMessage === "function") {
         onSendMessage(englishMessage, "user");
       } else {
-        throw new Error('Send message function not available');
+        throw new Error("Send message function not available");
       }
 
       // Simulate server response
       setTimeout(async () => {
         try {
           const serverResponse = `I understand your query about agriculture. For "${englishMessage}", here's my advice: Focus on proper irrigation and organic fertilizers for better yield.`;
-          const userLanguageResponse = selectedLanguage !== 'en'
-            ? `${serverResponse} [Response in ${getLanguageOption(selectedLanguage).nativeName}]`
-            : serverResponse;
+          const userLanguageResponse =
+            selectedLanguage !== "en"
+              ? `${serverResponse} [Response in ${getLanguageOption(selectedLanguage).nativeName}]`
+              : serverResponse;
 
-          if (typeof onSendMessage === 'function') {
+          if (typeof onSendMessage === "function") {
             onSendMessage(userLanguageResponse, "bot");
           }
         } catch (error) {
-          console.error('Server response simulation failed:', error);
-          setError('Failed to get response from server. Please try again.');
+          console.error("Server response simulation failed:", error);
+          setError("Failed to get response from server. Please try again.");
         }
       }, 2000);
-
     } catch (error) {
-      console.error('Message submission failed:', error);
-      setError('Failed to send message. Please try again.');
+      console.error("Message submission failed:", error);
+      setError("Failed to send message. Please try again.");
       // Restore input message on error
       setInputMessage(userMessage);
     }
   };
 
   // Robust text-to-speech with comprehensive error handling
-  const handleSpeak = useCallback((text, lang = "en-US") => {
-    if (!speechSupport.synthesis) {
-      setError('Text-to-speech not supported in your browser');
-      return;
-    }
-
-    try {
-      // Stop any current speech
-      if (speechRef.current) {
-        window.speechSynthesis.cancel();
-        setIsPlaying(false);
+  const handleSpeak = useCallback(
+    (text, lang = "en-US") => {
+      if (!speechSupport.synthesis) {
+        setError("Text-to-speech not supported in your browser");
+        return;
       }
 
-      const utterance = new SpeechSynthesisUtterance(text.substring(0, 300)); // Limit length
-      utterance.lang = lang;
-      utterance.rate = 0.8;
-      utterance.pitch = 1;
-      utterance.volume = 0.8;
+      try {
+        // Stop any current speech
+        if (speechRef.current) {
+          window.speechSynthesis.cancel();
+          setIsPlaying(false);
+        }
 
-      utterance.onstart = () => {
-        setIsPlaying(true);
-        setCurrentSpeech(text);
-      };
+        const utterance = new SpeechSynthesisUtterance(text.substring(0, 300)); // Limit length
+        utterance.lang = lang;
+        utterance.rate = 0.8;
+        utterance.pitch = 1;
+        utterance.volume = 0.8;
 
-      utterance.onend = () => {
-        setIsPlaying(false);
-        setCurrentSpeech(null);
-      };
+        utterance.onstart = () => {
+          setIsPlaying(true);
+          setCurrentSpeech(text);
+        };
 
-      utterance.onerror = (event) => {
-        console.error('Speech synthesis error:', event);
-        setIsPlaying(false);
-        setCurrentSpeech(null);
-        setError('Speech synthesis failed. Please try again.');
-      };
+        utterance.onend = () => {
+          setIsPlaying(false);
+          setCurrentSpeech(null);
+        };
 
-      speechRef.current = utterance;
-      window.speechSynthesis.speak(utterance);
-    } catch (error) {
-      console.error('Speech synthesis setup failed:', error);
-      setError('Text-to-speech initialization failed');
-    }
-  }, [speechSupport.synthesis]);
+        utterance.onerror = (event) => {
+          console.error("Speech synthesis error:", event);
+          setIsPlaying(false);
+          setCurrentSpeech(null);
+          setError("Speech synthesis failed. Please try again.");
+        };
+
+        speechRef.current = utterance;
+        window.speechSynthesis.speak(utterance);
+      } catch (error) {
+        console.error("Speech synthesis setup failed:", error);
+        setError("Text-to-speech initialization failed");
+      }
+    },
+    [speechSupport.synthesis],
+  );
 
   const handlePauseSpeech = useCallback(() => {
     if (window.speechSynthesis?.speaking) {
@@ -374,7 +442,7 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
         window.speechSynthesis.pause();
         setIsPlaying(false);
       } catch (error) {
-        console.error('Pause speech failed:', error);
+        console.error("Pause speech failed:", error);
       }
     }
   }, []);
@@ -385,7 +453,7 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
         window.speechSynthesis.resume();
         setIsPlaying(true);
       } catch (error) {
-        console.error('Resume speech failed:', error);
+        console.error("Resume speech failed:", error);
       }
     }
   }, []);
@@ -393,15 +461,18 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
   // Robust voice input handling
   const handleVoiceInput = useCallback(() => {
     if (!speechSupport.recognition) {
-      setError('Voice input not supported in your browser. Please use Chrome or Edge.');
+      setError(
+        "Voice input not supported in your browser. Please use Chrome or Edge.",
+      );
       return;
     }
 
     try {
       if (!recognitionRef.current) {
-        const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+        const SpeechRecognition =
+          window.webkitSpeechRecognition || window.SpeechRecognition;
         if (!SpeechRecognition) {
-          throw new Error('Speech recognition API not available');
+          throw new Error("Speech recognition API not available");
         }
 
         const recognition = new SpeechRecognition();
@@ -412,19 +483,24 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
         recognition.onresult = (event) => {
           try {
             const transcript = event.results[0][0].transcript;
-            setInputMessage(prev => prev + (prev ? ' ' : '') + transcript);
+            setInputMessage((prev) => prev + (prev ? " " : "") + transcript);
           } catch (error) {
-            console.error('Speech recognition result processing failed:', error);
+            console.error(
+              "Speech recognition result processing failed:",
+              error,
+            );
           }
         };
 
         recognition.onerror = (event) => {
-          console.error('Speech recognition error:', event.error);
+          console.error("Speech recognition error:", event.error);
           setListening(false);
-          if (event.error === 'not-allowed') {
-            setError('Microphone access denied. Please allow microphone permissions.');
+          if (event.error === "not-allowed") {
+            setError(
+              "Microphone access denied. Please allow microphone permissions.",
+            );
           } else {
-            setError('Voice recognition failed. Please try again.');
+            setError("Voice recognition failed. Please try again.");
           }
         };
 
@@ -439,72 +515,85 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
         recognitionRef.current.stop();
         setListening(false);
       } else {
-        recognitionRef.current.lang = getLanguageOption(selectedLanguage)?.voice || "en-US";
+        recognitionRef.current.lang =
+          getLanguageOption(selectedLanguage)?.voice || "en-US";
         recognitionRef.current.start();
         setListening(true);
         setError(null);
       }
     } catch (error) {
-      console.error('Voice input setup failed:', error);
-      setError('Voice input initialization failed');
+      console.error("Voice input setup failed:", error);
+      setError("Voice input initialization failed");
       setListening(false);
     }
-  }, [listening, selectedLanguage, speechSupport.recognition, getLanguageOption]);
+  }, [
+    listening,
+    selectedLanguage,
+    speechSupport.recognition,
+    getLanguageOption,
+  ]);
 
   // Safe language change handler
-  const handleLanguageChange = useCallback((code) => {
-    if (languageOptions[code]) {
-      setSelectedLanguage(code);
-      setIsLanguageDropdownOpen(false);
-      setError(null);
-    }
-  }, [languageOptions]);
+  const handleLanguageChange = useCallback(
+    (code) => {
+      if (languageOptions[code]) {
+        setSelectedLanguage(code);
+        setIsLanguageDropdownOpen(false);
+        setError(null);
+      }
+    },
+    [languageOptions],
+  );
 
   // Enhanced suggested questions with fallbacks
-  const suggestedQuestions = React.useMemo(() => ({
-    en: [
-      "What is late blight of potato?",
-      "Current weather for farming?",
-      "Wheat rust treatment options",
-      "Rice cultivation best practices",
-      "Organic farming techniques"
-    ],
-    hi: [
-      "आलू का लेट ब्लाइट क्या है?",
-      "खेती के लिए मौसम का हाल",
-      "गेहूं की जंग उपचार विकल्प",
-      "चावल की खेती के सर्वोत्तम तरीके",
-      "जैविक खेती तकनीक"
-    ],
-    te: [
-      "బంగాళాదుంప లేట్ బ్లైట్ అంటే ఏమిటి?",
-      "వ్యవసాయానికి ప్రస్తుత వాతావరణం",
-      "గోధుమ తుప్పు చికిత్స ఎంపికలు",
-      "వరి సాగు ఉత్తమ పద్ధతులు",
-      "సేంద్రీయ వ్యవసాయ పద్ధతులు"
-    ],
-    ta: [
-      "உருளைக்கிழங்கு லேட் பிளைட் என்றால் என்ன?",
-      "விவசாயத்திற்கான தற்போதைய வானிலை",
-      "கோதுமை துரு சிகிச்சை விருப்பங்கள்",
-      "நெல் சாகுபடி சிறந்த முறைகள்",
-      "கரிம விவசாய முறைகள்"
-    ],
-    bn: [
-      "আলুর লেট ব্লাইট কি?",
-      "চাষের জন্য বর্তমান আবহাওয়া",
-      "গমের মরিচা চিকিৎসার বিকল্প",
-      "ধান চাষের সেরা পদ্ধতি",
-      "জৈব চাষ কৌশল"
-    ]
-  }), []);
+  const suggestedQuestions = React.useMemo(
+    () => ({
+      en: [
+        "What is late blight of potato?",
+        "Current weather for farming?",
+        "Wheat rust treatment options",
+        "Rice cultivation best practices",
+        "Organic farming techniques",
+      ],
+      hi: [
+        "आलू का लेट ब्लाइट क्या है?",
+        "खेती के लिए मौसम का हाल",
+        "गेहूं की जंग उपचार विकल्प",
+        "चावल की खेती के सर्वोत्तम तरीके",
+        "जैविक खेती तकनीक",
+      ],
+      te: [
+        "బంగాళాదుంప లేట్ బ్లైట్ అంటే ఏమిటి?",
+        "వ్యవసాయానికి ప్రస్తుత వాతావరణం",
+        "గోధుమ తుప్పు చికిత్స ఎంపికలు",
+        "వరి సాగు ఉత్తమ పద్ధతులు",
+        "సేంద్రీయ వ్యవసాయ పద్ధతులు",
+      ],
+      ta: [
+        "உருளைக்கிழங்கு லேட் பிளைட் என்றால் என்ன?",
+        "விவசாயத்திற்கான தற்போதைய வானிலை",
+        "கோதுமை துரு சிகிச்சை விருப்பங்கள்",
+        "நெல் சாகுபடி சிறந்த முறைகள்",
+        "கரிம விவசாய முறைகள்",
+      ],
+      bn: [
+        "আলুর লেট ব্লাইট কি?",
+        "চাষের জন্য বর্তমান আবহাওয়া",
+        "গমের মরিচা চিকিৎসার বিকল্প",
+        "ধান চাষের সেরা পদ্ধতি",
+        "জৈব চাষ কৌশল",
+      ],
+    }),
+    [],
+  );
 
   // Get safe suggested questions for current language
-  const currentSuggestedQuestions = suggestedQuestions[selectedLanguage] || suggestedQuestions.en;
+  const currentSuggestedQuestions =
+    suggestedQuestions[selectedLanguage] || suggestedQuestions.en;
 
   // Safe clear chat handler
   const handleClearChat = useCallback(() => {
-    if (typeof onClearChat === 'function') {
+    if (typeof onClearChat === "function") {
       onClearChat();
     }
     setError(null);
@@ -513,7 +602,8 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
   // Safe input change handler
   const handleInputChange = useCallback((e) => {
     const value = e.target.value;
-    if (value.length <= 1000) { // Prevent extremely long messages
+    if (value.length <= 1000) {
+      // Prevent extremely long messages
       setInputMessage(value);
       setError(null);
     }
@@ -527,8 +617,8 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
         alt={alt}
         className="w-5 h-5 sm:w-6 sm:h-6"
         onError={(e) => {
-          e.target.style.display = 'none';
-          e.target.nextSibling?.style?.removeProperty('display');
+          e.target.style.display = "none";
+          e.target.nextSibling?.style?.removeProperty("display");
         }}
       />
     );
@@ -568,7 +658,9 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
           <div className="relative z-20 bg-yellow-50 border-b border-yellow-200 p-3">
             <div className="flex items-center justify-center space-x-2 text-yellow-800 text-sm">
               <WifiOff size={16} />
-              <span>You are currently offline. Some features may be limited.</span>
+              <span>
+                You are currently offline. Some features may be limited.
+              </span>
             </div>
           </div>
         )}
@@ -587,7 +679,9 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                 <p className="text-green-100 text-xs sm:text-sm flex items-center gap-1">
                   <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></span>
                   Multi-Language Agricultural Assistant
-                  {isOnline && <Wifi size={12} className="text-green-300 ml-1" />}
+                  {isOnline && (
+                    <Wifi size={12} className="text-green-300 ml-1" />
+                  )}
                 </p>
               </div>
             </div>
@@ -596,17 +690,22 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
               {/* Language Selector */}
               <div className="relative flex-1 sm:flex-none" ref={dropdownRef}>
                 <button
-                  onClick={() => setIsLanguageDropdownOpen(!isLanguageDropdownOpen)}
+                  onClick={() =>
+                    setIsLanguageDropdownOpen(!isLanguageDropdownOpen)
+                  }
                   className="flex items-center space-x-2 bg-white/20 hover:bg-white/30 text-white px-3 sm:px-4 py-2 rounded-xl transition-all duration-300 w-full sm:w-auto justify-between"
                   disabled={processing}
                 >
                   <div className="flex items-center space-x-2">
                     <Languages className="h-4 w-4" />
                     <span className="text-sm font-medium">
-                      {getLanguageOption(selectedLanguage).flag} {getLanguageOption(selectedLanguage).nativeName}
+                      {getLanguageOption(selectedLanguage).flag}{" "}
+                      {getLanguageOption(selectedLanguage).nativeName}
                     </span>
                   </div>
-                  <ChevronDown className={`h-4 w-4 transition-transform ${isLanguageDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`h-4 w-4 transition-transform ${isLanguageDropdownOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
 
                 {isLanguageDropdownOpen && (
@@ -616,13 +715,19 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                         key={code}
                         onClick={() => handleLanguageChange(code)}
                         className={`flex items-center space-x-3 w-full px-4 py-3 text-left hover:bg-green-50 transition-colors ${
-                          selectedLanguage === code ? 'bg-green-100 text-green-800' : 'text-gray-700'
+                          selectedLanguage === code
+                            ? "bg-green-100 text-green-800"
+                            : "text-gray-700"
                         }`}
                       >
                         <span className="text-lg">{lang.flag}</span>
                         <div className="flex flex-col">
-                          <span className="font-medium text-sm">{lang.nativeName}</span>
-                          <span className="text-xs text-gray-500">{lang.name}</span>
+                          <span className="font-medium text-sm">
+                            {lang.nativeName}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {lang.name}
+                          </span>
                         </div>
                       </button>
                     ))}
@@ -652,17 +757,25 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                   Welcome to AgriConnect! 🌱
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  Ask me anything about agriculture in your preferred language. I'll understand and respond in {getLanguageOption(selectedLanguage).nativeName}.
+                  Ask me anything about agriculture in your preferred language.
+                  I'll understand and respond in{" "}
+                  {getLanguageOption(selectedLanguage).nativeName}.
                 </p>
                 <div className="text-sm text-green-600 font-medium">
-                  Currently selected: {getLanguageOption(selectedLanguage).flag} {getLanguageOption(selectedLanguage).nativeName}
+                  Currently selected: {getLanguageOption(selectedLanguage).flag}{" "}
+                  {getLanguageOption(selectedLanguage).nativeName}
                 </div>
               </div>
             </div>
           ) : (
             messages.map((message) => (
-              <div key={message.id || Math.random()} className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`relative max-w-[85%] sm:max-w-[80%] group ${message.sender === "user" ? "ml-auto" : ""}`}>
+              <div
+                key={message.id || Math.random()}
+                className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`relative max-w-[85%] sm:max-w-[80%] group ${message.sender === "user" ? "ml-auto" : ""}`}
+                >
                   <MessageBubble
                     message={message}
                     language={selectedLanguage}
@@ -675,19 +788,34 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                       {currentSpeech === message.text ? (
                         <>
                           <button
-                            onClick={isPlaying ? handlePauseSpeech : handleResumeSpeech}
+                            onClick={
+                              isPlaying ? handlePauseSpeech : handleResumeSpeech
+                            }
                             className="p-1.5 text-green-600 hover:text-green-800 transition-colors rounded hover:bg-green-50"
                             title={isPlaying ? "Pause" : "Resume"}
                           >
-                            {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                            {isPlaying ? (
+                              <Pause size={14} />
+                            ) : (
+                              <Play size={14} />
+                            )}
                           </button>
                           <div className="w-6 h-6 flex items-center justify-center">
-                            {renderAnimatedIcon(speakingGif, "Speaking", <Volume2 size={14} />)}
+                            {renderAnimatedIcon(
+                              speakingGif,
+                              "Speaking",
+                              <Volume2 size={14} />,
+                            )}
                           </div>
                         </>
                       ) : (
                         <button
-                          onClick={() => handleSpeak(message.text, getLanguageOption(selectedLanguage)?.voice)}
+                          onClick={() =>
+                            handleSpeak(
+                              message.text,
+                              getLanguageOption(selectedLanguage)?.voice,
+                            )
+                          }
                           className="p-1.5 text-green-600 hover:text-green-800 transition-colors rounded hover:bg-green-50"
                           title="Read aloud"
                         >
@@ -710,11 +838,12 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                     <span className="text-sm">
                       {processing
                         ? `Processing in ${getLanguageOption(selectedLanguage).nativeName}...`
-                        : "Analyzing your query..."
-                      }
+                        : "Analyzing your query..."}
                     </span>
                     <span className="text-xs text-green-600">
-                      {selectedLanguage !== 'en' ? 'Communicating with agricultural database...' : 'Accessing farming knowledge base...'}
+                      {selectedLanguage !== "en"
+                        ? "Communicating with agricultural database..."
+                        : "Accessing farming knowledge base..."}
                     </span>
                   </div>
                 </div>
@@ -741,7 +870,10 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                   disabled={processing}
                   className="text-xs sm:text-sm bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 px-3 sm:px-4 py-2 rounded-xl hover:from-green-100 hover:to-emerald-100 transition-all duration-300 border border-green-200/50 shadow-sm hover:shadow-md hover:scale-105 transform cursor-pointer flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   style={{
-                    fontFamily: selectedLanguage !== "en" ? "'Noto Sans', sans-serif" : "inherit"
+                    fontFamily:
+                      selectedLanguage !== "en"
+                        ? "'Noto Sans', sans-serif"
+                        : "inherit",
                   }}
                 >
                   <User size={12} />
@@ -773,11 +905,17 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
               >
                 <div className="flex flex-col items-center">
                   {listening ? (
-                    renderAnimatedIcon(listeningGif, "Listening", <Mic className="h-5 w-5 sm:h-6 sm:w-6" />)
+                    renderAnimatedIcon(
+                      listeningGif,
+                      "Listening",
+                      <Mic className="h-5 w-5 sm:h-6 sm:w-6" />,
+                    )
                   ) : (
                     <Mic className="h-5 w-5 sm:h-6 sm:w-6" />
                   )}
-                  <span className="text-xs mt-1">{getLanguageOption(selectedLanguage).flag}</span>
+                  <span className="text-xs mt-1">
+                    {getLanguageOption(selectedLanguage).flag}
+                  </span>
                 </div>
               </button>
             )}
@@ -792,12 +930,16 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
                 disabled={isLoading || processing || !isOnline}
                 rows="1"
                 style={{
-                  fontFamily: selectedLanguage !== "en" ? "'Noto Sans', sans-serif" : "inherit"
+                  fontFamily:
+                    selectedLanguage !== "en"
+                      ? "'Noto Sans', sans-serif"
+                      : "inherit",
                 }}
               />
               <div className="absolute bottom-2 right-3 text-xs text-gray-400 flex items-center space-x-1">
                 <span>
-                  {getLanguageOption(selectedLanguage).flag} {getLanguageOption(selectedLanguage).nativeName}
+                  {getLanguageOption(selectedLanguage).flag}{" "}
+                  {getLanguageOption(selectedLanguage).nativeName}
                 </span>
                 {inputMessage.length > 0 && (
                   <span className="text-gray-300">
@@ -809,10 +951,12 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
 
             <button
               type="submit"
-              disabled={!inputMessage.trim() || isLoading || processing || !isOnline}
+              disabled={
+                !inputMessage.trim() || isLoading || processing || !isOnline
+              }
               className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 disabled:hover:shadow-lg flex items-center justify-center space-x-2 transition-all duration-300 disabled:cursor-not-allowed flex-shrink-0"
             >
-              {(isLoading || processing) ? (
+              {isLoading || processing ? (
                 <Loader className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
               ) : (
                 <Send className="h-4 w-4 sm:h-5 sm:w-5" />
@@ -826,7 +970,8 @@ const ChatInterface = ({ messages = [], isLoading = false, onSendMessage, onClea
             <div className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium flex items-center space-x-2">
               <Languages size={12} />
               <span>
-                Communicating in {getLanguageOption(selectedLanguage).nativeName}
+                Communicating in{" "}
+                {getLanguageOption(selectedLanguage).nativeName}
                 {!speechSupport.recognition && " (Voice input unavailable)"}
                 {!speechSupport.synthesis && " (Voice output unavailable)"}
               </span>

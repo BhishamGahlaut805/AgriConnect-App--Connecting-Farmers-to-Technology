@@ -16,15 +16,24 @@ import {
 } from "chart.js";
 
 // Import images and GIFs
-import campingimg from "/src/assets/images/camping.gif";
-import newimg from "/src/assets/images/newi.gif";
-import envirimg from "/src/assets/images/environment.gif";
-import harvestimg from "/src/assets/images/fruit.gif";
-import agribotimg from "/src/assets/images/chat-bot.gif";
-import communityimg from "/src/assets/images/communityimg.gif";
-import playGif from "/src/assets/images/play.gif";
-import pauseGif from "/src/assets/images/play.gif";
-import stopGif from "/src/assets/images/play.gif";
+const campingimg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
+const newimg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
+const envirimg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
+const harvestimg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const agribotimg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
+const communityimg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/communityimg_vhkxax.gif";
+const playGif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/play_akkaf8.gif";
+const pauseGif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/play_akkaf8.gif";
+const stopGif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/play_akkaf8.gif";
 
 const cardcontainerimage1 =
   "https://plus.unsplash.com/premium_photo-1674624682288-085eff4f98da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
@@ -62,21 +71,34 @@ const image13 =
   "https://images.unsplash.com/photo-1615129825073-c47c67bdec5b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
 
 // Import images for graph cards
-import tempRainImg from "/src/assets/images/rain.gif";
-import analysisImg from "/src/assets/images/fruit.gif";
-import metricsImg from "/src/assets/images/newi.gif";
-import analyticsImg from "/src/assets/images/camping.gif";
-import seasonalImg from "/src/assets/images/environment.gif";
+const tempRainImg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/rain_u5o9dh.gif";
+const analysisImg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const metricsImg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
+const analyticsImg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
+const seasonalImg =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
 
-// Import weather GIFs
-import stormgif from "/src/assets/images/storm.gif";
-import rain1gif from "/src/assets/images/rain1.gif";
-import clearsun from "/src/assets/images/sun.gif";
-import nightclouds from "/src/assets/images/night.gif";
-import windgif from "/src/assets/images/forest.gif";
-import cloudydaygif from "/src/assets/images/cloudy.gif";
-import hottempgif from "/src/assets/images/hot.gif";
-import clearnight from "/src/assets/images/night1.gif";
+// Weather GIF URLs (use string constants instead of ES imports for external URLs)
+const stormgif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/storm_cy1yqn.gif";
+const rain1gif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/rain1_r77h1m.gif";
+const clearsun =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258553/sun_eufjq0.gif";
+const nightclouds =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/night_b9sp6q.gif";
+const windgif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/forest_ajojjj.gif";
+const cloudydaygif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/cloudy_vumjce.gif";
+const hottempgif =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/hot_m8s0pg.gif";
+const clearnight =
+  "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/night1_koyckn.gif";
 
 // Register ChartJS components
 ChartJS.register(
@@ -1617,22 +1639,22 @@ AgriConnect stands with you in every season!`;
           {/* Animated weather GIFs */}
           <div className="flex justify-center mt-6 gap-4 flex-wrap">
             <img
-              src="/src/assets/images/sun.gif"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258553/sun_eufjq0.gif"
               alt="Sun"
               className="w-20 h-20 object-contain rounded-full shadow-lg"
             />
             <img
-              src="/src/assets/images/cloudy.gif"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/cloudy_vumjce.gif"
               alt="Cloudy"
               className="w-20 h-20 object-contain rounded-full shadow-lg"
             />
             <img
-              src="/src/assets/images/rain1.gif"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/rain1_r77h1m.gif"
               alt="Rain"
               className="w-20 h-20 object-contain rounded-full shadow-lg"
             />
             <img
-              src="/src/assets/images/forest.gif"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/forest_ajojjj.gif"
               alt="Wind"
               className="w-20 h-20 object-contain rounded-full shadow-lg"
             />
@@ -1694,7 +1716,7 @@ AgriConnect stands with you in every season!`;
           <div className="mt-6 flex justify-center gap-6 flex-wrap text-gray-600 text-sm">
             <div className="flex items-center gap-2">
               <img
-                src="/src/assets/images/hot.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/hot_m8s0pg.gif"
                 alt="Temp"
                 className="w-10 h-10"
               />
@@ -1702,7 +1724,7 @@ AgriConnect stands with you in every season!`;
             </div>
             <div className="flex items-center gap-2">
               <img
-                src="/src/assets/images/rain1.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/rain1_r77h1m.gif"
                 alt="Rain"
                 className="w-10 h-10"
               />
@@ -1710,7 +1732,7 @@ AgriConnect stands with you in every season!`;
             </div>
             <div className="flex items-center gap-2">
               <img
-                src="/src/assets/images/forest.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/forest_ajojjj.gif"
                 alt="Wind"
                 className="w-10 h-10"
               />

@@ -18,10 +18,10 @@ const image4 =
   "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
 const image5 =
   "https://plus.unsplash.com/premium_photo-1663945778994-11b3201882a0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
-import cropGif from "/src/assets/images/fruit.gif";
-import yieldGif from "/src/assets/images/environment.gif";
-import aiGif from "/src/assets/images/chat-bot.gif";
-import mapGif from "/src/assets/images/newi.gif";
+const cropGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const yieldGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
+const aiGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
+const mapGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
 
 const CropYieldHero = ({ yieldState, totalCrops, availableStates }) => {
   return (

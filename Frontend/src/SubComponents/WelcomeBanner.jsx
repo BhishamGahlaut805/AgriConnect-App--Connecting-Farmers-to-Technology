@@ -1,9 +1,9 @@
 import { motion } from "framer-motion";
 const bgImage =
   "https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
-import sunGif from "/src/assets/images/hot.gif";
-import cloudGif from "/src/assets/images/cloudy.gif";
-import windGif from "/src/assets/images/forest.gif";
+const sunGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/hot_m8s0pg.gif";
+const cloudGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/cloudy_vumjce.gif";
+const windGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/forest_ajojjj.gif";
 import StyledCard from "../Components/StyleCard";
 import WeatherWidget from "../components/WeatherWidget";
 

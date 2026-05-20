@@ -2,10 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 const headerBg =
   "https://images.unsplash.com/photo-1495107334309-fcf20504a5ab?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D"; // Background image (Unsplash)
-import cropGif from "/src/assets/images/fruit.gif";
-import aiGif from "/src/assets/images/chat-bot.gif";
-import liveGif from "/src/assets/images/environment.gif";
-import videoGif from "/src/assets/images/newi.gif";
+const cropGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const aiGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
+const liveGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
+const videoGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
 
 const AgriWeedHero = ({ setSidebarOpen }) => {
   return (

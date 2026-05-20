@@ -28,7 +28,7 @@ import {
   Droplets,
   Thermometer,
 } from "lucide-react";
-import DetectionDetails from "../../SubComponents/DetectionRes"
+import DetectionDetails from "../../SubComponents/DetectionRes";
 import AgriWeedHero from "../../SubComponents/AgriWeedHero";
 
 const CropDashboard = () => {
@@ -133,7 +133,7 @@ const CropDashboard = () => {
         (error) => {
           setError("Live stream error: " + error.message);
           setAnalysisStatus("error");
-        }
+        },
       );
     } catch (err) {
       console.error("Error starting webcam:", err);
@@ -182,11 +182,11 @@ const CropDashboard = () => {
               return {
                 maxWeedCount: Math.max(
                   prev.maxWeedCount,
-                  frameData.counts.Weed || 0
+                  frameData.counts.Weed || 0,
                 ),
                 maxCottonCount: Math.max(
                   prev.maxCottonCount,
-                  frameData.counts.Cotton || 0
+                  frameData.counts.Cotton || 0,
                 ),
                 totalFrames: prev.totalFrames + 1,
                 weedFrames:
@@ -200,7 +200,7 @@ const CropDashboard = () => {
           setError("Video playback error: " + error.message);
           setAnalysisStatus("error");
         },
-        "video"
+        "video",
       );
     } catch (err) {
       console.error("Error starting video detection:", err);
@@ -256,7 +256,7 @@ const CropDashboard = () => {
 
     const totalDetections = Object.values(results.counts).reduce(
       (sum, count) => sum + count,
-      0
+      0,
     );
     const weedDensity =
       totalDetections > 0
@@ -432,7 +432,7 @@ const CropDashboard = () => {
 
     const totalDetections = Object.values(liveFrame.counts).reduce(
       (sum, count) => sum + count,
-      0
+      0,
     );
     const weedDensity =
       totalDetections > 0
@@ -759,7 +759,9 @@ const CropDashboard = () => {
       <div className="p-6 flex flex-col h-full">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xl font-bold tracking-wide">AgriWeed AI- Powered by AGRIConnect </h2>
+          <h2 className="text-xl font-bold tracking-wide">
+            AgriWeed AI- Powered by AGRIConnect{" "}
+          </h2>
           <button
             onClick={() => setSidebarOpen(false)}
             className="text-white hover:text-gray-200 transition-colors"
@@ -929,7 +931,7 @@ const CropDashboard = () => {
               onClick={() => setActiveTab("webcam")}
             >
               <img
-                src="/src/assets/images/environment.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif"
                 alt="Live Monitor"
                 className="w-7 h-7 mr-2 object-contain rounded-full shadow-sm"
               />
@@ -950,7 +952,7 @@ const CropDashboard = () => {
               onClick={() => setActiveTab("video")}
             >
               <img
-                src="/src/assets/images/newi.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif"
                 alt="Video Study"
                 className="w-7 h-7 mr-2 object-contain rounded-full shadow-sm"
               />
@@ -971,7 +973,7 @@ const CropDashboard = () => {
               onClick={() => setActiveTab("image")}
             >
               <img
-                src="/src/assets/images/fruit.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif"
                 alt="Image Check"
                 className="w-7 h-7 mr-2 object-contain rounded-full shadow-sm"
               />
@@ -1020,26 +1022,26 @@ const CropDashboard = () => {
                 analysisStatus === "idle"
                   ? "bg-gray-400"
                   : analysisStatus === "live" || analysisStatus === "playing"
-                  ? "bg-green-500 animate-pulse"
-                  : analysisStatus === "processing"
-                  ? "bg-amber-500"
-                  : "bg-red-500"
+                    ? "bg-green-500 animate-pulse"
+                    : analysisStatus === "processing"
+                      ? "bg-amber-500"
+                      : "bg-red-500"
               }`}
             ></div>
             <span className="text-gray-600 dark:text-gray-400">
               {analysisStatus === "idle"
                 ? "Ready"
                 : analysisStatus === "starting"
-                ? "Initializing..."
-                : analysisStatus === "processing"
-                ? "Processing..."
-                : analysisStatus === "live"
-                ? "Live Webcam Detection"
-                : analysisStatus === "playing"
-                ? "Video Detection Running"
-                : analysisStatus === "completed"
-                ? "Analysis Complete"
-                : "Error"}
+                  ? "Initializing..."
+                  : analysisStatus === "processing"
+                    ? "Processing..."
+                    : analysisStatus === "live"
+                      ? "Live Webcam Detection"
+                      : analysisStatus === "playing"
+                        ? "Video Detection Running"
+                        : analysisStatus === "completed"
+                          ? "Analysis Complete"
+                          : "Error"}
             </span>
           </div>
 

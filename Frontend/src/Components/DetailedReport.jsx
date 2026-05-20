@@ -18,7 +18,7 @@ import {
   FiClock,
   FiExternalLink,
   FiGrid,
-  FiArrowRight
+  FiArrowRight,
 } from "react-icons/fi";
 import { Tooltip } from "react-tooltip";
 import { motion, AnimatePresence } from "framer-motion";
@@ -43,11 +43,13 @@ const DetailedReportCard = ({
 
   // Background images and icons
   const backgroundAssets = {
-    pattern: "/src/assets/images/image15.png",
-    farmer: "/src/assets/images/environment.gif",
-    plants: "/src/assets/images/sea-level.gif",
-    warning: "/src/assets/images/storm.gif",
-    voice: "/src/assets/images/camping.gif",
+    pattern:
+      "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1778833550/bg1_x4idx8.png",
+    // farmer: "/src/assets/images/environment.gif",
+    // plants: "/src/assets/images/sea-level.gif",
+    // warning: "/src/assets/images/storm.gif",
+    voice:
+      "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif",
   };
 
   const confidence = report?.confidence || 0;
@@ -484,7 +486,7 @@ const DetailedReportCard = ({
             {/* Icon with subtle GIF background */}
             <div className="relative w-14 h-14 rounded-2xl overflow-hidden bg-white/20 backdrop-blur-sm flex items-center justify-center">
               <img
-                src="/src/assets/images/camping.gif"
+                src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif"
                 alt="Shield Animation"
                 className="absolute inset-0 w-full h-full object-cover opacity-70"
               />
@@ -495,7 +497,7 @@ const DetailedReportCard = ({
               <h2 className="text-2xl lg:text-3xl font-bold text-white flex items-center gap-2">
                 🌾 फसल रोग रिपोर्ट / Crop Disease Report
                 <img
-                  src="/src/assets/images/farmer.gif"
+                  src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/farmer_jxnfx2.gif"
                   className="w-8 h-8"
                   alt="Farm GIF"
                 />
@@ -547,7 +549,7 @@ const DetailedReportCard = ({
                   <FiVolume2 size={18} />
                   <span>पूरी रिपोर्ट सुनें / Full Report</span>
                   <img
-                    src="/src/assets/images/volume.gif"
+                    src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258554/volume_fmuupi.gif"
                     className="w-5 h-5"
                     alt="Sound Wave GIF"
                   />
@@ -908,6 +910,6 @@ const DetailedReportCard = ({
       </motion.div>
     </div>
   );
-};;;
+};
 
 export default DetailedReportCard;

@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 const image11 =
   "https://plus.unsplash.com/premium_vector-1723555158836-8bc23353de33?q=80&w=1112&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
-import tempRainImg from "/src/assets/images/rain.gif";
-import analysisImg from "/src/assets/images/fruit.gif";
+const tempRainImg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/rain_u5o9dh.gif";
+const analysisImg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
 
 const CropHeader2 = () => {
   return (

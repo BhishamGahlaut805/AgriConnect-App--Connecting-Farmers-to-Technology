@@ -2,12 +2,12 @@ import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { Tooltip } from "react-tooltip";
 import { ThemeContext } from "../Util/ThemeContext";
-import campingimg from "/src/assets/images/camping.gif";
-import newimg from "/src/assets/images/newi.gif";
-import envirimg from "/src/assets/images/environment.gif";
-import harvestimg from "/src/assets/images/fruit.gif";
-import agribotimg from "/src/assets/images/chat-bot.gif";
-import communityimg from "/src/assets/images/communityimg.gif";
+const campingimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
+const newimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
+const envirimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
+const harvestimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const agribotimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
+const communityimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/communityimg_vhkxax.gif";
 import AgriConnectBenefits from "../SubComponents/AgriConnectBenefits";
 
 const AgriConnectHome = () => {
@@ -110,7 +110,7 @@ const AgriConnectHome = () => {
     {
       id: "community",
       title: "Sell With Us at HarvestLink",
-      description: "Sell Your Agricultural Products Easily" ,
+      description: "Sell Your Agricultural Products Easily",
       icon: "👥",
       path: "/harvestLink/Seller-Dashboard",
       tutorial:

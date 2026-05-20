@@ -2,12 +2,13 @@
 import React from "react";
 import ChatInterface from "../../NewComponents/chatInterface";
 import { useChat } from "../../hooks/usechat";
-const farmBg = "https://plus.unsplash.com/premium_photo-1674624682232-c9ced5360a2e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
-import farmerGif from "../../assets/images/farmer.gif";
-import cropGif from "../../assets/images/camping.gif";
-import cloudGif from "../../assets/images/cloudy.gif";
-import ChatHeader from "../../NewComponents/ChatHeader";
-import CropHeader2 from "./ChaHeader2";
+const farmBg =
+  "https://plus.unsplash.com/premium_photo-1674624682232-c9ced5360a2e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8ZmFybSUyMGJhY2tncm91bmR8ZW58MHx8MHx8fDA%3D";
+const farmerGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/farmer_jxnfx2.gif";
+const cropGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
+const cloudGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/cloudy_vumjce.gif";
+const ChatHeader = "../../NewComponents/ChatHeader";
+const CropHeader2 = "./ChaHeader2";
 
 const ChatPage = () => {
   const { messages, isLoading, error, sendMessage, clearChat } = useChat();

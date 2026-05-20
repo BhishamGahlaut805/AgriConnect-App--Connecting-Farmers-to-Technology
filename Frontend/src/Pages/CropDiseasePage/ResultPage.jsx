@@ -67,7 +67,7 @@ const CropDiseaseResultsPage = () => {
         });
       }
     },
-    [updateState]
+    [updateState],
   );
 
   const printReport = useCallback(() => {
@@ -174,7 +174,7 @@ const CropDiseaseResultsPage = () => {
         });
       }
     },
-    [updateState]
+    [updateState],
   );
 
   const generateComprehensiveReport = useCallback(
@@ -251,7 +251,7 @@ ${f.recommendations}
         summary: {
           totalImages: findings.length,
           diseasesDetected: findings.filter(
-            (f) => f.disease?.toLowerCase?.() !== "healthy"
+            (f) => f.disease?.toLowerCase?.() !== "healthy",
           ).length,
           timestamp: `(Report Time): ${timestamp}`,
           modelType: modelType || "Unspecified Model",
@@ -268,7 +268,7 @@ ${f.recommendations}
           : null,
       };
     },
-    [state.selectedReport, result, farmData, getDiseaseSeverity, modelType]
+    [state.selectedReport, result, farmData, getDiseaseSeverity, modelType],
   );
 
   return (
@@ -303,7 +303,7 @@ ${f.recommendations}
           {/* Optional Sub-Icon or Status */}
           <div className="flex items-center space-x-2 text-sm text-indigo-100 bg-white/10 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/20 shadow-sm">
             <img
-              src="/src/assets/images/environment.gif"
+              src="https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif"
               alt="AI Analysis"
               className="w-6 h-6 object-contain rounded-full"
             />

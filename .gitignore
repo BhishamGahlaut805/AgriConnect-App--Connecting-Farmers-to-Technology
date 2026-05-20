@@ -18,6 +18,9 @@ keys/
 # Ignore India GeoJSON file
 Frontend/public/india.geojson
 
+#images folder
+Frontend\src\assets\images
+
 # =========================
 # 🧠 Python and Virtual Environments
 # =========================
@@ -147,9 +150,9 @@ outputs/
 *.jpg
 *.jpeg
 # *.png
-# *.gif
+*.gif
 *.bmp
-# *.svg
+*.svg
 *.ico
 *.mp4
 *.mov
@@ -159,7 +162,7 @@ outputs/
 *.tif
 *.tiff
 media/
-# images/
+images/
 screenshots/
 videos/
 static/uploads/

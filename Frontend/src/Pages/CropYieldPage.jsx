@@ -53,12 +53,12 @@ const image3 =
   "https://images.unsplash.com/photo-1623190632241-20a391a7b2e0?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
 const image4 =
   "https://images.unsplash.com/photo-1716830234226-9dc4088ba59b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGZhcm0lMjBiYWNrZ3JvdW5kfGVufDB8fDB8fHww";
-import campingimg from "/src/assets/images/camping.gif";
-import newimg from "/src/assets/images/newi.gif";
-import envirimg from "/src/assets/images/environment.gif";
-import harvestimg from "/src/assets/images/fruit.gif";
-import agribotimg from "/src/assets/images/chat-bot.gif";
-import communityimg from "/src/assets/images/communityimg.gif";
+const campingimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
+const newimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258550/newi_fojfll.gif";
+const envirimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif";
+const harvestimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258549/fruit_mgfwwa.gif";
+const agribotimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif";
+const communityimg = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/communityimg_vhkxax.gif";
 
 // Assuming custom Button component
 import { Button } from "../ui/Button";

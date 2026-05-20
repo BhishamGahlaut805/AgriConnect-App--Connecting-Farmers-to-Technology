@@ -43,10 +43,14 @@ const CropDiseaseResults = ({
     main: "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1778833550/bg1_x4idx8.png",
     // gradient: "/src/assets/images/cardcontainerimage2.jpg",
     pattern: "/src/assets/images/image15.png",
-    voiceAssistant: "/src/assets/images/chat-bot.gif",
-    farmer: "/src/assets/images/environment.gif",
-    plants: "/src/assets/images/sea-level.gif",
-    warning: "/src/assets/images/storm.gif",
+    voiceAssistant:
+      "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258546/chat-bot_phleij.gif",
+    farmer:
+      "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/environment_iwo4aa.gif",
+    plants:
+      "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/sea-level_vwcokg.gif",
+    warning:
+      "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258552/storm_cy1yqn.gif",
   };
 
   // Convert confidence to textual risk levels with Hindi translations
@@ -110,10 +114,10 @@ const CropDiseaseResults = ({
             typeof pred.confidence === "number"
               ? pred.confidence
               : parseFloat(pred.confidence?.toString().replace("%", "")) || 0;
-              console.log("Confidence value:", confidence);
-              if(confidence<1 && confidence>0){
-                confidence*=100;
-              }
+          console.log("Confidence value:", confidence);
+          if (confidence < 1 && confidence > 0) {
+            confidence *= 100;
+          }
           const { level } = getRiskLevel(confidence);
           const cropName = pred.crop || "Unknown crop";
           const diseaseName = pred.disease
@@ -123,7 +127,7 @@ const CropDiseaseResults = ({
           return `Image ${
             index + 1
           }: ${cropName} is showing ${level.toLowerCase()} due to ${diseaseName}. Confidence level is ${Math.round(
-            confidence
+            confidence,
           )} percent.`;
         })
         .join(" ");
@@ -134,9 +138,9 @@ const CropDiseaseResults = ({
             typeof pred.confidence === "number"
               ? pred.confidence
               : parseFloat(pred.confidence?.toString().replace("%", "")) || 0;
-              if(confidence<1 && confidence>0){
-                confidence*=100;
-              }
+          if (confidence < 1 && confidence > 0) {
+            confidence *= 100;
+          }
           const { levelHindi } = getRiskLevel(confidence);
           const cropName = pred.crop || "अज्ञात फसल";
           const diseaseName = pred.disease
@@ -150,7 +154,7 @@ const CropDiseaseResults = ({
           return `चित्र ${
             index + 1
           }: ${cropName} में ${levelHindi.toLowerCase()} दिख रहा है, कारण है ${diseaseName}. विश्वास स्तर ${Math.round(
-            confidence
+            confidence,
           )} प्रतिशत है।`;
         })
         .join(" ");
@@ -189,7 +193,7 @@ const CropDiseaseResults = ({
         voice.lang === language &&
         (language === "hi-IN"
           ? voice.name.includes("Hindi")
-          : voice.name.includes("English"))
+          : voice.name.includes("English")),
     );
 
     if (preferredVoice) {
@@ -220,7 +224,7 @@ const CropDiseaseResults = ({
         : parseFloat(pred.confidence?.toString().replace("%", "")) || 0;
     if (confidence < 1 && confidence > 0) {
       confidence *= 100;
-        }
+    }
     const { level, levelHindi, color, emoji } = getRiskLevel(confidence);
     return {
       name:
@@ -263,7 +267,7 @@ const CropDiseaseResults = ({
   const healthyCount =
     chartData?.filter(
       (item) =>
-        item.name.toLowerCase().includes("healthy") || item.confidence === 0
+        item.name.toLowerCase().includes("healthy") || item.confidence === 0,
     ).length || 0;
 
   if (!results || results.length === 0) {
@@ -353,8 +357,7 @@ const CropDiseaseResults = ({
             />
           </div>
           <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            AI-पावर्ड फसल रोग विश्लेषण  • तत्काल रिपोर्ट्स •
-            मुफ्त सलाह
+            AI-पावर्ड फसल रोग विश्लेषण • तत्काल रिपोर्ट्स • मुफ्त सलाह
           </p>
           <p className="text-sm text-gray-600 dark:text-gray-400">
             AI-Powered Crop Disease Analysis • Live Video Support • Instant
@@ -623,7 +626,7 @@ const CropDiseaseResults = ({
                 typeof prediction.confidence === "number"
                   ? prediction.confidence
                   : parseFloat(
-                      prediction.confidence?.toString().replace("%", "")
+                      prediction.confidence?.toString().replace("%", ""),
                     ) || 0;
               const {
                 level,
