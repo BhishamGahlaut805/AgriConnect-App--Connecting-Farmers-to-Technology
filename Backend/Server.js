@@ -35,7 +35,7 @@ app.use(bodyParser.urlencoded({ limit: "10mb", extended: true }));
 app.use(
   cors({
     origin: [
-      "https://agri-connect-app-connecting-farmers.vercel.app/",
+      "https://agri-connect-app-connecting-farmers.vercel.app",
       "http://localhost:5173",
       "https://j2rgc684-5173.inc1.devtunnels.ms",
       "https://klg2zcrt-5173.inc1.devtunnels.ms/",
