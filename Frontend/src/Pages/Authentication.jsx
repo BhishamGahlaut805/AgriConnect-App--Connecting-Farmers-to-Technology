@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import authService from "../API/authService";
-import Tooltip from "../components/Tooltip";
-import AlertMessage from "../components/AlertMessage";
+import Tooltip from "../Components/Tooltip";
+import AlertMessage from "../Components/AlertMessage";
 import { useParams } from "react-router-dom";
 import {
   GoogleIcon,
