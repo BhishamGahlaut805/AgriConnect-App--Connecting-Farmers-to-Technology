@@ -14,7 +14,18 @@ import {
   InfoIcon,
 } from "../icons/icon";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  FaArrowRight,
+  FaBolt,
+  FaEye,
+  FaEyeSlash,
+  FaShieldAlt,
+  FaShoppingCart,
+  FaTimes,
+  FaUserCircle,
+  FaSeedling,
+} from "react-icons/fa";
 import validator from "validator";
 
 const AuthPage = () => {
@@ -22,7 +33,16 @@ const AuthPage = () => {
   const [searchParams] = useSearchParams();
   const [activeView, setActiveView] = useState("login");
   const [isLoading, setIsLoading] = useState(false);
+  const [demoLoadingRole, setDemoLoadingRole] = useState("");
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+  const [passwordVisibility, setPasswordVisibility] = useState({
+    login: false,
+    register: false,
+    confirmRegister: false,
+    reset: false,
+    confirmReset: false,
+  });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -52,7 +72,68 @@ const AuthPage = () => {
     message: "",
     type: "success",
   });
-  const [showTooltip, setShowTooltip] = useState(null);
+
+  const demoAccounts = {
+    farmer: {
+      label: "Farmer Demo",
+      description: "Explore farmer-specific features and dashboards.",
+      contact: "testUserEmail@email.com",
+      password: "MyPassword",
+      buttonLabel: "Login as Farmer",
+      icon: FaSeedling,
+      gradient: "from-emerald-500 via-green-500 to-lime-500",
+      glow: "shadow-emerald-500/30",
+    },
+    admin: {
+      label: "Admin Demo",
+      description: "Access administrative controls and management features.",
+      contact: "AgriConnectAdmin@gmail.com",
+      password: "MyPassword",
+      buttonLabel: "Login as Admin",
+      icon: FaShieldAlt,
+      gradient: "from-slate-700 via-gray-800 to-zinc-900",
+      glow: "shadow-slate-500/30",
+    },
+    user: {
+      label: "User Demo",
+      description: "Experience the platform as a standard user.",
+      contact: "SAMPLEUSER8059@GMAIL.COM",
+      password: "Bhisham@123",
+      buttonLabel: "Login as User",
+      icon: FaUserCircle,
+      gradient: "from-sky-500 via-cyan-500 to-blue-500",
+      glow: "shadow-sky-500/30",
+    },
+    trader: {
+      label: "Trader Demo",
+      description: "Explore trader functionalities and marketplace features.",
+      contact: "SampleTrader@gmail.com",
+      password: "Bhisham@123",
+      buttonLabel: "Login as Trader",
+      icon: FaShoppingCart,
+      gradient: "from-amber-500 via-orange-500 to-rose-500",
+      glow: "shadow-amber-500/30",
+    },
+  };
+
+  const performLogin = async ({ contact, password }) => {
+    const { user } = await authService.login({ contact, password });
+    localStorage.setItem("token", user.token); // use "token"
+    localStorage.setItem("userDetails", JSON.stringify(user));
+    window.dispatchEvent(new Event("authChange")); //  notify Navbar
+
+    if (user.role === "admin" || user.role === "Admin") {
+      setTimeout(() => navigate(`/Admin/dashboard/${user.id}`), 1500);
+    } else if (user.role === "farmer" || user.role === "Farmer") {
+      setTimeout(() => navigate(`/Farmer/dashboard/${user.id}`), 1500);
+    } else if (user.role === "trader" || user.role === "Trader") {
+      setTimeout(() => navigate(`/harvestLink/seller-dashboard`), 1500);
+    } else {
+      setTimeout(() => navigate(`/user/dashboard/${user.id}`), 1500);
+    }
+
+    return user;
+  };
 
   // Check for token in URL for password reset
   useEffect(() => {
@@ -63,10 +144,23 @@ const AuthPage = () => {
       showAlert(
         "Password Reset",
         "Please enter your new password below",
-        "success"
+        "success",
       );
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!isDemoModalOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        setIsDemoModalOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isDemoModalOpen]);
 
   // Initialize Google Auth on component mount
   useEffect(() => {
@@ -81,26 +175,61 @@ const AuthPage = () => {
         localStorage.setItem("userDetails", JSON.stringify(result.user));
         window.dispatchEvent(new Event("authChange"));
         //Role Wise navigation for 4 people- farmer, trader, admin, other
-        if(result.user.role==="admin" || result.user.role==="Admin"){
-          setTimeout(() => navigate(`/Admin/dashboard/${result.user.id}`), 1500);
-        }else if(result.user.role==="farmer" || result.user.role==="Farmer"){
-          setTimeout(() => navigate(`/Farmer/dashboard/${result.user.id}`), 1500);
-        }else if(result.user.role==="trader" || result.user.role==="Trader"){
+        if (result.user.role === "admin" || result.user.role === "Admin") {
+          setTimeout(
+            () => navigate(`/Admin/dashboard/${result.user.id}`),
+            1500,
+          );
+        } else if (
+          result.user.role === "farmer" ||
+          result.user.role === "Farmer"
+        ) {
+          setTimeout(
+            () => navigate(`/Farmer/dashboard/${result.user.id}`),
+            1500,
+          );
+        } else if (
+          result.user.role === "trader" ||
+          result.user.role === "Trader"
+        ) {
           setTimeout(() => navigate(`/harvestLink/seller-dashboard`), 1500);
-        }else{
+        } else {
           setTimeout(() => navigate(`/user/dashboard/${result.user.id}`), 1500);
         }
       },
       (error) => {
         setGoogleLoading(false);
         showAlert("Login Failed", error.message, "error");
-      }
+      },
     );
   }, [navigate]);
 
   const showAlert = (title, message, type) => {
     setAlert({ isOpen: true, title, message, type });
     setTimeout(() => setAlert({ ...alert, isOpen: false }), 5000);
+  };
+
+  const handleDemoLogin = async (roleKey) => {
+    const account = demoAccounts[roleKey];
+    if (!account) return;
+
+    setDemoLoadingRole(roleKey);
+    setIsLoading(true);
+    setErrors({});
+    setIsDemoModalOpen(false);
+
+    try {
+      const user = await performLogin({
+        contact: account.contact,
+        password: account.password,
+      });
+      showAlert("Welcome Back!", `Hi ${user.name}!`, "success");
+    } catch (err) {
+      showAlert("Demo Login Failed", err.message, "error");
+    } finally {
+      setIsLoading(false);
+      setDemoLoadingRole("");
+    }
   };
 
   const validateField = (name, value) => {
@@ -140,36 +269,30 @@ const AuthPage = () => {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
+  const togglePasswordVisibility = (field) => {
+    setPasswordVisibility((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  const authInputClassName =
+    "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm transition-all duration-300 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-4 focus:ring-green-500/15 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-green-400 dark:focus:ring-green-400/15";
+
+  const passwordInputClassName =
+    "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 pr-12 text-gray-900 shadow-sm transition-all duration-300 placeholder:text-gray-400 focus:border-green-500 focus:outline-none focus:ring-4 focus:ring-green-500/15 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-green-400 dark:focus:ring-green-400/15";
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setErrors({});
     try {
-      const { user } = await authService.login({
+      const user = await performLogin({
         contact: formData.email || formData.phone,
         password: formData.password,
       });
       showAlert("Welcome Back!", `Hi ${user.name}!`, "success");
-      localStorage.setItem("token", user.token); // use "token"
-      localStorage.setItem("userDetails", JSON.stringify(user));
-      window.dispatchEvent(new Event("authChange")); //  notify Navbar
       console.log("Login successful:", user);
-      if (user.role === "admin" || user.role === "Admin") {
-        setTimeout(() => navigate(`/Admin/dashboard/${user.id}`), 1500);
-      } else if (
-        user.role === "farmer" ||
-        user.role === "Farmer"
-      ) {
-        setTimeout(() => navigate(`/Farmer/dashboard/${user.id}`), 1500);
-      } else if (
-        user.role === "trader" ||
-        user.role === "Trader"
-      ) {
-        setTimeout(() => navigate(`/harvestLink/seller-dashboard`), 1500);
-      } else {
-        setTimeout(() => navigate(`/user/dashboard/${user.id}`), 1500);
-      }
-      // setTimeout(() => navigate(`/dashboard/${user.id}`), 1500);
     } catch (err) {
       showAlert("Login Failed", err.message, "error");
     } finally {
@@ -192,7 +315,7 @@ const AuthPage = () => {
       showAlert(
         "Registration Successful!",
         "You can now login with your credentials",
-        "success"
+        "success",
       );
       setActiveView("login");
       setFormData((prev) => ({ ...prev, password: "", confirmPassword: "" }));
@@ -212,7 +335,7 @@ const AuthPage = () => {
       showAlert(
         "Reset Link Sent",
         "Check your email for password reset instructions",
-        "success"
+        "success",
       );
       setFormData((prev) => ({ ...prev, resetEmail: "" }));
     } catch (err) {
@@ -230,12 +353,12 @@ const AuthPage = () => {
       await authService.resetPassword(
         formData.resetToken,
         formData.password,
-        formData.confirmPassword
+        formData.confirmPassword,
       );
       showAlert(
         "Password Reset!",
         "You can now login with your new password",
-        "success"
+        "success",
       );
       setActiveView("login");
       setFormData((prev) => ({
@@ -414,14 +537,195 @@ const AuthPage = () => {
             </div>
 
             {activeView === "login" ? (
+              <motion.button
+                type="button"
+                onClick={() => setIsDemoModalOpen(true)}
+                whileHover={{ y: -2, scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="mb-6 inline-flex w-full items-center justify-center gap-3 rounded-2xl border border-dashed border-emerald-400/60 bg-emerald-50/80 px-4 py-3 text-sm font-semibold text-emerald-800 shadow-sm transition-all duration-300 hover:border-emerald-500 hover:bg-emerald-100 dark:border-emerald-400/40 dark:bg-emerald-950/30 dark:text-emerald-200"
+              >
+                <FaBolt className="h-4 w-4" />
+                Try Demo Accounts
+                <span className="text-emerald-600 dark:text-emerald-300">
+                  Explore the platform instantly
+                </span>
+              </motion.button>
+            ) : null}
+
+            {activeView === "login" ? (
               <motion.form
+                key="login"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 variants={itemVariants}
                 onSubmit={handleLogin}
                 className="space-y-4"
               >
                 <div>
-                  <div className="flex items-center mb-1">
+                  <div className="flex items-center mb-4">
                     <label className="block text-gray-700 dark:text-gray-300">
+                      <AnimatePresence>
+                        {isDemoModalOpen ? (
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="
+fixed inset-0 z-50
+flex items-center justify-center
+px-4 py-6
+
+bg-gradient-to-br
+from-emerald-950/70
+via-green-900/60
+to-lime-950/70
+
+backdrop-blur-xl
+backdrop-saturate-150
+
+animate-in fade-in duration-300
+
+overflow-y-auto
+"
+                            onClick={() => setIsDemoModalOpen(false)}
+                          >
+                            <motion.div
+                              initial={{ opacity: 0, y: 28, scale: 0.96 }}
+                              animate={{ opacity: 1, y: 0, scale: 1 }}
+                              exit={{ opacity: 0, y: 20, scale: 0.97 }}
+                              transition={{
+                                type: "spring",
+                                stiffness: 260,
+                                damping: 24,
+                              }}
+                              onClick={(event) => event.stopPropagation()}
+                              className="relative w-full overflow-scroll rounded-[28px] border border-white/10 bg-white/95 shadow-2xl dark:bg-slate-900/95"
+                            >
+                              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.16),_transparent_30%),linear-gradient(135deg,_rgba(255,255,255,0.95),_rgba(248,250,252,0.92))] dark:bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.16),_transparent_30%),linear-gradient(135deg,_rgba(15,23,42,0.98),_rgba(15,23,42,0.92))]" />
+
+                              <div className="relative flex items-start justify-between gap-4 border-b border-slate-200/70 py-5 dark:border-slate-700/70 sm:px-8">
+                                <div>
+                                  <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-200">
+                                    <FaBolt className="h-full h-full" />
+                                    Quick Access
+                                  </div>
+                                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">
+                                    Try demo accounts without signing up
+                                  </h2>
+                                  <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300 sm:text-base">
+                                    Choose a role and jump directly into the
+                                    matching dashboard. Credentials stay hidden
+                                    and the normal authentication flow is
+                                    reused.
+                                  </p>
+                                </div>
+
+                                <button
+                                  type="button"
+                                  onClick={() => setIsDemoModalOpen(false)}
+                                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:bg-slate-50 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-white"
+                                  aria-label="Close demo accounts dialog"
+                                >
+                                  <FaTimes className="h-4 w-4" />
+                                </button>
+                              </div>
+
+                              <div className="relative px-6 py-6 sm:px-8 sm:py-8">
+                                <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                                  {Object.entries(demoAccounts).map(
+                                    ([roleKey, account], index) => {
+                                      const Icon = account.icon;
+                                      const isLoadingCard =
+                                        demoLoadingRole === roleKey;
+
+                                      return (
+                                        <motion.div
+                                          key={roleKey}
+                                          custom={index}
+                                          variants={{
+                                            hidden: {
+                                              opacity: 0,
+                                              y: 16,
+                                              scale: 0.98,
+                                            },
+                                            visible: (cardIndex) => ({
+                                              opacity: 1,
+                                              y: 0,
+                                              scale: 1,
+                                              transition: {
+                                                duration: 0.35,
+                                                delay: cardIndex * 0.08,
+                                              },
+                                            }),
+                                          }}
+                                          initial="hidden"
+                                          animate="visible"
+                                          whileHover={{ y: -6, scale: 1.01 }}
+                                          className={`group relative overflow-hidden rounded-3xl border border-white/60 bg-gradient-to-br ${account.gradient} p-[1px] shadow-xl ${account.glow}`}
+                                        >
+                                          <div className="flex h-full flex-col rounded-[23px] bg-white/95 p-5 text-slate-900 transition-colors duration-300 dark:bg-slate-950/90 dark:text-white">
+                                            <div className="flex items-start justify-between gap-3">
+                                              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70 text-slate-900 shadow-md ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-110 dark:bg-white/10 dark:text-white">
+                                                <Icon className="h-6 w-6" />
+                                              </div>
+                                              <span className="rounded-full bg-black/5 px-3 py-1 text-xs font-semibold text-slate-700 dark:bg-white/10 dark:text-slate-200">
+                                                Demo
+                                              </span>
+                                            </div>
+
+                                            <div className="mt-4 space-y-2">
+                                              <h3 className="text-xl font-bold tracking-tight">
+                                                {account.label}
+                                              </h3>
+                                              <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">
+                                                {account.description}
+                                              </p>
+                                            </div>
+
+                                            <div className="mt-6 flex-1 rounded-2xl bg-slate-50/90 p-4 dark:bg-white/5">
+                                              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+                                                Instant access
+                                              </p>
+                                              <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
+                                                The app will sign you in and
+                                                redirect to the correct role
+                                                dashboard.
+                                              </p>
+                                            </div>
+
+                                            <motion.button
+                                              type="button"
+                                              onClick={() =>
+                                                handleDemoLogin(roleKey)
+                                              }
+                                              whileTap={{ scale: 0.98 }}
+                                              disabled={
+                                                isLoading ||
+                                                Boolean(demoLoadingRole)
+                                              }
+                                              className="mt-5 inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200"
+                                            >
+                                              {isLoadingCard ? (
+                                                <LoadingSpinner
+                                                  size="sm"
+                                                  className="mr-1"
+                                                />
+                                              ) : null}
+                                              {account.buttonLabel}
+                                              <FaArrowRight className="h-3.5 w-3.5" />
+                                            </motion.button>
+                                          </div>
+                                        </motion.div>
+                                      );
+                                    },
+                                  )}
+                                </div>
+                              </div>
+                            </motion.div>
+                          </motion.div>
+                        ) : null}
+                      </AnimatePresence>
                       Email or Phone
                     </label>
                     <Tooltip content="You can login with either your email or phone number">
@@ -434,8 +738,9 @@ const AuthPage = () => {
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                    className={authInputClassName}
                     placeholder="Enter email or phone"
+                    autoComplete="username"
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-1">{errors.email}</p>
@@ -458,15 +763,39 @@ const AuthPage = () => {
                       Forgot password?
                     </button>
                   </div>
-                  <input
-                    type="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                    placeholder="Enter password"
-                  />
+                  <div className="relative">
+                    <input
+                      type={passwordVisibility.login ? "text" : "password"}
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      className={passwordInputClassName}
+                      placeholder="Enter password"
+                      autoComplete="current-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => togglePasswordVisibility("login")}
+                      className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-gray-500 transition-colors hover:text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-gray-300 dark:hover:text-green-300"
+                      aria-label={
+                        passwordVisibility.login
+                          ? "Hide Password"
+                          : "Show Password"
+                      }
+                      title={
+                        passwordVisibility.login
+                          ? "Hide Password"
+                          : "Show Password"
+                      }
+                    >
+                      {passwordVisibility.login ? (
+                        <FaEyeSlash className="h-4 w-4" />
+                      ) : (
+                        <FaEye className="h-4 w-4" />
+                      )}
+                    </button>
+                  </div>
                   {errors.password && (
                     <p className="text-red-500 text-sm mt-1">
                       {errors.password}
@@ -515,6 +844,10 @@ const AuthPage = () => {
               </motion.form>
             ) : activeView === "register" ? (
               <motion.form
+                key="register"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 variants={itemVariants}
                 onSubmit={handleRegister}
                 className="space-y-4"
@@ -529,8 +862,9 @@ const AuthPage = () => {
                     value={formData.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                    className={authInputClassName}
                     placeholder="Enter your full name"
+                    autoComplete="name"
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">{errors.name}</p>
@@ -553,8 +887,9 @@ const AuthPage = () => {
                       value={formData.email}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                      className={authInputClassName}
                       placeholder="Enter email"
+                      autoComplete="email"
                     />
                     {errors.email && (
                       <p className="text-red-500 text-sm mt-1">
@@ -578,8 +913,9 @@ const AuthPage = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                      className={authInputClassName}
                       placeholder="Enter phone number"
+                      autoComplete="tel"
                     />
                     {errors.phone && (
                       <p className="text-red-500 text-sm mt-1">
@@ -604,7 +940,7 @@ const AuthPage = () => {
                     value={formData.address}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                    className={authInputClassName}
                     placeholder="Enter your address"
                   />
                   {errors.address && (
@@ -646,15 +982,39 @@ const AuthPage = () => {
                         <InfoIcon className="w-4 h-4 ml-1 text-gray-400 dark:text-gray-500" />
                       </Tooltip>
                     </div>
-                    <input
-                      type="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                      placeholder="Create password (min 8 chars)"
-                    />
+                    <div className="relative">
+                      <input
+                        type={passwordVisibility.register ? "text" : "password"}
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={passwordInputClassName}
+                        placeholder="Create password (min 8 chars)"
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => togglePasswordVisibility("register")}
+                        className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-gray-500 transition-colors hover:text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-gray-300 dark:hover:text-green-300"
+                        aria-label={
+                          passwordVisibility.register
+                            ? "Hide Password"
+                            : "Show Password"
+                        }
+                        title={
+                          passwordVisibility.register
+                            ? "Hide Password"
+                            : "Show Password"
+                        }
+                      >
+                        {passwordVisibility.register ? (
+                          <FaEyeSlash className="h-4 w-4" />
+                        ) : (
+                          <FaEye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                     {errors.password && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.password}
@@ -666,15 +1026,45 @@ const AuthPage = () => {
                     <label className="block text-gray-700 dark:text-gray-300 mb-1">
                       Confirm Password
                     </label>
-                    <input
-                      type="password"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                      placeholder="Confirm password"
-                    />
+                    <div className="relative">
+                      <input
+                        type={
+                          passwordVisibility.confirmRegister
+                            ? "text"
+                            : "password"
+                        }
+                        name="confirmPassword"
+                        value={formData.confirmPassword}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        className={passwordInputClassName}
+                        placeholder="Confirm password"
+                        autoComplete="new-password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          togglePasswordVisibility("confirmRegister")
+                        }
+                        className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-gray-500 transition-colors hover:text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-gray-300 dark:hover:text-green-300"
+                        aria-label={
+                          passwordVisibility.confirmRegister
+                            ? "Hide Password"
+                            : "Show Password"
+                        }
+                        title={
+                          passwordVisibility.confirmRegister
+                            ? "Hide Password"
+                            : "Show Password"
+                        }
+                      >
+                        {passwordVisibility.confirmRegister ? (
+                          <FaEyeSlash className="h-4 w-4" />
+                        ) : (
+                          <FaEye className="h-4 w-4" />
+                        )}
+                      </button>
+                    </div>
                     {errors.confirmPassword && (
                       <p className="text-red-500 text-sm mt-1">
                         {errors.confirmPassword}
@@ -727,6 +1117,10 @@ const AuthPage = () => {
               </motion.form>
             ) : (
               <motion.form
+                key="forgot"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 variants={itemVariants}
                 onSubmit={
                   formData.resetToken
@@ -755,15 +1149,39 @@ const AuthPage = () => {
                           <InfoIcon className="w-4 h-4 ml-1 text-gray-400 dark:text-gray-500" />
                         </Tooltip>
                       </div>
-                      <input
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                        placeholder="Enter new password"
-                      />
+                      <div className="relative">
+                        <input
+                          type={passwordVisibility.reset ? "text" : "password"}
+                          name="password"
+                          value={formData.password}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={passwordInputClassName}
+                          placeholder="Enter new password"
+                          autoComplete="new-password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => togglePasswordVisibility("reset")}
+                          className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-gray-500 transition-colors hover:text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-gray-300 dark:hover:text-green-300"
+                          aria-label={
+                            passwordVisibility.reset
+                              ? "Hide Password"
+                              : "Show Password"
+                          }
+                          title={
+                            passwordVisibility.reset
+                              ? "Hide Password"
+                              : "Show Password"
+                          }
+                        >
+                          {passwordVisibility.reset ? (
+                            <FaEyeSlash className="h-4 w-4" />
+                          ) : (
+                            <FaEye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
                       {errors.password && (
                         <p className="text-red-500 text-sm mt-1">
                           {errors.password}
@@ -775,15 +1193,45 @@ const AuthPage = () => {
                       <label className="block text-gray-700 dark:text-gray-300 mb-1">
                         Confirm New Password
                       </label>
-                      <input
-                        type="password"
-                        name="confirmPassword"
-                        value={formData.confirmPassword}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
-                        placeholder="Confirm new password"
-                      />
+                      <div className="relative">
+                        <input
+                          type={
+                            passwordVisibility.confirmReset
+                              ? "text"
+                              : "password"
+                          }
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                          className={passwordInputClassName}
+                          placeholder="Confirm new password"
+                          autoComplete="new-password"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            togglePasswordVisibility("confirmReset")
+                          }
+                          className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-gray-500 transition-colors hover:text-green-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 dark:text-gray-300 dark:hover:text-green-300"
+                          aria-label={
+                            passwordVisibility.confirmReset
+                              ? "Hide Password"
+                              : "Show Password"
+                          }
+                          title={
+                            passwordVisibility.confirmReset
+                              ? "Hide Password"
+                              : "Show Password"
+                          }
+                        >
+                          {passwordVisibility.confirmReset ? (
+                            <FaEyeSlash className="h-4 w-4" />
+                          ) : (
+                            <FaEye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
                       {errors.confirmPassword && (
                         <p className="text-red-500 text-sm mt-1">
                           {errors.confirmPassword}
@@ -823,8 +1271,9 @@ const AuthPage = () => {
                         value={formData.resetEmail}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-all"
+                        className={authInputClassName}
                         placeholder="Enter your registered email"
+                        autoComplete="email"
                       />
                       {errors.resetEmail && (
                         <p className="text-red-500 text-sm mt-1">
