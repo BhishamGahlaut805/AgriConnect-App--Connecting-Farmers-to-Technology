@@ -64,25 +64,93 @@ export async function fetchLatLon(location) {
 }
 
 /** Reverse geocode via OpenCage */
+/** Reverse geocode coordinates using OpenCage */
 export async function reverseGeocode(latitude, longitude) {
   try {
-    const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
-    const res = await fetch(
-      `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=${apiKey}`
-    );
-    if (!res.ok) throw new Error(`Error ${res.status}`);
-    const data = await res.json();
-    if (data.results?.length > 0) {
-      const loc = data.results[0].components;
+    // Validate input
+    if (
+      latitude === undefined ||
+      longitude === undefined ||
+      latitude === null ||
+      longitude === null
+    ) {
+      console.warn("reverseGeocode: Invalid coordinates");
       return {
-        city: loc.city || loc.town || loc.village,
-        country: loc.country || "Unknown",
+        city: "Unknown",
+        country: "Unknown",
       };
     }
-    return null;
-  } catch (err) {
-    console.error("reverseGeocode error:", err);
-    return null;
+
+    const apiKey = import.meta.env.VITE_OPENCAGE_API_KEY;
+
+    // If API key missing, don't break UI
+    if (!apiKey) {
+      console.warn("OpenCage API key not configured");
+      return {
+        city: "Unknown",
+        country: "Unknown",
+      };
+    }
+
+    const url =
+      `https://api.opencagedata.com/geocode/v1/json` +
+      `?q=${encodeURIComponent(`${latitude}, ${longitude}`)}` +
+      `&key=${apiKey}` +
+      `&limit=1` +
+      `&no_annotations=1`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      console.error(
+        `OpenCage API Error: ${response.status} ${response.statusText}`
+      );
+
+      return {
+        city: "Unknown",
+        country: "Unknown",
+      };
+    }
+
+    const data = await response.json();
+
+    if (!data?.results?.length) {
+      return {
+        city: "Unknown",
+        country: "Unknown",
+      };
+    }
+
+    const components = data.results[0]?.components || {};
+
+    const city =
+      components.city ||
+      components.town ||
+      components.village ||
+      components.hamlet ||
+      components.county ||
+      components.state_district ||
+      "Unknown";
+
+    const country = components.country || "Unknown";
+
+    return {
+      city,
+      country,
+    };
+  } catch (error) {
+    console.error("reverseGeocode error:", error);
+
+    // Never throw; always return fallback
+    return {
+      city: "Unknown",
+      country: "Unknown",
+    };
   }
 }
 

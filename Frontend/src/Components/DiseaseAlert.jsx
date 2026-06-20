@@ -12,6 +12,8 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
+  BarController,
   Title,
   Tooltip as ChartTooltip,
   Legend,
@@ -23,10 +25,12 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
+  BarController,
   Title,
   ChartTooltip,
   Legend,
-  Filler
+  Filler,
 );
 
 const DiseaseAlerts = ({ farmData }) => {

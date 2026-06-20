@@ -8,22 +8,25 @@ import {
   LinearScale,
   PointElement,
   LineElement,
-  Title,
-  Tooltip,
-  Legend,
   BarElement,
+  BarController,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend,
+  Filler,
 } from "chart.js";
 
-// Register ChartJS components
 ChartJS.register(
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
   BarElement,
+  BarController,
   Title,
-  Tooltip,
-  Legend
+  ChartTooltip,
+  Legend,
+  Filler,
 );
 
 const RainfallCard = () => {

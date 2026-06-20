@@ -59,7 +59,7 @@ const AuthPage = () => {
   useEffect(() => {
     // Verify token validity or set state if needed
     if (token) {
-      console.log("Login token received:");
+      console.log("");
 
       // If you want to validate or use token, do it here
     }
@@ -292,7 +292,7 @@ const AuthPage = () => {
         password: formData.password,
       });
       showAlert("Welcome Back!", `Hi ${user.name}!`, "success");
-      console.log("Login successful:", user);
+      // console.log("Login successful:", user);
     } catch (err) {
       showAlert("Login Failed", err.message, "error");
     } finally {

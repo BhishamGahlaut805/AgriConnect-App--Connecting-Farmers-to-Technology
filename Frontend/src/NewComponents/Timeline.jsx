@@ -7,8 +7,10 @@ import {
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
+  BarController,
   Title,
-  Tooltip,
+  Tooltip as ChartTooltip,
   Legend,
   Filler,
 } from "chart.js";
@@ -18,12 +20,13 @@ ChartJS.register(
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
+  BarController,
   Title,
-  Tooltip,
+  ChartTooltip,
   Legend,
-  Filler
+  Filler,
 );
-
 const Timeline = ({ data }) => {
   if (!data || !data.timestamps || data.timestamps.length === 0) {
     return (

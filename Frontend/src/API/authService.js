@@ -148,7 +148,7 @@ const authService = {
   getCurrentUser: async () => {
     try {
       const response = await apiClient.get("/auth/me");
-      console.log("Fetched current user:", response.data.user);
+      // console.log("Fetched current user:", response.data.user);
       return response.data.user;
     } catch (error) {
       // If 401, the token is invalid/expired - redirect to login

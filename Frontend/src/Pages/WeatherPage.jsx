@@ -3,18 +3,43 @@ import { motion } from "framer-motion";
 import { Line, Bar } from "react-chartjs-2";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import * as WeatherService from "../API/WeatherService";
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip as ChartTooltip,
+//   Legend,
+//   BarElement,
+// } from "chart.js";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
   PointElement,
   LineElement,
+  BarElement,
+  BarController,
   Title,
   Tooltip as ChartTooltip,
   Legend,
-  BarElement,
+  Filler,
 } from "chart.js";
 
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  BarController,
+  Title,
+  ChartTooltip,
+  Legend,
+  Filler,
+);
 // Import images and GIFs
 const campingimg =
   "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
@@ -101,16 +126,16 @@ const clearnight =
   "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258551/night1_koyckn.gif";
 
 // Register ChartJS components
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  Title,
-  ChartTooltip,
-  Legend,
-);
+// ChartJS.register(
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   BarElement,
+//   Title,
+//   ChartTooltip,
+//   Legend,
+// );
 
 // Default WMO weather code descriptions
 const defaultWmoDescriptions = {
