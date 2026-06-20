@@ -7,8 +7,8 @@ const farmBg =
 const farmerGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/farmer_jxnfx2.gif";
 const cropGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258545/camping_qicd3r.gif";
 const cloudGif = "https://res.cloudinary.com/dvf2bl8co/image/upload/q_auto/f_auto/v1779258548/cloudy_vumjce.gif";
-const ChatHeader = "../../NewComponents/ChatHeader";
-const CropHeader2 = "./ChaHeader2";
+import ChatHeader from "../../NewComponents/ChatHeader";
+import CropHeader2 from "./ChaHeader2";
 
 const ChatPage = () => {
   const { messages, isLoading, error, sendMessage, clearChat } = useChat();
