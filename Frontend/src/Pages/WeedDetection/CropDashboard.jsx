@@ -104,12 +104,12 @@ const CropDashboard = () => {
       setError(null);
 
       // First check if backend is reachable
-      const isConnected = await checkBackendConnection();
-      if (!isConnected) {
-        setAnalysisStatus("error");
-        setUploadProgress(0);
-        return;
-      }
+      // const isConnected = await checkBackendConnection();
+      // if (!isConnected) {
+      //   setAnalysisStatus("error");
+      //   setUploadProgress(0);
+      //   return;
+      // }
 
       console.log("📤 Starting image upload for:", file.name);
       const response = await cropWeedService.uploadImage(file);
@@ -130,7 +130,7 @@ const CropDashboard = () => {
       setUploadProgress(0);
     }
   };
-  
+
 
   // Handle video upload
   // CropDashboard.jsx - Replace handleVideoUpload function
