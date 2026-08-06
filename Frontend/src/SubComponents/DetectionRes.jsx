@@ -1,10 +1,32 @@
 import coverImage from "../assets/SVG/icon1.svg"; // replace with a proper cover image if you have one
 
 export default function DetectionSummary({ results }) {
-  const totalDetections = results.detections.length;
-  const weedCount = results.counts?.Weed || 0;
-  const cottonCount = results.counts?.Cotton || 0;
-  const soilCount = results.counts?.Soil || 0;
+  // Safety check: if results is undefined or null, return empty state
+  if (!results) {
+    return (
+      <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg overflow-hidden">
+        <div className="p-6 text-center">
+          <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-3">
+            Detection Summary
+          </h3>
+          <p className="text-gray-600 dark:text-gray-300">
+            No detection results available. Upload an image or start a stream to
+            see results.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Safety check: ensure detections exists and is an array
+  const detections = results.detections || [];
+  const totalDetections = Array.isArray(detections) ? detections.length : 0;
+
+  // Safety check: ensure counts exists
+  const counts = results.counts || {};
+  const weedCount = counts.Weed || 0;
+  const cottonCount = counts.Cotton || 0;
+  const soilCount = counts.Soil || 0;
 
   return (
     <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-lg overflow-hidden">

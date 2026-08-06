@@ -65,15 +65,56 @@ const CropDashboard = () => {
     };
   }, []);
 
-  // Handle image upload
+  // CropDashboard.jsx - Add this function before handleImageUpload
+
+  // Check backend health before any operation
+  const checkBackendConnection = async () => {
+    try {
+      console.log(
+        "🔍 Checking backend health at:",
+        `${cropWeedService.baseURL}/health`,
+      );
+      const response = await fetch(`${cropWeedService.baseURL}/health`, {
+        method: "GET",
+        signal: AbortSignal.timeout(5000),
+      });
+      const isHealthy = response.ok;
+      console.log("🔍 Health check result:", isHealthy);
+      if (!isHealthy) {
+        setError(
+          "Cannot connect to backend server. Please ensure the server is running on port 5505.",
+        );
+        return false;
+      }
+      return true;
+    } catch (err) {
+      console.error("❌ Health check failed:", err);
+      setError(
+        `Cannot connect to backend at ${cropWeedService.baseURL}. Please ensure the server is running.`,
+      );
+      return false;
+    }
+  };
+
+  // Update handleImageUpload
   const handleImageUpload = async (file) => {
     try {
       setAnalysisStatus("processing");
       setUploadProgress(30);
       setError(null);
 
+      // First check if backend is reachable
+      const isConnected = await checkBackendConnection();
+      if (!isConnected) {
+        setAnalysisStatus("error");
+        setUploadProgress(0);
+        return;
+      }
+
+      console.log("📤 Starting image upload for:", file.name);
       const response = await cropWeedService.uploadImage(file);
       setUploadProgress(70);
+      console.log("Image upload response:", response);
 
       const formattedResults = cropWeedService.formatDetectionResults(response);
       setResults(formattedResults);
@@ -86,9 +127,13 @@ const CropDashboard = () => {
       console.error("Error uploading image:", err);
       setError(err.message || "Image upload failed. Please try again.");
       setAnalysisStatus("error");
+      setUploadProgress(0);
     }
   };
+  
 
+  // Handle video upload
+  // CropDashboard.jsx - Replace handleVideoUpload function
   // Handle video upload
   const handleVideoUpload = async (file) => {
     try {
@@ -99,10 +144,11 @@ const CropDashboard = () => {
       const response = await cropWeedService.uploadVideo(file);
       setUploadProgress(70);
 
-      // response.video_path is "/static/uploads/filename.mp4"
-      const backendVideoPath =
-        response.video_path || response.videoPath || response.videoPath;
-      setVideoId(backendVideoPath); // keep this to send to startVideo
+      console.log("Video upload response:", response);
+
+      // Store the video path returned from backend
+      const backendVideoPath = response.videoId || response.video_path;
+      setVideoId(backendVideoPath);
 
       // Keep local preview for user
       setUploadedVideoUrl(URL.createObjectURL(file));
@@ -110,6 +156,8 @@ const CropDashboard = () => {
       setUploadProgress(100);
       setActiveTab("video");
       setAnalysisStatus("ready");
+
+      console.log("Video ready for playback with ID:", backendVideoPath);
     } catch (err) {
       console.error("Error uploading video:", err);
       setError(err.message || "Video upload failed. Please try again.");
@@ -150,6 +198,7 @@ const CropDashboard = () => {
     setLiveFrame(null);
   };
 
+  // CropDashboard.jsx - Replace startVideoPlayback function
   const startVideoPlayback = async () => {
     try {
       setAnalysisStatus("starting");
@@ -159,7 +208,9 @@ const CropDashboard = () => {
         throw new Error("No video uploaded. Please upload a video first.");
       }
 
-      // pass the path returned by uploadVideo()
+      console.log("Starting video playback with ID:", videoId);
+
+      // Start video playback using the videoId
       await cropWeedService.startVideo(videoId);
 
       cropWeedService.startLiveStream(
@@ -1066,6 +1117,6 @@ const CropDashboard = () => {
       </footer>
     </div>
   );
-};
+};;;;
 
 export default CropDashboard;
